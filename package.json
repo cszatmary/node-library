@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "lerna run build",
-    "check-types": "tsc",
+    "check-types": "tsc --noEmit",
     "clean": "lerna run clean",
     "lerna": "lerna",
     "lint": "eslint --ext=js,ts ./packages",
