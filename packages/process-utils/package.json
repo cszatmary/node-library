@@ -1,0 +1,39 @@
+{
+  "name": "@cszatma/process-utils",
+  "version": "0.1.0",
+  "description": "Provides basic functions to make creating a cli easier.",
+  "keywords": [
+    "process helpers",
+    "cli utils"
+  ],
+  "author": {
+    "name": "Christopher Szatmary",
+    "email": "cs@christopherszatmary.com",
+    "url": "https://christopherszatmary.com"
+  },
+  "repository": "cszatma/node-library",
+  "bugs": {
+    "url": "https://github.com/cszatma/node-library/issues"
+  },
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "yarn run build:babel && yarn run build:tsc",
+    "build:babel": "babel src -d lib --extensions '.js,.ts'",
+    "build:tsc": "tsc --emitDeclarationOnly",
+    "clean": "rimraf lib && rimraf coverage"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}
