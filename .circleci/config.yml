@@ -48,15 +48,6 @@ jobs:
           name: lint
           command: yarn lint
 
-  check-types:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
-      - run:
-          name: check-types
-          command: yarn check-types
-
   test:
     <<: *defaults
     steps:
@@ -74,15 +65,9 @@ workflows:
       - build:
           requires:
             - install
-      - check-types:
-          requires:
-            - install
       - lint:
           requires:
             - install
       - test:
           requires:
             - install
-            - build
-            - check-types
-            - lint
