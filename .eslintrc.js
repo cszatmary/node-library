@@ -1,22 +1,29 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
     project: 'tsconfig.json',
   },
   env: {
     node: true,
     jest: true,
   },
+  settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   extends: [
-    'airbnb/base',
+    'airbnb-base',
     'prettier',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
+    'plugin:import/typescript',
   ],
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
@@ -29,16 +36,10 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-explicit-any': ['off'],
-    'import/no-extraneous-dependencies': ['off'],
+    'import/no-extraneous-dependencies': ['error'],
+    'import/no-unresolved': ['off'],
     'import/order': ['off'],
     'prettier/prettier': ['error'],
     'no-console': ['off'],
-  },
-  settings: {
-    'import/resolver': {
-      'babel-module': {
-        extensions: ['.js', '.ts'],
-      },
-    },
   },
 };

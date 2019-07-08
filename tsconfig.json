@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2016",
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
-    "declaration": true
+    "declaration": true,
+    "resolveJsonModule": true
   },
   "include": ["packages"],
   "exclude": ["node_modules"]
