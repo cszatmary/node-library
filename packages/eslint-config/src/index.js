@@ -8,15 +8,12 @@ module.exports = {
     jest: true,
   },
   settings: {
-    "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".tsx"
-      ]
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
-    "import/resolver": {
-      "typescript": {}
-    }
+    'import/resolver': {
+      typescript: {},
+    },
   },
   extends: [
     'airbnb-base',
