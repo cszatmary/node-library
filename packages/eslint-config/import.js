@@ -9,8 +9,8 @@ module.exports = {
       node: {
         extensions: ['.js', '.json'],
       },
-      'import/ignore': ['node_modules', '\\.json$'],
     },
+    'import/ignore': ['node_modules', '\\.json$'],
   },
   rules: {
     'import/no-extraneous-dependencies': [
