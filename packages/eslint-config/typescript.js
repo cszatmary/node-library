@@ -3,10 +3,7 @@ module.exports = {
   parserOptions: {
     project: 'tsconfig.json',
   },
-  env: {
-    node: true,
-    jest: true,
-  },
+  plugins: ['@typescript-eslint'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -16,27 +13,20 @@ module.exports = {
     },
   },
   extends: [
-    'airbnb-base',
-    'prettier',
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
     'plugin:import/typescript',
   ],
-  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
+    camelcase: ['off'],
+    '@typescript-eslint/camelcase': ['error', { properties: 'always' }],
     '@typescript-eslint/no-var-requires': ['off'],
-    '@typescript-eslint/explicit-function-return-type': [
-      'error',
-      {
-        allowExpressions: true,
-        allowTypedFunctionExpressions: true,
-      },
-    ],
+    '@typescript-eslint/explicit-function-return-type': ['off'],
     '@typescript-eslint/no-explicit-any': ['off'],
-    'import/no-extraneous-dependencies': ['error'],
     'import/no-unresolved': ['off'],
-    'import/order': ['off'],
-    'prettier/prettier': ['error'],
-    'no-console': ['off'],
+  },
+  env: {
+    node: true,
+    jest: true,
   },
 };

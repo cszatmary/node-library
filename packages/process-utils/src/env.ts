@@ -12,8 +12,8 @@ export const cwd = (): string => process.env.INIT_CWD || process.cwd();
  * If not it terminates the process with the given status code.
  * @param status The status of the child process.
  * @param command The name of the child process.
- * @param failureStatus The status to terminate the current process with if the child process failed.
- Defaults to `status`.
+ * @param failureStatus The status to terminate the current process with
+ * if the child process failed. Defaults to `status`.
  */
 export function ensureChildSucceeded(
   status: number,
