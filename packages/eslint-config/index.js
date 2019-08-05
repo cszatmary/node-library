@@ -1,7 +1,7 @@
 module.exports = {
   extends: [
-    './style.js',
     './best_practices.js',
+    './style.js',
     './import.js',
     './typescript.js',
   ],
