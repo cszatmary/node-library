@@ -8,6 +8,9 @@ module.exports = {
     'lines-around-directive': ['off'],
     'no-plusplus': ['off'],
     'spaced-comment': ['error', 'always', { markers: ['/'] }],
+    'space-before-function-paren': ['off'],
+    'operator-linebreak': ['off'],
+    'implicit-arrow-linebreak': ['off'],
   },
   env: {
     node: true,
