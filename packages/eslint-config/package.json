@@ -17,10 +17,7 @@
     "url": "https://github.com/cszatma/node-library/issues"
   },
   "license": "MIT",
-  "main": "src/index.js",
-  "files": [
-    "src/"
-  ],
+  "main": "index.js",
   "engines": {
     "node": ">= 10.0.0"
   },
