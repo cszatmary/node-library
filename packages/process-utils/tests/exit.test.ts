@@ -22,8 +22,7 @@ describe('src/exit.ts tests', () => {
       });
     spyExit = jest
       .spyOn(process, 'exit')
-      // @ts-ignore
-      .mockImplementation(() => {});
+      .mockImplementation((() => {}) as () => never);
   });
 
   afterEach(() => {

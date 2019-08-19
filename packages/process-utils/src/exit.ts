@@ -8,7 +8,7 @@ import { logError, logSuccess } from './log';
  */
 export function exitFailure(
   message?: any,
-  statusCode: number = 1,
+  statusCode = 1,
   ...optionalParams: any[]
 ): never {
   logError(message, ...optionalParams);
