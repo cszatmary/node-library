@@ -11,6 +11,7 @@ module.exports = {
     'space-before-function-paren': ['off'],
     'operator-linebreak': ['off'],
     'implicit-arrow-linebreak': ['off'],
+    'function-paren-newline': ['off'],
   },
   env: {
     node: true,
