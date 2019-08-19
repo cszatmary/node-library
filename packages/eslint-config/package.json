@@ -1,6 +1,6 @@
 {
   "name": "@cszatma/eslint-config",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "cszatma's ESLint config.",
   "keywords": [
     "eslint",
