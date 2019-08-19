@@ -41,8 +41,7 @@ describe('src/env.ts tests', () => {
     beforeEach(() => {
       spyExit = jest
         .spyOn(process, 'exit')
-        // @ts-ignore
-        .mockImplementation(() => {});
+        .mockImplementation((() => {}) as () => never);
 
       stderrData = '';
       spyError = jest

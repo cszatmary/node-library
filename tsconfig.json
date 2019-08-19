@@ -5,8 +5,8 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "declaration": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true
   },
   "include": ["packages"],
   "exclude": ["node_modules"]
