@@ -1,27 +1,27 @@
 module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
-    souceType: 'module',
+    souceType: "module",
   },
-  plugins: ['import'],
+  plugins: ["import"],
   settings: {
-    'import/resolver': {
+    "import/resolver": {
       node: {
-        extensions: ['.js', '.json'],
+        extensions: [".js", ".json"],
       },
     },
-    'import/ignore': ['node_modules', '\\.json$'],
+    "import/ignore": ["node_modules", "\\.json$"],
   },
   rules: {
-    'import/no-extraneous-dependencies': [
-      'error',
+    "import/no-extraneous-dependencies": [
+      "error",
       {
-        devDependencies: ['**/test/**', '**/__tests__/**', '**/scripts/**'],
+        devDependencies: ["**/test/**", "**/__tests__/**", "**/scripts/**"],
       },
     ],
-    'import/named': ['off'],
-    'import/extensions': ['error', { js: 'never', json: 'always' }],
-    'import/prefer-default-export': ['off'],
+    "import/named": ["off"],
+    "import/extensions": ["error", { js: "never", json: "always" }],
+    "import/prefer-default-export": ["off"],
   },
   env: {
     es6: true,

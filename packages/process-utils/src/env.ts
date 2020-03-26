@@ -1,4 +1,4 @@
-import { exitFailure } from './exit';
+import { exitFailure } from "./exit";
 
 /**
  * Returns the current working directory of the process.
