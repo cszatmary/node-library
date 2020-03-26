@@ -1,4 +1,4 @@
-import { logError, logSuccess } from './log';
+import { logError, logSuccess } from "./log";
 
 /**
  * Logs a message to stderr in red, then terminates the process.
