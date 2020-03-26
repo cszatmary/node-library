@@ -40,10 +40,23 @@
     "ts-jest": "^25.2.1",
     "typescript": "^3.8.3"
   },
+  "eslintConfig": {
+    "extends": [
+      "./packages/eslint-config/index.js"
+    ]
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix --ext=js,ts"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
   },
   "prettier": {
     "trailingComma": "all"
