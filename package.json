@@ -11,7 +11,7 @@
     "build": "lerna run build",
     "check-types": "tsc --noEmit",
     "clean": "lerna run clean",
-    "fmt": "prettier --write 'packages/**/{src,test}/**/*.{js,ts}'",
+    "fmt": "prettier --write 'packages/**/{src,tests}/**/*.{js,ts}'",
     "lint": "eslint --ext=js,ts ./packages",
     "lint:fix": "eslint --fix --ext=js,ts ./packages",
     "prepublishOnly": "yarn clean && yarn build && yarn verify",
@@ -44,5 +44,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "prettier": {
+    "trailingComma": "all"
   }
 }
