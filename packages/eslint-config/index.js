@@ -1,9 +1,9 @@
 module.exports = {
   extends: [
-    './best_practices.js',
-    './style.js',
-    './import.js',
-    './typescript.js',
+    "./best_practices.js",
+    "./prettier.js",
+    "./import.js",
+    "./typescript.js",
   ],
   rules: {},
   env: {
