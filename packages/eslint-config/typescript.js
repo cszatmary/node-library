@@ -20,9 +20,9 @@ module.exports = {
   rules: {
     camelcase: ["off"],
     "@typescript-eslint/camelcase": ["error", { properties: "always" }],
-    "@typescript-eslint/no-var-requires": ["off"],
-    "@typescript-eslint/explicit-function-return-type": ["off"],
-    "@typescript-eslint/no-explicit-any": ["off"],
+    "@typescript-eslint/explicit-function-return-type": ["error"],
+    "@typescript-eslint/no-explicit-any": ["error"],
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "import/no-unresolved": ["off"],
   },
   env: {

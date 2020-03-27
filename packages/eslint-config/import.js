@@ -22,6 +22,7 @@ module.exports = {
     "import/named": ["off"],
     "import/extensions": ["error", { js: "never", json: "always" }],
     "import/prefer-default-export": ["off"],
+    "import/no-default-export": ["error"],
   },
   env: {
     es6: true,
