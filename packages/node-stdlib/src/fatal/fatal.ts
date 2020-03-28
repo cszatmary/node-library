@@ -1,3 +1,11 @@
+import { error } from "../errors/mod";
+
+let shouldShowErrDetail = false;
+
+export function showErrDetail(b: boolean): void {
+  shouldShowErrDetail = b;
+}
+
 /**
  * Logs a message and error to stderr, then terminates the process with code 1.
  * @param err The error to log.
@@ -5,12 +13,18 @@
  * @param optionalParams Any additional parameters to log.
  */
 export function exitErr(
-  err: Error,
+  err: error,
   message: string,
   ...optionalParams: unknown[]
 ): never {
   console.error(message, ...optionalParams);
-  console.error(err);
+
+  if (shouldShowErrDetail) {
+    console.error(`Error: ${err.detailedError()}`);
+  } else {
+    console.error(`Error: ${err.error()}`);
+  }
+
   process.exit(1);
 }
 
