@@ -1,155 +1,230 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-classes-per-file */
 
-interface ResultCase<S, E extends Error> {
-  readonly isSuccess: boolean;
-  readonly isFailure: boolean;
+interface ResultCase<S, F> {
+  /**
+   * Returns `true` if the a `Success`.
+   */
+  isSuccess(): this is Success<S, F>;
 
-  get(): S;
-  getOrUndefined(): S | undefined;
-  getOrElse(defaultValue: S): S;
-  error(): E;
-  map<NewS>(transform: (value: S) => NewS): Result<NewS, E>;
-  mapError<NewE extends Error>(transform: (error: E) => NewE): Result<S, NewE>;
-  flatMap<NewS>(transform: (value: S) => Result<NewS, E>): Result<NewS, E>;
-  flatMapError<NewE extends Error>(
-    transform: (error: E) => Result<S, NewE>,
-  ): Result<S, NewE>;
-  fold<NewS>(
-    onSuccess: (value: S) => NewS,
-    onFailure: (error: E) => NewS,
-  ): NewS;
+  /**
+   * Returns `true` if the a `Failure`.
+   */
+  isFailure(): this is Failure<S, F>;
+
+  /**
+   * Unwraps the result and returns the `Success`'s value.
+   * Terminates the program if the result is a `Failure`.
+   * @param msg An optional message to print if the result is a `Failure`.
+   */
+  unwrap(msg?: string): S;
+
+  /**
+   * Unwraps the result and returns the `Failure`'s value.
+   * Terminates the program if the result is a `Success`.
+   * @param msg An optional message to print if the result is a `Success`.
+   */
+  unwrapFailure(msg?: string): F;
+
+  /**
+   * Returns the success value or `undefined` if the result is a `Failure`.
+   */
+  success(): S | undefined;
+
+  /**
+   * Returns the failure value or `undefined` if the result is a `Success`.
+   */
+  failure(): F | undefined;
+
+  /**
+   * Returns the success value or `defaultValue` if the result is a `Failure`.
+   */
+  orElse(defaultValue: S): S;
+
+  /**
+   * Returns a new result, mapping the `Success` value using the given `transform` closure.
+   */
+  map<T>(transform: (value: S) => T): Result<T, F>;
+
+  /**
+   * Returns a new result, mapping the `Failure` value using the given `transform` closure.
+   */
+  mapFailure<E>(transform: (err: F) => E): Result<S, E>;
+
+  /**
+   * Returns a new result, mapping the `Success` value using the given `transform` closure
+   * and unwrapping the produced result.
+   */
+  flatMap<T>(transform: (value: S) => Result<T, F>): Result<T, F>;
+
+  /**
+   * Returns a new result, mapping the `Failure` value using the given `transform` closure
+   * and unwrapping the produced result.
+   */
+  flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E>;
+
+  /**
+   * Returns the result of calling `onSuccess` if the result is a `Success`
+   * or `onFailure` if the result is a `Failure`.
+   */
+  fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T;
 }
 
-class Success<S, E extends Error> implements ResultCase<S, E> {
-  private value: S;
+class Success<S, F> implements ResultCase<S, F> {
+  #value: S;
 
   constructor(value: S) {
-    this.value = value;
+    this.#value = value;
   }
 
-  get isSuccess(): boolean {
+  isSuccess(): this is Success<S, F> {
     return true;
   }
 
-  get isFailure(): boolean {
+  isFailure(): this is Failure<S, F> {
     return false;
   }
 
-  get(): S {
-    return this.value;
+  unwrap(msg?: string): S {
+    return this.#value;
   }
 
-  getOrUndefined(): S | undefined {
-    return this.value;
+  unwrapFailure(msg?: string): never {
+    if (msg) {
+      console.error(`${msg}:`, this.#value);
+    } else {
+      console.error(this.#value);
+    }
+
+    process.exit(1);
   }
 
-  getOrElse(defaultValue: S): S {
-    return this.value;
+  success(): S {
+    return this.#value;
   }
 
-  error(): E {
-    throw new TypeError("Success has no error");
-  }
-
-  map<NewS>(transform: (value: S) => NewS): Result<NewS, E> {
-    return new Success(transform(this.value));
-  }
-
-  mapError<NewE extends Error>(transform: (error: E) => NewE): Result<S, NewE> {
-    return new Success(this.value);
-  }
-
-  flatMap<NewS>(transform: (value: S) => Result<NewS, E>): Result<NewS, E> {
-    return transform(this.value);
-  }
-
-  flatMapError<NewE extends Error>(
-    transform: (error: E) => Result<S, NewE>,
-  ): Result<S, NewE> {
-    return new Success(this.value);
-  }
-
-  fold<NewS>(
-    onSuccess: (value: S) => NewS,
-    onFailure: (error: E) => NewS,
-  ): NewS {
-    return onSuccess(this.value);
-  }
-}
-
-class Failure<S, E extends Error> implements ResultCase<S, E> {
-  private cause: E;
-
-  constructor(cause: E) {
-    this.cause = cause;
-  }
-
-  get isSuccess(): boolean {
-    return false;
-  }
-
-  get isFailure(): boolean {
-    return true;
-  }
-
-  get(): S {
-    throw this.cause;
-  }
-
-  getOrUndefined(): S | undefined {
+  failure(): undefined {
     return undefined;
   }
 
-  getOrElse(defaultValue: S): S {
-    return defaultValue;
+  orElse(defaultValue: S): S {
+    return this.#value;
   }
 
-  error(): E {
-    return this.cause;
+  map<T>(transform: (value: S) => T): Result<T, F> {
+    return new Success(transform(this.#value));
   }
 
-  map<NewS>(transform: (value: S) => NewS): Result<NewS, E> {
-    return new Failure(this.cause);
+  mapFailure<E>(transform: (err: F) => E): Result<S, E> {
+    return new Success(this.#value);
   }
 
-  mapError<NewE extends Error>(transform: (error: E) => NewE): Result<S, NewE> {
-    return new Failure(transform(this.cause));
+  flatMap<T>(transform: (value: S) => Result<T, F>): Result<T, F> {
+    return transform(this.#value);
   }
 
-  flatMap<NewS>(transform: (value: S) => Result<NewS, E>): Result<NewS, E> {
-    return new Failure(this.cause);
+  flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E> {
+    return new Success(this.#value);
   }
 
-  flatMapError<NewE extends Error>(
-    transform: (error: E) => Result<S, NewE>,
-  ): Result<S, NewE> {
-    return transform(this.cause);
-  }
-
-  fold<NewS>(
-    onSuccess: (value: S) => NewS,
-    onFailure: (error: E) => NewS,
-  ): NewS {
-    return onFailure(this.cause);
+  fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T {
+    return onSuccess(this.#value);
   }
 }
 
-export type Result<S, E extends Error> = Success<S, E> | Failure<S, E>;
+class Failure<S, F> implements ResultCase<S, F> {
+  #cause: F;
+
+  constructor(cause: F) {
+    this.#cause = cause;
+  }
+
+  isSuccess(): this is Success<S, F> {
+    return false;
+  }
+
+  isFailure(): this is Failure<S, F> {
+    return true;
+  }
+
+  unwrap(msg?: string): never {
+    if (msg) {
+      console.error(`${msg}:`, this.#cause);
+    } else {
+      console.error(this.#cause);
+    }
+
+    process.exit(1);
+  }
+
+  unwrapFailure(msg?: string): F {
+    return this.#cause;
+  }
+
+  success(): undefined {
+    return undefined;
+  }
+
+  failure(): F {
+    return this.#cause;
+  }
+
+  orElse(defaultValue: S): S {
+    return defaultValue;
+  }
+
+  map<T>(transform: (value: S) => T): Result<T, F> {
+    return new Failure(this.#cause);
+  }
+
+  mapFailure<E>(transform: (err: F) => E): Result<S, E> {
+    return new Failure(transform(this.#cause));
+  }
+
+  flatMap<T>(transform: (value: S) => Result<T, F>): Result<T, F> {
+    return new Failure(this.#cause);
+  }
+
+  flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E> {
+    return transform(this.#cause);
+  }
+
+  fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T {
+    return onFailure(this.#cause);
+  }
+}
+
+/**
+ * A type that represents either success or failure.
+ */
+export type Result<S, F> = Success<S, F> | Failure<S, F>;
 
 // "static methods" for Result type
 export const Result = {
-  success<S, E extends Error>(value: S): Result<S, E> {
+  /**
+   * Creates a new result of type Success with the given value.
+   */
+  success<S, F>(value: S): Result<S, F> {
     return new Success(value);
   },
-  failure<S, E extends Error>(cause: E): Result<S, E> {
+
+  /**
+   * Creates a new result of type Failure with the given error value.
+   */
+  failure<S, F>(cause: F): Result<S, F> {
     return new Failure(cause);
   },
-  of<S, E extends Error>(catching: () => S): Result<S, E> {
+
+  /**
+   * Creates a new result by evaluating a throwing closure,
+   * captyrubg the returned value as a success, or any thrown error as a failure.
+   * @param catching A throwing closure to evaluate.
+   */
+  of<S, F extends Error = Error>(catching: () => S): Result<S, F> {
     try {
       return new Success(catching());
-    } catch (error) {
-      return new Failure(error);
+    } catch (err) {
+      return new Failure(err);
     }
   },
 };
