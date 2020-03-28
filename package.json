@@ -10,7 +10,7 @@
   "scripts": {
     "build": "lerna run build",
     "check-types": "tsc --noEmit",
-    "clean": "lerna run clean",
+    "clean": "lerna run clean && rimraf coverage",
     "fmt": "prettier --write 'packages/**/{src,tests}/**/*.{js,ts}'",
     "lint": "eslint --ext=js,ts ./packages",
     "lint:fix": "eslint --fix --ext=js,ts ./packages",
