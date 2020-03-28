@@ -1,4 +1,4 @@
-import { fatal } from "../../src";
+import { errors, fatal } from "../../src";
 
 describe("src/exit.ts tests", () => {
   let stderrData: string;
@@ -26,9 +26,20 @@ describe("src/exit.ts tests", () => {
   });
 
   describe("exitErr", () => {
-    it("should call logError then exit with status code 1", () => {
-      fatal.exitErr(new Error("Shoot"), "Error message");
+    it("should log the error then exit with status code 1", () => {
+      fatal.showErrDetail(false);
+      fatal.exitErr(errors.newError("Shoot"), "Error message");
       expect(stderrData).toBe("Error message\nError: Shoot\n");
+      expect(exitCode).toBe(1);
+    });
+
+    it("should log the error details then exit with status code 1", () => {
+      fatal.showErrDetail(true);
+      fatal.exitErr(errors.newError("Shoot"), "Error message");
+      // Check that the error is printed with a stack trace
+      expect(stderrData).toMatch(
+        /^Error message\nError: Shoot\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/tests\/fatal\/fatal\.test\.ts/m,
+      );
       expect(exitCode).toBe(1);
     });
   });
