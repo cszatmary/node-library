@@ -1,6 +1,6 @@
 import { core, errors } from "../../src";
 
-const { Result } = core;
+const { Result, resultify, resultifyPromise } = core;
 
 describe("Result", () => {
   describe("creation functions", () => {
@@ -223,6 +223,44 @@ describe("Result", () => {
         (_e) => 100,
       );
       expect(val).toBe(100);
+    });
+  });
+
+  describe("resultify()", () => {
+    it("converts the throwing function into one that returns a Result", () => {
+      function divide(a: number, b: number): number {
+        if (b === 0) {
+          throw new Error("Cannot divide by zero!");
+        }
+
+        return a / b;
+      }
+
+      const resultifiedDivide = resultify(divide);
+      const s = resultifiedDivide(6, 3);
+      const f = resultifiedDivide(6, 0);
+
+      expect(s.success()).toEqual(2);
+      expect(f.failure()?.message).toBe("Cannot divide by zero!");
+    });
+  });
+
+  describe("resultifyPromise()", () => {
+    it("converts the function into one that returns a promise to a result", async () => {
+      function divide(a: number, b: number): Promise<number> {
+        if (b === 0) {
+          return Promise.reject(new Error("Cannot divide by zero!"));
+        }
+
+        return Promise.resolve(a / b);
+      }
+
+      const resultifiedDivide = resultifyPromise(divide);
+      const s = await resultifiedDivide(6, 3);
+      const f = await resultifiedDivide(6, 0);
+
+      expect(s.success()).toEqual(2);
+      expect(f.failure()?.message).toBe("Cannot divide by zero!");
     });
   });
 });
