@@ -231,3 +231,37 @@ export const Result = {
     }
   },
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function resultify<F extends (...args: any) => any>(
+  fn: F,
+): (...args: Parameters<F>) => Result<ReturnType<F>, Error> {
+  return (...args): Result<ReturnType<F>, Error> => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      return new Success(fn(...args));
+    } catch (err) {
+      return new Failure(err);
+    }
+  };
+}
+
+type ExtractPromise<P> = P extends Promise<infer T> ? T : never;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function resultifyPromise<F extends (...args: any) => Promise<any>>(
+  fn: F,
+): (
+  ...args: Parameters<F>
+) => Promise<Result<ExtractPromise<ReturnType<F>>, Error>> {
+  return (...args): Promise<Result<ExtractPromise<ReturnType<F>>, Error>> => {
+    return new Promise((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      fn(...args)
+        .then((val) => resolve(new Success(val)))
+        .catch((err) => resolve(new Failure(err)));
+    });
+  };
+}
