@@ -1,6 +1,6 @@
 {
   "name": "@cszatma/node-stdlib",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Provides basic functions to make creating a cli easier.",
   "keywords": [
     "standard library",
