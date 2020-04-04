@@ -1,3 +1,11 @@
+// Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
+// All rights reserved. MIT License.
+
+// This code has been ported largely from the Go library pkg/errors
+// Copyright (c) 2015, Dave Cheney <dave@cheney.net>
+// All rights reserved.
+// https://github.com/pkg/errors/blob/master/LICENSE
+
 /* eslint-disable max-classes-per-file */
 
 /**
