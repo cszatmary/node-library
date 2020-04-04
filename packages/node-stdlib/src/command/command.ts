@@ -1,3 +1,10 @@
+// Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
+// All rights reserved. MIT License.
+
+// This code has been ported almost directly from Go's src/os/exec
+// Copyright (c) 2009 The Go Authors. All rights reserved.
+// https://github.com/golang/go/blob/master/LICENSE
+
 import fs from "fs";
 import path from "path";
 
