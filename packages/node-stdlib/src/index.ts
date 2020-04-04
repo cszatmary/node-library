@@ -3,6 +3,7 @@
 
 export * as cmd from "./cmd/mod";
 export * as core from "./core/mod";
+export * as env from "./env/mod";
 export * as errors from "./errors/mod";
 export * as fatal from "./fatal/mod";
 export * as sets from "./sets/mod";
