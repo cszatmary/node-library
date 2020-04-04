@@ -2,6 +2,7 @@
 // All rights reserved. MIT License.
 
 export * as cmd from "./cmd/mod";
+export * as colors from "./colors/mod";
 export * as core from "./core/mod";
 export * as env from "./env/mod";
 export * as errors from "./errors/mod";
