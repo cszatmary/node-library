@@ -8,13 +8,15 @@
 
 /* eslint-disable max-classes-per-file */
 
-/**
- * An interface representing an error condition.
- */
-// eslint-disable-next-line @typescript-eslint/class-name-casing
-export interface error {
-  error(): string;
-  detailedError(): string;
+declare global {
+  /**
+   * An interface representing an error condition.
+   */
+  // eslint-disable-next-line @typescript-eslint/class-name-casing
+  interface error {
+    error(): string;
+    detailedError(): string;
+  }
 }
 
 export interface Causer {

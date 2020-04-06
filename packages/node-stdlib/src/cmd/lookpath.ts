@@ -11,8 +11,6 @@ import path from "path";
 import { Result } from "../core/mod";
 import * as errors from "../errors/mod";
 
-type error = errors.error;
-
 export const errNotFound = errors.errorString(
   "executable file not found in PATH",
 );

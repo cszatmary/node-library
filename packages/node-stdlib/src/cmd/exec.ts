@@ -5,7 +5,7 @@ import type { Stream } from "stream";
 import { spawn, spawnSync } from "child_process";
 
 import { Result } from "../core/mod";
-import { error, fromJSError } from "../errors/mod";
+import { fromJSError } from "../errors/mod";
 
 export type Stdio = "inherit" | "ignore" | "pipe" | Stream;
 
