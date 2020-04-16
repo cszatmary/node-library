@@ -1,6 +1,8 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
+export * from "./global";
+
 export * as cmd from "./cmd/mod";
 export * as colors from "./colors/mod";
 export * as core from "./core/mod";

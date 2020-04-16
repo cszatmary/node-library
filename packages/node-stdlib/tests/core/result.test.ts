@@ -32,73 +32,42 @@ describe("Result", () => {
   });
 
   describe("unwrap() / unwrapFailure()", () => {
-    let stderrData: string;
-    let didExit: boolean;
-    let spyError: jest.SpyInstance;
-    let spyExit: jest.SpyInstance;
-
-    beforeEach(() => {
-      stderrData = "";
-      didExit = false;
-      spyError = jest
-        .spyOn(console, "error")
-        .mockImplementation((input: string, ...rest: unknown[]) => {
-          if (rest.length > 0) {
-            stderrData += `${input} ${rest.join(" ")}\n`;
-          } else {
-            stderrData += `${input}\n`;
-          }
-        });
-      spyExit = jest.spyOn(process, "exit").mockImplementation((() => {
-        didExit = true;
-      }) as () => never);
-    });
-
-    afterEach(() => {
-      spyError.mockRestore();
-      spyExit.mockRestore();
-    });
-
     it("returns the value when the result a Success", () => {
       const r = Result.success(10);
       expect(r.unwrap()).toBe(10);
-      expect(stderrData).toBe("");
-      expect(didExit).toBe(false);
     });
 
-    it("prints the message and exits the program when the result is a Failure", () => {
+    it("panics with the given message when the result is a Failure", () => {
       const r = Result.failure("Oh no!");
-      expect(r.unwrap("panic!")).toBeUndefined();
-      expect(stderrData).toBe("panic!: Oh no!\n");
-      expect(didExit).toBe(true);
+      expect(() => {
+        r.unwrap("Something broke");
+      }).toPanic("Something broke: Oh no!");
     });
 
-    it("exits the program when the result is a Failure", () => {
+    it("panics when the result is a Failure", () => {
       const r = Result.failure("Oh no!");
-      expect(r.unwrap()).toBeUndefined();
-      expect(stderrData).toBe("Oh no!\n");
-      expect(didExit).toBe(true);
+      expect(() => {
+        r.unwrap();
+      }).toPanic("Oh no!");
     });
 
-    it("prints the message and exits the program when the result is a Success", () => {
+    it("panics with the given message when the result is a Success", () => {
       const r = Result.success(10);
-      expect(r.unwrapFailure("panic!")).toBeUndefined();
-      expect(stderrData).toBe("panic!: 10\n");
-      expect(didExit).toBe(true);
+      expect(() => {
+        r.unwrapFailure("Something broke");
+      }).toPanic("Something broke: 10");
     });
 
-    it("exits the program when the result is a Success", () => {
+    it("panics when the result is a Success", () => {
       const r = Result.success(10);
-      expect(r.unwrapFailure()).toBeUndefined();
-      expect(stderrData).toBe("10\n");
-      expect(didExit).toBe(true);
+      expect(() => {
+        r.unwrapFailure();
+      }).toPanic("10");
     });
 
     it("returns the error when the result a Failure", () => {
       const r = Result.failure("Oh no!");
       expect(r.unwrapFailure()).toBe("Oh no!");
-      expect(stderrData).toBe("");
-      expect(didExit).toBe(false);
     });
   });
 

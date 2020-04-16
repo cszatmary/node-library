@@ -4,6 +4,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-classes-per-file */
 
+import { panic } from "../global";
+
 interface ResultCase<S, F> {
   /**
    * Returns `true` if the a `Success`.
@@ -17,15 +19,15 @@ interface ResultCase<S, F> {
 
   /**
    * Unwraps the result and returns the `Success`'s value.
-   * Terminates the program if the result is a `Failure`.
-   * @param msg An optional message to print if the result is a `Failure`.
+   * Panics with the failure value if the result is a `Failure`.
+   * @param msg An optional message to panic with if the result is a `Failure`.
    */
   unwrap(msg?: string): S;
 
   /**
    * Unwraps the result and returns the `Failure`'s value.
-   * Terminates the program if the result is a `Success`.
-   * @param msg An optional message to print if the result is a `Success`.
+   * Panics with the success value if the result is a `Success`.
+   * @param msg An optional message to panic with if the result is a `Success`.
    */
   unwrapFailure(msg?: string): F;
 
@@ -93,13 +95,14 @@ class Success<S, F> implements ResultCase<S, F> {
   }
 
   unwrapFailure(msg?: string): never {
+    let m: string;
     if (msg) {
-      console.error(`${msg}:`, this.#value);
+      m = `${msg}: ${this.#value}`;
     } else {
-      console.error(this.#value);
+      m = `${this.#value}`;
     }
 
-    process.exit(1);
+    panic(m);
   }
 
   success(): S {
@@ -151,13 +154,14 @@ class Failure<S, F> implements ResultCase<S, F> {
   }
 
   unwrap(msg?: string): never {
+    let m: string;
     if (msg) {
-      console.error(`${msg}:`, this.#cause);
+      m = `${msg}: ${this.#cause}`;
     } else {
-      console.error(this.#cause);
+      m = `${this.#cause}`;
     }
 
-    process.exit(1);
+    panic(m);
   }
 
   unwrapFailure(msg?: string): F {
