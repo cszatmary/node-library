@@ -5,18 +5,19 @@
     "packages/*"
   ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=10.0.0"
   },
   "scripts": {
     "build": "lerna run build",
     "check-types": "tsc --noEmit",
     "clean": "lerna run clean && rimraf coverage",
-    "fmt": "prettier --write 'packages/**/{src,tests}/**/*.{js,ts}'",
+    "fmt": "prettier --write 'packages/**/{src,test}/**/*.{js,ts}'",
     "lint": "eslint --ext=js,ts ./packages",
     "lint:fix": "eslint --fix --ext=js,ts ./packages",
     "prepublishOnly": "yarn clean && yarn build && yarn verify",
     "release": "lerna publish --conventional-commits",
     "test": "NODE_ENV=test jest --coverage",
+    "test:nocover": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "verify": "yarn lint && yarn check-types && yarn test"
   },

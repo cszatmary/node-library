@@ -32,7 +32,7 @@ Avoid adding package dependencies unless absolutely necessary.
 
 ## Separate source code and tests
 
-Source code goes in `src` and tests go in `tests`. This is to make it easier to exclude tests from the outputted JavaScript source.
+Source code goes in `src` and tests go in `test`. This is to make it easier to exclude tests from the outputted JavaScript source.
 
 ## Organize code into modules
 
