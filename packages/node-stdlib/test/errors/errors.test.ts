@@ -3,6 +3,13 @@ import { errors } from "../../src";
 describe("errors", () => {
   const ioErr = errors.errorString("IO Error");
 
+  describe("isError()", () => {
+    const err = errors.errorString("foo");
+    const notErr = "not an error";
+    expect(errors.isError(err)).toBe(true);
+    expect(errors.isError(notErr)).toBe(false);
+  });
+
   describe("errorString()", () => {
     it("creates a new error from the given string", () => {
       const err = errors.errorString("foo");
