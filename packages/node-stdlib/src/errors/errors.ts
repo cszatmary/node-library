@@ -8,6 +8,11 @@
 
 /* eslint-disable max-classes-per-file */
 
+export function isError(err: unknown): err is error {
+  const e = err as error;
+  return typeof e.error === "function" && typeof e.detailedError === "function";
+}
+
 export interface Causer {
   cause(): error;
 }
