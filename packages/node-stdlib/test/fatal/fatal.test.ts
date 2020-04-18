@@ -38,7 +38,7 @@ describe("src/exit.ts tests", () => {
       fatal.exitErr(errors.newError("Shoot"), "Error message");
       // Check that the error is printed with a stack trace
       expect(stderrData).toMatch(
-        /^Error message\nError: Shoot\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/tests\/fatal\/fatal\.test\.ts/m,
+        /^Error message\nError: Shoot\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/test\/fatal\/fatal\.test\.ts/m,
       );
       expect(exitCode).toBe(1);
     });

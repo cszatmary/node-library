@@ -92,7 +92,7 @@ describe("errors", () => {
       );
       // Check that the error is printed with a stack trace
       expect(err.detailedError()).toMatch(
-        /^IO Error\nerror reading file\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/tests\/errors\/errors\.test\.ts/m,
+        /^IO Error\nerror reading file\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/test\/errors\/errors\.test\.ts/m,
       );
     });
   });
