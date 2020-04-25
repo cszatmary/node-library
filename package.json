@@ -44,7 +44,11 @@
   "eslintConfig": {
     "extends": [
       "./packages/eslint-config/index.js"
-    ]
+    ],
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly"
+    }
   },
   "husky": {
     "hooks": {
