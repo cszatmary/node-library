@@ -2,3 +2,4 @@
 // All rights reserved. MIT License.
 
 export * from "./semver";
+export * from "./util";

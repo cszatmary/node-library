@@ -19,6 +19,13 @@ declare global {
     error(): string;
     detailedError(): string;
   }
+
+  /**
+   * An interface representing a type that can create copies of itself.
+   */
+  interface Copyable {
+    copy(): this;
+  }
 }
 
 /**

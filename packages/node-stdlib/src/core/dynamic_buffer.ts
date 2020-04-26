@@ -31,7 +31,7 @@ function isByte(c: number): boolean {
  * A DynamicBuffer is a variable-sized buffer of bytes.
  * It will automatically grow as needed.
  */
-export class DynamicBuffer implements Iterable<number> {
+export class DynamicBuffer implements Iterable<number>, Copyable {
   #buf: Buffer; // contents are the bytes #buf[#off : #buf.byteLength]
   #off = 0; // read at #buf[#off], write at #buf[#buf.byteLength]
 
@@ -366,5 +366,16 @@ export class DynamicBuffer implements Iterable<number> {
       yield this.#buf[this.#off];
       this.#off++;
     }
+  }
+
+  /**
+   * Returns a new DynamicBuffer with the unread bytes copied.
+   */
+  copy(): this {
+    const buf = new DynamicBuffer(new ArrayBuffer(this.length));
+    for (let i = 0; i < this.length; i++) {
+      buf.#buf[i] = this.#buf[i + this.#off];
+    }
+    return buf as this;
   }
 }
