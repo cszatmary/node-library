@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { util } from "../../src";
 
 describe("util/semver.ts", () => {
@@ -121,6 +122,20 @@ describe("util/semver.ts", () => {
       expect(() => {
         util.SemVer.mustParse("1.10.10.3");
       }).toPanic("SemVer.Parse: Invalid semver string: 1.10.10.3");
+    });
+  });
+
+  describe("inspect", () => {
+    it("returns just the type when depth is zero", () => {
+      const sv = new util.SemVer(1, 5, 12);
+      const s = inspect(sv, { depth: -1 });
+      expect(s).toBe("SemVer {}");
+    });
+
+    it("returns a string representation of the box", () => {
+      const sv = new util.SemVer(1, 5, 12);
+      const s = inspect(sv);
+      expect(s).toBe("SemVer { 1.5.12 }");
     });
   });
 });

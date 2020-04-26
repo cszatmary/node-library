@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { core } from "../../src";
 
 describe("core/uuid.ts", () => {
@@ -67,6 +68,22 @@ describe("core/uuid.ts", () => {
         const uuid1 = core.UUID.v5(namespace, "always the same");
         const uuid2 = core.UUID.v5(namespace, "always the same");
         expect(uuid1.equals(uuid2)).toBe(true);
+      });
+    });
+
+    describe("inspect", () => {
+      it("returns just the type when depth is zero", () => {
+        const uuidString = "1d4f6d02-1146-48a8-b0ad-f562220303de";
+        const uuid = core.UUID.fromString(uuidString)!;
+        const s = inspect(uuid, { depth: -1 });
+        expect(s).toBe("UUID {}");
+      });
+
+      it("returns a string representation of the box", () => {
+        const uuidString = "1d4f6d02-1146-48a8-b0ad-f562220303de";
+        const uuid = core.UUID.fromString(uuidString)!;
+        const s = inspect(uuid);
+        expect(s).toBe("UUID { 1d4f6d02-1146-48a8-b0ad-f562220303de }");
       });
     });
   });

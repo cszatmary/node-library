@@ -1,6 +1,7 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
+import { inspect } from "util";
 import { panic } from "../global";
 import { Result } from "../core/mod";
 import { errorString } from "../errors/mod";
@@ -106,6 +107,17 @@ export class SemVer {
    */
   incrementPatch(): SemVer {
     return new SemVer(this.#major, this.#minor, this.#patch + 1);
+  }
+
+  /**
+   * Custom inspect implementation for use with node's `util.inspect`.
+   */
+  [inspect.custom](depth?: number | null): string {
+    if (depth && depth < 0) {
+      return "SemVer {}";
+    }
+
+    return `SemVer { ${this.toString()} }`;
   }
 
   /**

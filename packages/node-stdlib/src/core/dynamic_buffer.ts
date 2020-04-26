@@ -5,6 +5,7 @@
 // Copyright 2009 The Go Authors. All rights reserved. BSD license.
 // https://github.com/golang/go/blob/master/LICENSE
 
+import { inspect } from "util";
 import { panic } from "../global";
 import { Result } from "./result";
 import { errorString } from "../errors/mod";
@@ -184,7 +185,7 @@ export class DynamicBuffer implements Iterable<number>, Copyable {
    * Returns the contents of the unread portion of the buffer as a string.
    */
   toString(encoding?: BufferEncoding): string {
-    return this.#buf.subarray(this.#off).toString(encoding);
+    return this.#buf.toString(encoding, this.#off);
   }
 
   /**
@@ -377,5 +378,30 @@ export class DynamicBuffer implements Iterable<number>, Copyable {
       buf.#buf[i] = this.#buf[i + this.#off];
     }
     return buf as this;
+  }
+
+  /**
+   * Custom inspect implementation for use with node's `util.inspect`.
+   */
+  [inspect.custom](depth?: number | null): string {
+    if (depth && depth < 0) {
+      return "DynamicBuffer {}";
+    }
+
+    // Limit to a max of 50 bytes to display
+    const max = 50;
+    const actualMax = Math.min(max, this.length);
+    const remaining = this.length - max;
+
+    let bytes = this.#buf
+      .toString("hex", this.#off, actualMax + this.#off)
+      .replace(/(.{2})/g, "$1 ")
+      .trim();
+
+    if (remaining > 0) {
+      bytes += ` ... ${remaining} more byte${remaining > 1 ? "s" : ""}`;
+    }
+
+    return `DynamicBuffer { ${bytes} }`;
   }
 }
