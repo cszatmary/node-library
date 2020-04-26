@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { core } from "../../src";
 
 describe("core/dynamic_buffer.ts", () => {
@@ -262,6 +263,20 @@ describe("core/dynamic_buffer.ts", () => {
       const bufCopy = buf.copy();
       expect(buf).not.toBe(bufCopy);
       expect(buf.toString("hex")).toBe(bufCopy.toString("hex"));
+    });
+  });
+
+  describe("inspect", () => {
+    it("returns just the type when depth is zero", () => {
+      const buf = new core.DynamicBuffer("10ffab23ef5d", "hex");
+      const s = inspect(buf, { depth: -1 });
+      expect(s).toBe("DynamicBuffer {}");
+    });
+
+    it("returns a string representation of the box", () => {
+      const buf = new core.DynamicBuffer("10ffab23ef5d", "hex");
+      const s = inspect(buf);
+      expect(s).toBe("DynamicBuffer { 10 ff ab 23 ef 5d }");
     });
   });
 });

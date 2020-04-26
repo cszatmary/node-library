@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-classes-per-file */
 
+import { inspect, InspectOptions } from "util";
 import { panic } from "../global";
 
 interface ResultCase<S, F> {
@@ -73,6 +74,11 @@ interface ResultCase<S, F> {
    * or `onFailure` if the result is a `Failure`.
    */
   fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T;
+
+  /**
+   * Custom inspect implementation for use with node's `util.inspect`.
+   */
+  [inspect.custom](depth?: number | null, options?: InspectOptions): string;
 }
 
 class Success<S, F> implements ResultCase<S, F> {
@@ -136,6 +142,20 @@ class Success<S, F> implements ResultCase<S, F> {
   fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T {
     return onSuccess(this.#value);
   }
+
+  [inspect.custom](depth?: number | null, options?: InspectOptions): string {
+    if (depth && depth < 0) {
+      return "Result.success {}";
+    }
+
+    const newOpts = {
+      ...options,
+      depth: options?.depth == null ? null : options.depth - 1,
+    };
+
+    const value = inspect(this.#value, newOpts);
+    return `Result.success { ${value} }`;
+  }
 }
 
 class Failure<S, F> implements ResultCase<S, F> {
@@ -198,6 +218,20 @@ class Failure<S, F> implements ResultCase<S, F> {
 
   fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T {
     return onFailure(this.#cause);
+  }
+
+  [inspect.custom](depth?: number | null, options?: InspectOptions): string {
+    if (depth && depth < 0) {
+      return "Result.failure {}";
+    }
+
+    const newOpts = {
+      ...options,
+      depth: options?.depth == null ? null : options.depth - 1,
+    };
+
+    const cause = inspect(this.#cause, newOpts);
+    return `Result.failure { ${cause} }`;
   }
 }
 

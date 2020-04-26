@@ -1,3 +1,4 @@
+import { inspect } from "util";
 import { core, errors } from "../../src";
 
 const { Result, resultify, resultifyPromise } = core;
@@ -230,6 +231,26 @@ describe("Result", () => {
 
       expect(s.success()).toEqual(2);
       expect(f.failure()?.message).toBe("Cannot divide by zero!");
+    });
+  });
+
+  describe("inspect", () => {
+    it("returns just the type when depth is zero", () => {
+      const success = core.Result.success(10);
+      const failure = core.Result.failure("oh no!");
+      const s1 = inspect(success, { depth: -1 });
+      const s2 = inspect(failure, { depth: -1 });
+      expect(s1).toBe("Result.success {}");
+      expect(s2).toBe("Result.failure {}");
+    });
+
+    it("returns a string representation of the box", () => {
+      const success = core.Result.success(10);
+      const failure = core.Result.failure("oh no!");
+      const s1 = inspect(success);
+      const s2 = inspect(failure);
+      expect(s1).toBe("Result.success { 10 }");
+      expect(s2).toBe("Result.failure { 'oh no!' }");
     });
   });
 });

@@ -4,6 +4,7 @@
 /* eslint-disable no-bitwise */
 
 import crypto from "crypto";
+import { inspect } from "util";
 
 export enum UUIDVersion {
   nil,
@@ -122,6 +123,17 @@ export class UUID {
     }
 
     return UUIDVariant.future;
+  }
+
+  /**
+   * Custom inspect implementation for use with node's `util.inspect`.
+   */
+  [inspect.custom](depth?: number | null): string {
+    if (depth && depth < 0) {
+      return "UUID {}";
+    }
+
+    return `UUID { ${this.toString()} }`;
   }
 
   /* ----- UUID Creation Methods ----- **/
