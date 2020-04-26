@@ -255,4 +255,13 @@ describe("core/dynamic_buffer.ts", () => {
       expect(buf.length).toBe(0);
     });
   });
+
+  describe("copy()", () => {
+    it("creates a copy of the DynamicBuffer", () => {
+      const buf = new core.DynamicBuffer("10ffab23ef5d", "hex");
+      const bufCopy = buf.copy();
+      expect(buf).not.toBe(bufCopy);
+      expect(buf.toString("hex")).toBe(bufCopy.toString("hex"));
+    });
+  });
 });
