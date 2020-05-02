@@ -43,7 +43,6 @@ const ansiCodes = {
   bgWhite: 47,
 };
 
-// todo make this more woke
 const noColor = isEnvSet("NO_COLOR");
 let colorEnabled = !noColor;
 
@@ -52,6 +51,7 @@ export function isColorEnabled(): boolean {
 }
 
 export function setColorEnabled(isEnabled: boolean): void {
+  /* istanbul ignore else */
   if (!noColor) {
     colorEnabled = isEnabled;
   }
