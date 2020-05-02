@@ -17,6 +17,7 @@
     "prepublishOnly": "yarn clean && yarn build && yarn verify",
     "release": "lerna publish --conventional-commits",
     "test": "NODE_ENV=test jest --coverage",
+    "test:ci": "yarn test --runInBand --colors",
     "test:nocover": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "verify": "yarn lint && yarn check-types && yarn test"
