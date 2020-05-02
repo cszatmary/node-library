@@ -2,7 +2,6 @@
 // All rights reserved. MIT License.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable max-classes-per-file */
 
 import { inspect, InspectOptions } from "util";
 import { panic } from "../global";

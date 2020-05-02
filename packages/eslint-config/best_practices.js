@@ -20,6 +20,8 @@ module.exports = {
       "always",
       { exceptAfterSingleLine: true },
     ],
+    "max-classes-per-file": ["off"],
+    curly: ["error"],
   },
   env: {
     node: true,
