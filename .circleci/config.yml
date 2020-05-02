@@ -55,7 +55,7 @@ jobs:
       - restore_cache: *restore_cache
       - run:
           name: test
-          command: yarn test
+          command: yarn test:ci
 
 workflows:
   build-test:
