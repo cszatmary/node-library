@@ -12,4 +12,5 @@ export * as fatal from "./fatal/mod";
 export * as fs from "./fs/mod";
 export * as log from "./log/mod";
 export * as sets from "./sets/mod";
+export * as strings from "./strings/mod";
 export * as util from "./util/mod";
