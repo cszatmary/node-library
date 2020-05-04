@@ -1,4 +1,4 @@
-import { panic, range, sleep, sleepSync } from "../src";
+import { errors, panic, range, sleep, sleepSync } from "../src";
 
 describe("src/global.ts", () => {
   describe("panic()", () => {
@@ -6,6 +6,24 @@ describe("src/global.ts", () => {
       expect(() => {
         panic("something broke");
       }).toPanic("something broke");
+    });
+
+    it("panics with the given error", () => {
+      expect(() => {
+        panic(errors.errorString("something broke"));
+      }).toPanic("something broke");
+    });
+
+    it("panics with the given number", () => {
+      expect(() => {
+        panic(10);
+      }).toPanic("10");
+    });
+
+    it("panics with the given object", () => {
+      expect(() => {
+        panic({ error: "oops" });
+      }).toPanic("{ error: 'oops' }");
     });
   });
 

@@ -10,6 +10,8 @@ This file should not import any other files from this library since it
 should be able to be imported by any other file.
 */
 
+import { inspect } from "util";
+
 declare global {
   /**
    * An interface representing an error condition.
@@ -28,12 +30,27 @@ declare global {
   }
 }
 
+// Copy isError here so we don't need to import from the errors module
+function isError(err: unknown): err is error {
+  const e = err as error;
+  return typeof e.error === "function" && typeof e.detailedError === "function";
+}
+
 /**
  * Allows the program to be terminated with a message and a stack trace
  * when the program reaches an unrecoverable state.
  * @param msg A message to display when the program terminates.
  */
-export function panic(msg: string): never {
+export function panic(v: unknown): never {
+  let msg: string;
+  if (typeof v === "string") {
+    msg = v;
+  } else if (isError(v)) {
+    msg = v.error();
+  } else {
+    msg = inspect(v);
+  }
+
   const exception = new Error(msg);
   exception.name = "panic";
   // Remove first line of stack trace since it is in this function
