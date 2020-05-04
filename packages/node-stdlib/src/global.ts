@@ -21,13 +21,6 @@ declare global {
     error(): string;
     detailedError(): string;
   }
-
-  /**
-   * An interface representing a type that can create copies of itself.
-   */
-  interface Copyable {
-    copy(): this;
-  }
 }
 
 // Copy isError here so we don't need to import from the errors module
