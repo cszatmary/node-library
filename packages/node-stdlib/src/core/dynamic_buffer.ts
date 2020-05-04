@@ -9,6 +9,7 @@ import { inspect } from "util";
 import { panic } from "../global";
 import { Result } from "./result";
 import { errorString } from "../errors/mod";
+import { Copyable, copySymbol } from "../util/util";
 
 // Minimum capacity for a new DynamicBuffer
 const minSize = 64;
@@ -372,7 +373,7 @@ export class DynamicBuffer implements Iterable<number>, Copyable {
   /**
    * Returns a new DynamicBuffer with the unread bytes copied.
    */
-  copy(): this {
+  [copySymbol](): this {
     const buf = new DynamicBuffer(new ArrayBuffer(this.length));
     for (let i = 0; i < this.length; i++) {
       buf.#buf[i] = this.#buf[i + this.#off];

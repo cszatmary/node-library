@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import { core } from "../../src";
+import { core, util } from "../../src";
 
 describe("core/dynamic_buffer.ts", () => {
   describe("constructor()", () => {
@@ -257,12 +257,14 @@ describe("core/dynamic_buffer.ts", () => {
     });
   });
 
-  describe("copy()", () => {
+  describe("Copyable conformance", () => {
     it("creates a copy of the DynamicBuffer", () => {
-      const buf = new core.DynamicBuffer("10ffab23ef5d", "hex");
-      const bufCopy = buf.copy();
+      const buf = new core.DynamicBuffer("abc");
+      const bufCopy = util.copy(buf);
+      bufCopy.writeString("def");
       expect(buf).not.toBe(bufCopy);
-      expect(buf.toString("hex")).toBe(bufCopy.toString("hex"));
+      expect(buf.toString()).toBe("abc");
+      expect(bufCopy.toString()).toBe("abcdef");
     });
   });
 
