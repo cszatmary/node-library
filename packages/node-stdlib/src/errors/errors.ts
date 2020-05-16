@@ -221,3 +221,39 @@ export function cause(err: error | undefined): error | undefined {
 
   return e;
 }
+
+interface Is {
+  is(err: error): boolean;
+}
+
+function hasIs(err: unknown): err is Is {
+  return typeof (err as Is).is === "function";
+}
+
+/**
+ * Reports whether any error in `err`'s chain matches `target`.
+ * The chain consists of `err` followed by a sequence of errors
+ * obtained by repeatedly calling `cause`.
+ * An error is considered a match to target if it is equal to
+ * that target or implements a method `is(error): boolean`
+ * such that `is(target)` returns true.
+ */
+export function is(err: error, target: error): boolean {
+  let e = err;
+
+  while (true) {
+    if (e === target) {
+      return true;
+    } else if (hasIs(e) && e.is(target)) {
+      return true;
+    }
+
+    const cerr = cause(e);
+    // End of the chain
+    if (cerr === e) {
+      return false;
+    }
+
+    e = cerr;
+  }
+}
