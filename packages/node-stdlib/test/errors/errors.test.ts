@@ -1,5 +1,27 @@
 import { errors } from "../../src";
 
+class ExampleError {
+  #msg: string;
+  #f: (err: error) => boolean;
+
+  constructor(msg: string, f: (err: error) => boolean) {
+    this.#msg = msg;
+    this.#f = f;
+  }
+
+  error(): string {
+    return this.#msg;
+  }
+
+  detailedError(): string {
+    return this.#msg;
+  }
+
+  is(err: error): boolean {
+    return this.#f(err);
+  }
+}
+
 describe("errors", () => {
   const ioErr = errors.errorString("IO Error");
 
@@ -132,6 +154,49 @@ describe("errors", () => {
       const err = errors.withMessage(ioErr, "wrapped");
       const cause = errors.cause(err);
       expect(cause).toBe(ioErr);
+    });
+  });
+
+  describe("is", () => {
+    it("returns true if the errors are equal", () => {
+      const err = errors.errorString("oops");
+      expect(errors.is(err, err)).toBe(true);
+    });
+
+    it("returns true if the target is in err's chain", () => {
+      const err1 = errors.newError("oops");
+      const err2 = errors.wrap(err1, "oops2");
+      const err3 = errors.wrap(err2, "oops3");
+
+      expect(errors.is(err2, err1)).toBe(true);
+      expect(errors.is(err3, err1)).toBe(true);
+    });
+
+    it("returns true if an error has an is method that returns true", () => {
+      const err1 = errors.newError("oops");
+      const err2 = errors.wrap(err1, "oops2");
+      const err3 = errors.wrap(err2, "oops3");
+      const exErr = new ExampleError("either 1 or 3", (err) => {
+        return err === err1 || err === err3;
+      });
+
+      expect(errors.is(exErr, err1)).toBe(true);
+      expect(errors.is(exErr, err3)).toBe(true);
+    });
+
+    it("returns false if err does not have a chain", () => {
+      const err1 = errors.errorString("oops");
+      const err2 = errors.errorString("oops2");
+
+      expect(errors.is(err2, err1)).toBe(false);
+    });
+
+    it("returns false if target is not in err's chain", () => {
+      const err1 = errors.newError("oops");
+      const err2 = errors.newError("oops2");
+      const err3 = errors.wrap(err2, "oops3");
+
+      expect(errors.is(err3, err1)).toBe(false);
     });
   });
 });
