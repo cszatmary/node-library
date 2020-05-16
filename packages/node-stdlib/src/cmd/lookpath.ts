@@ -17,7 +17,7 @@ export const errNotFound = errors.errorString(
 export const errPermission = errors.errorString("permission denied");
 export const errNotExist = errors.errorString("file does not exist");
 
-export class LookUpError implements error, errors.Causer {
+export class LookUpError {
   fileName: string;
   err: error;
 

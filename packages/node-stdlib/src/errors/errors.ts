@@ -11,18 +11,10 @@ export function isError(err: unknown): err is error {
   return typeof e.error === "function" && typeof e.detailedError === "function";
 }
 
-export interface Causer {
-  cause(): error;
-}
-
-function isCauser(err: unknown): err is Causer {
-  return typeof (err as Causer).cause === "function";
-}
-
 /**
  * A trivial implementation of error. A string message.
  */
-class ErrorString implements error {
+class ErrorString {
   str: string;
 
   constructor(str: string) {
@@ -51,7 +43,7 @@ export function errorString(str: string): error {
  * A fundamental error type implementing the `error` interface.
  * Contains a message and a stack trace.
  */
-class FundamentalError implements error {
+class FundamentalError {
   msg: string;
   stack: string;
 
@@ -69,7 +61,7 @@ class FundamentalError implements error {
   }
 }
 
-class ErrorWithStack implements error, Causer {
+class ErrorWithStack {
   err: error;
   stack: string;
 
@@ -91,7 +83,7 @@ class ErrorWithStack implements error, Causer {
   }
 }
 
-class ErrorWithMessage implements error, Causer {
+class ErrorWithMessage {
   err: error;
   msg: string;
 
@@ -199,6 +191,14 @@ export function wrap(err: error | undefined, msg: string): error | undefined {
 
   const newErr = new ErrorWithMessage(err, msg);
   return new ErrorWithStack(newErr, stack.slice(i));
+}
+
+interface Causer {
+  cause(): error;
+}
+
+function isCauser(err: unknown): err is Causer {
+  return typeof (err as Causer).cause === "function";
 }
 
 /**
