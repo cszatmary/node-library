@@ -14,4 +14,5 @@ export * as log from "./log/mod";
 export * as sets from "./sets/mod";
 export * as strconv from "./strconv/mod";
 export * as strings from "./strings/mod";
+export * as time from "./time/mod";
 export * as util from "./util/mod";

@@ -8,7 +8,7 @@
 
 import { sep } from "path";
 import fs from "fs";
-import { sleepSync } from "../global";
+import { millisecond, sleepSync } from "../time/mod";
 
 const notEmptyErrorCodes = new Set(["ENOTEMPTY", "EEXIST", "EPERM"]);
 const retryErrorCodes = new Set([
@@ -253,7 +253,7 @@ function _rmdirSync(path: fs.PathLike, originalErr?: Error): void {
           // Only sleep if this is not the last try, and the delay is greater
           // than zero, and an error was encountered that warrants a retry.
           if (retryErrorCodes.has(err1.code) && i < tries && retryDelay > 0) {
-            sleepSync(i * retryDelay);
+            sleepSync(i * retryDelay * millisecond);
           }
         }
       }

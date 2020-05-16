@@ -65,21 +65,3 @@ export function* range(
     yield i;
   }
 }
-
-/**
- * Asynchronously waits for `ms` milliseconds.
- */
-export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
-/**
- * Synchronously waits for `ms` milliseconds.
- *
- * **NOTE:** This will block the NodeJS thread. Use with care!
- */
-export function sleepSync(ms: number): void {
-  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-}
