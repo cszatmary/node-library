@@ -6,7 +6,7 @@
 // https://github.com/golang/go/blob/master/LICENSE
 
 import { Result } from "../core/mod";
-import { Causer, errorString, isError } from "../errors/mod";
+import { errorString, isError } from "../errors/mod";
 
 /**
  * Indicates that a value is out or range for the target type.
@@ -21,7 +21,7 @@ export const errSyntax = errorString("invalid syntax");
 /**
  * An error that records a failed converstion.
  */
-export class NumError implements error, Causer {
+export class NumError {
   func: string;
   num: string;
   err: error;
