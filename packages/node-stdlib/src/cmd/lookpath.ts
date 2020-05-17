@@ -11,9 +11,7 @@ import path from "path";
 import { Result } from "../core/mod";
 import * as errors from "../errors/mod";
 
-export const errNotFound = errors.errorString(
-  "executable file not found in PATH",
-);
+export const errNotFound = errors.errorString("executable file not found in PATH");
 export const errPermission = errors.errorString("permission denied");
 export const errNotExist = errors.errorString("file does not exist");
 
@@ -87,10 +85,7 @@ function chkStatWin(file: string): Result<void, error> {
     });
 }
 
-function findExecutableWin(
-  file: string,
-  exts: string[],
-): Result<string, error> {
+function findExecutableWin(file: string, exts: string[]): Result<string, error> {
   if (exts.length === 0) {
     return chkStatWin(file).map(() => file);
   }
@@ -130,9 +125,7 @@ function lookPathWin(file: string): Result<string, error> {
   }
 
   if ([":", "\\", "/"].some((c) => file.includes(c))) {
-    return findExecutableWin(file, exts).mapFailure(
-      (e) => new LookUpError(file, e),
-    );
+    return findExecutableWin(file, exts).mapFailure((e) => new LookUpError(file, e));
   }
 
   const res = findExecutableWin(path.join(".", file), exts);

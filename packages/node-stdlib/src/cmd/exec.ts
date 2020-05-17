@@ -33,11 +33,7 @@ export function exec(
     const cp = spawn(cmd, args, {
       cwd: opts?.dir,
       env: { ...process.env, ...opts?.env },
-      stdio: [
-        opts?.stdin ?? "pipe",
-        opts?.stdout ?? "pipe",
-        opts?.stderr ?? "pipe",
-      ],
+      stdio: [opts?.stdin ?? "pipe", opts?.stdout ?? "pipe", opts?.stderr ?? "pipe"],
     });
 
     const stdoutChunks: Buffer[] = [];
@@ -101,11 +97,7 @@ export function execSync(
     spawnSync(cmd, args, {
       cwd: opts?.dir,
       env: { ...process.env, ...opts?.env },
-      stdio: [
-        opts?.stdin ?? "pipe",
-        opts?.stdout ?? "pipe",
-        opts?.stderr ?? "pipe",
-      ],
+      stdio: [opts?.stdin ?? "pipe", opts?.stdout ?? "pipe", opts?.stderr ?? "pipe"],
     }),
   )
     .mapFailure((e) => fromJSError(e))

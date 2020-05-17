@@ -9,12 +9,10 @@ describe("src/exit.ts tests", () => {
   beforeEach(() => {
     stderrData = "";
     exitCode = 0;
-    spyError = jest
-      .spyOn(console, "error")
-      .mockImplementation((inputs: string) => {
-        stderrData += inputs;
-        stderrData += "\n";
-      });
+    spyError = jest.spyOn(console, "error").mockImplementation((inputs: string) => {
+      stderrData += inputs;
+      stderrData += "\n";
+    });
     spyExit = jest.spyOn(process, "exit").mockImplementation(((code) => {
       exitCode = code;
     }) as (code?: number) => never);

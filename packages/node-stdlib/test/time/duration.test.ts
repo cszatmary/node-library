@@ -70,20 +70,12 @@ describe("time/duration.ts", () => {
       expect(time.durationString(-1100 * time.nanosecond)).toBe("-1.1µs");
       expect(time.durationString(2200 * time.microsecond)).toBe("2.2ms");
       expect(time.durationString(3300 * time.millisecond)).toBe("3.3s");
-      expect(time.durationString(4 * time.minute + 5 * time.second)).toBe(
-        "4m5s",
+      expect(time.durationString(4 * time.minute + 5 * time.second)).toBe("4m5s");
+      expect(time.durationString(4 * time.minute + 5001 * time.millisecond)).toBe("4m5.001s");
+      expect(time.durationString(5 * time.hour + 6 * time.minute + 7001 * time.millisecond)).toBe(
+        "5h6m7.001s",
       );
-      expect(
-        time.durationString(4 * time.minute + 5001 * time.millisecond),
-      ).toBe("4m5.001s");
-      expect(
-        time.durationString(
-          5 * time.hour + 6 * time.minute + 7001 * time.millisecond,
-        ),
-      ).toBe("5h6m7.001s");
-      expect(time.durationString(8 * time.minute + 1 * time.nanosecond)).toBe(
-        "8m0.000000001s",
-      );
+      expect(time.durationString(8 * time.minute + 1 * time.nanosecond)).toBe("8m0.000000001s");
     });
   });
 });

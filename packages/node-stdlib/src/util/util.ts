@@ -89,19 +89,16 @@ export function copy<T>(v: T): T {
 /**
  * Merges the given objects or arrays and returns a deep copy.
  */
-export function merge<T extends Record<string, unknown>>(
-  x: Partial<T>,
-  y: Partial<T>,
-): T;
-export function merge<
-  T extends Record<string, unknown>,
-  S extends Record<string, unknown>
->(x: T, y: S): T & S;
+export function merge<T extends Record<string, unknown>>(x: Partial<T>, y: Partial<T>): T;
+export function merge<T extends Record<string, unknown>, S extends Record<string, unknown>>(
+  x: T,
+  y: S,
+): T & S;
 export function merge<T>(x: T[], y: T[]): T[];
-export function merge<
-  T extends Record<string, unknown>,
-  S extends Record<string, unknown>
->(x: T, y: S): T & S {
+export function merge<T extends Record<string, unknown>, S extends Record<string, unknown>>(
+  x: T,
+  y: S,
+): T & S {
   if (Array.isArray(x) !== Array.isArray(y)) {
     panic("merge: Cannot merge an object and an array");
   }
@@ -115,13 +112,7 @@ export function merge<
   const dest: any = copy(x);
   for (const [k, v] of Object.entries(y)) {
     // Prevent overwriting property in prototype
-    if (
-      k in x &&
-      !(
-        Object.hasOwnProperty.call(x, k) &&
-        Object.propertyIsEnumerable.call(x, k)
-      )
-    ) {
+    if (k in x && !(Object.hasOwnProperty.call(x, k) && Object.propertyIsEnumerable.call(x, k))) {
       continue;
     }
 

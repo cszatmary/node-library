@@ -167,8 +167,7 @@ export class TextFormatter implements Formatter {
   };
 
   #isColored = (): boolean => {
-    const isColored =
-      this.forceColors || (this.#isTerminal && process.platform !== "win32");
+    const isColored = this.forceColors || (this.#isTerminal && process.platform !== "win32");
     return isColored && !this.disableColors;
   };
 
@@ -227,12 +226,7 @@ export class TextFormatter implements Formatter {
     this.#appendValue(b, value);
   };
 
-  #printColored = (
-    b: DynamicBuffer,
-    log: Log,
-    keys: string[],
-    data: Fields,
-  ): void => {
+  #printColored = (b: DynamicBuffer, log: Log, keys: string[], data: Fields): void => {
     let colorFn: (str: string) => string;
     switch (log.level) {
       case Level.debug:
@@ -268,14 +262,10 @@ export class TextFormatter implements Formatter {
     if (this.disableTimestamp) {
       b.writeString(`${colorFn(levelText)} ${log.msg}`);
     } else if (!this.fullTimestamp) {
-      const timestamp = Math.floor(
-        (log.date.getTime() - baseTimestamp.getTime()) / 1000,
-      );
+      const timestamp = Math.floor((log.date.getTime() - baseTimestamp.getTime()) / 1000);
       b.writeString(`${colorFn(levelText)} [${timestamp}] ${log.msg}`);
     } else {
-      b.writeString(
-        `${colorFn(levelText)} [${log.date.toISOString()}] ${log.msg}`,
-      );
+      b.writeString(`${colorFn(levelText)} [${log.date.toISOString()}] ${log.msg}`);
     }
 
     for (const k of keys) {

@@ -65,11 +65,7 @@ export function panic(v: unknown): never {
  * @param step The amount by which the range increases at each step.
  * Defaults to `1`.
  */
-export function* range(
-  lower: number,
-  upper: number,
-  step = 1,
-): Generator<number, void> {
+export function* range(lower: number, upper: number, step = 1): Generator<number, void> {
   for (let i = lower; i < upper; i += step) {
     yield i;
   }

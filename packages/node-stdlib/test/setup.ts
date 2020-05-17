@@ -43,8 +43,7 @@ expect.extend({
 
     return {
       pass: expected === thrown.message,
-      message: (): string =>
-        `expected function to panic with message ${expected}`,
+      message: (): string => `expected function to panic with message ${expected}`,
     };
   },
 });

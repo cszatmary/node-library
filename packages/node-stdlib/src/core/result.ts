@@ -289,9 +289,7 @@ type ExtractPromise<P> = P extends Promise<infer T> ? T : never;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function resultifyPromise<F extends (...args: any) => Promise<any>>(
   fn: F,
-): (
-  ...args: Parameters<F>
-) => Promise<Result<ExtractPromise<ReturnType<F>>, Error>> {
+): (...args: Parameters<F>) => Promise<Result<ExtractPromise<ReturnType<F>>, Error>> {
   return (...args): Promise<Result<ExtractPromise<ReturnType<F>>, Error>> => {
     return new Promise((resolve) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore

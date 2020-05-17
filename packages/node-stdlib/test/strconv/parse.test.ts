@@ -58,12 +58,8 @@ describe("strconv/parse.ts", () => {
       expect(strconv.parseInt("-0X12345", 0).unwrap()).toBe(-0x12345);
       expect(strconv.parseInt("98765432100", 0).unwrap()).toBe(98765432100);
       expect(strconv.parseInt("-98765432100", 0).unwrap()).toBe(-98765432100);
-      expect(strconv.parseInt("922337203685477", 0).unwrap()).toBe(
-        922337203685477,
-      );
-      expect(strconv.parseInt("-922337203685477", 0).unwrap()).toBe(
-        -922337203685477,
-      );
+      expect(strconv.parseInt("922337203685477", 0).unwrap()).toBe(922337203685477);
+      expect(strconv.parseInt("-922337203685477", 0).unwrap()).toBe(-922337203685477);
       expect(strconv.parseInt("0b101", 0).unwrap()).toBe(5);
       expect(strconv.parseInt("0B101", 0).unwrap()).toBe(5);
       expect(strconv.parseInt("0o377", 0).unwrap()).toBe(255);
@@ -74,9 +70,7 @@ describe("strconv/parse.ts", () => {
       expect(strconv.parseInt("0", 2).unwrap()).toBe(0);
       expect(strconv.parseInt("-1", 2).unwrap()).toBe(-1);
       expect(strconv.parseInt("1010", 2).unwrap()).toBe(10);
-      expect(strconv.parseInt("1000000000000000", 2).unwrap()).toBe(
-        0b1000000000000000,
-      );
+      expect(strconv.parseInt("1000000000000000", 2).unwrap()).toBe(0b1000000000000000);
     });
 
     it("parses the int with base 8", () => {
@@ -89,9 +83,7 @@ describe("strconv/parse.ts", () => {
     it("parses the int with base 16", () => {
       expect(strconv.parseInt("0", 16).unwrap()).toBe(0);
       expect(strconv.parseInt("10", 16).unwrap()).toBe(16);
-      expect(strconv.parseInt("-12345abcdef", 16).unwrap()).toBe(
-        -0x12345abcdef,
-      );
+      expect(strconv.parseInt("-12345abcdef", 16).unwrap()).toBe(-0x12345abcdef);
       expect(strconv.parseInt("ab20ef", 16).unwrap()).toBe(0xab20ef);
     });
 
@@ -119,20 +111,12 @@ describe("strconv/parse.ts", () => {
       expect(getNumErr("18446744073709551616", 0).err).toBe(strconv.errRange);
       expect(getNumErr("18446744073709551620", 0).err).toBe(strconv.errRange);
       expect(getNumErr("0x10000000000000000", 0).err).toBe(strconv.errRange);
-      expect(getNumErr("02000000000000000000000", 0).err).toBe(
-        strconv.errRange,
-      );
+      expect(getNumErr("02000000000000000000000", 0).err).toBe(strconv.errRange);
       expect(
-        getNumErr(
-          "1000000000000000000000000000000000000000000000000000000000000000",
-          0,
-        ).err,
+        getNumErr("1000000000000000000000000000000000000000000000000000000000000000", 0).err,
       ).toBe(strconv.errRange);
       expect(
-        getNumErr(
-          "1000000000000000000000000000000000000000000000000000000000000001",
-          0,
-        ).err,
+        getNumErr("1000000000000000000000000000000000000000000000000000000000000001", 0).err,
       ).toBe(strconv.errRange);
     });
 
@@ -178,12 +162,8 @@ describe("strconv/parse.ts", () => {
 
     it("returns an error if an invalid base is given", () => {
       const err = getNumErr("123", 40);
-      expect(err.error()).toBe(
-        `strconv.parseInt: parsing "123": invalid base 40`,
-      );
-      expect(err.detailedError()).toBe(
-        `strconv.parseInt: parsing "123": invalid base 40`,
-      );
+      expect(err.error()).toBe(`strconv.parseInt: parsing "123": invalid base 40`);
+      expect(err.detailedError()).toBe(`strconv.parseInt: parsing "123": invalid base 40`);
     });
   });
 
@@ -195,9 +175,7 @@ describe("strconv/parse.ts", () => {
     });
 
     it("returns a NumError if the string is not a valid float", () => {
-      const err = strconv
-        .parseFloat("1.111abc")
-        .unwrapFailure() as strconv.NumError;
+      const err = strconv.parseFloat("1.111abc").unwrapFailure() as strconv.NumError;
       expect(strconv.isNumError(err)).toBe(true);
       expect(err.func).toBe("parseFloat");
       expect(err.num).toBe("1.111abc");

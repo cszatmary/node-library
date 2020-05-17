@@ -344,10 +344,7 @@ export class DynamicBuffer implements Iterable<number> {
    * the data read before the error and the error itself (often eof) are returned.
    * @param encoding An optional encoding to use for the string.
    */
-  readString(
-    delim: number,
-    encoding?: BufferEncoding,
-  ): [string, error | undefined] {
+  readString(delim: number, encoding?: BufferEncoding): [string, error | undefined] {
     if (!isByte(delim)) {
       panic("DynamicBuffer.readBytes: delim is not a valid byte");
     }
