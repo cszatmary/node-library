@@ -100,8 +100,8 @@ describe("strconv/format.ts", () => {
 
     it("panics if fmt isn't f or e", () => {
       expect(() => {
-        // should change this to @ts-expect-error once it's available
-        strconv.formatFloat(1.1, "h" as "e");
+        // @ts-expect-error
+        strconv.formatFloat(1.1, "h");
       }).toPanic(`formatFloat: invalid fmt "h", must be either "f" or "e"`);
     });
   });
