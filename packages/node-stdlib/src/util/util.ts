@@ -2,15 +2,13 @@
 // All rights reserved. MIT License.
 
 import util from "util";
-import { panic } from "../global";
-
-export const copySymbol = Symbol.for("node-stdlib.util.copy");
+import { panic, symbols } from "../global";
 
 /**
  * An interface representing a type that can create copies of itself.
  */
 export interface Copyable {
-  [copySymbol](): this;
+  [symbols.copy](): this;
 }
 
 /**
@@ -27,7 +25,7 @@ export function isObject(v: unknown): v is object {
  * A value implements `Copyable` if it has a `copy` method.
  */
 export function isCopyable(v: unknown): v is Copyable {
-  return v != null && typeof (v as Copyable)[copySymbol] === "function";
+  return v != null && typeof (v as Copyable)[symbols.copy] === "function";
 }
 
 /**
@@ -78,7 +76,7 @@ export function copy<T>(v: T): T {
   }
 
   if (isCopyable(v)) {
-    return v[copySymbol]();
+    return v[symbols.copy]();
   }
 
   const o: Record<string, unknown> = {};

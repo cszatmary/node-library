@@ -23,6 +23,15 @@ declare global {
   }
 }
 
+/**
+ * Globally available symbols.
+ */
+export const symbols = Object.freeze({
+  copy: Symbol.for("node-stdlib.copy"),
+}) as {
+  readonly copy: unique symbol;
+};
+
 // Copy isError here so we don't need to import from the errors module
 function isError(err: unknown): err is error {
   const e = err as error;

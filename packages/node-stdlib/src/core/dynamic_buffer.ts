@@ -6,10 +6,9 @@
 // https://github.com/golang/go/blob/master/LICENSE
 
 import { inspect } from "util";
-import { panic } from "../global";
+import { panic, symbols } from "../global";
 import { Result } from "./result";
 import { errorString } from "../errors/mod";
-import { Copyable, copySymbol } from "../util/util";
 
 // Minimum capacity for a new DynamicBuffer
 const minSize = 64;
@@ -33,7 +32,7 @@ function isByte(c: number): boolean {
  * A DynamicBuffer is a variable-sized buffer of bytes.
  * It will automatically grow as needed.
  */
-export class DynamicBuffer implements Iterable<number>, Copyable {
+export class DynamicBuffer implements Iterable<number> {
   #buf: Buffer; // contents are the bytes #buf[#off : #buf.byteLength]
   #off = 0; // read at #buf[#off], write at #buf[#buf.byteLength]
 
@@ -373,7 +372,7 @@ export class DynamicBuffer implements Iterable<number>, Copyable {
   /**
    * Returns a new DynamicBuffer with the unread bytes copied.
    */
-  [copySymbol](): this {
+  [symbols.copy](): this {
     const buf = new DynamicBuffer(new ArrayBuffer(this.length));
     for (let i = 0; i < this.length; i++) {
       buf.#buf[i] = this.#buf[i + this.#off];
