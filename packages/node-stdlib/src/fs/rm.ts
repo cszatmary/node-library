@@ -11,13 +11,7 @@ import fs from "fs";
 import { millisecond, sleepSync } from "../time/mod";
 
 const notEmptyErrorCodes = new Set(["ENOTEMPTY", "EEXIST", "EPERM"]);
-const retryErrorCodes = new Set([
-  "EBUSY",
-  "EMFILE",
-  "ENFILE",
-  "ENOTEMPTY",
-  "EPERM",
-]);
+const retryErrorCodes = new Set(["EBUSY", "EMFILE", "ENFILE", "ENOTEMPTY", "EPERM"]);
 const isWindows = process.platform === "win32";
 const retryDelay = 100;
 const maxRetries = 3;
@@ -48,10 +42,7 @@ export function rimraf(
   });
 }
 
-function _rimraf(
-  path: fs.PathLike,
-  callback: (err: NodeJS.ErrnoException | null) => void,
-): void {
+function _rimraf(path: fs.PathLike, callback: (err: NodeJS.ErrnoException | null) => void): void {
   // SunOS lets the root user unlink directories. Use lstat here to make sure
   // it's not a directory.
   fs.lstat(path, (err, stats) => {

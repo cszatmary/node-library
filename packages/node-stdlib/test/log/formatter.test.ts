@@ -89,9 +89,7 @@ describe("log/formatter.ts", () => {
       const f = new log.TextFormatter();
       const s = f.format(l).unwrap().toString();
 
-      const regex = new RegExp(
-        `time="${isoRegex}" level=debug msg="log message" foo=bar`,
-      );
+      const regex = new RegExp(`time="${isoRegex}" level=debug msg="log message" foo=bar`);
       expect(s).toMatch(regex);
     });
 
@@ -144,9 +142,7 @@ describe("log/formatter.ts", () => {
       });
       const s = f.format(l).unwrap().toString();
 
-      const regex = new RegExp(
-        `time="${isoRegex}" level="debug" msg="log message" foo="bar"`,
-      );
+      const regex = new RegExp(`time="${isoRegex}" level="debug" msg="log message" foo="bar"`);
       expect(s).toMatch(regex);
     });
 
@@ -159,9 +155,7 @@ describe("log/formatter.ts", () => {
       });
       const s = f.format(l).unwrap().toString();
 
-      const regex = new RegExp(
-        `time=${isoRegex} level=debug msg=log message foo=bar`,
-      );
+      const regex = new RegExp(`time=${isoRegex} level=debug msg=log message foo=bar`);
       expect(s).toMatch(regex);
     });
 
@@ -175,9 +169,7 @@ describe("log/formatter.ts", () => {
       });
       const s = f.format(l).unwrap().toString();
 
-      expect(s).toBe(
-        `${colors.white("DEBU")} log message ${colors.white("foo")}=bar\n`,
-      );
+      expect(s).toBe(`${colors.white("DEBU")} log message ${colors.white("foo")}=bar\n`);
     });
 
     it("disables level truncation", () => {
@@ -192,9 +184,7 @@ describe("log/formatter.ts", () => {
       });
       const s = f.format(l).unwrap().toString();
 
-      expect(s).toBe(
-        `${colors.red("ERROR")} log message ${colors.red("foo")}=bar\n`,
-      );
+      expect(s).toBe(`${colors.red("ERROR")} log message ${colors.red("foo")}=bar\n`);
     });
 
     it("pads the level", () => {
@@ -209,9 +199,7 @@ describe("log/formatter.ts", () => {
       });
       const s = f.format(l).unwrap().toString();
 
-      expect(s).toBe(
-        `${colors.blue("INFO ")} log message ${colors.blue("foo")}=bar\n`,
-      );
+      expect(s).toBe(`${colors.blue("INFO ")} log message ${colors.blue("foo")}=bar\n`);
     });
   });
 });

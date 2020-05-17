@@ -104,9 +104,7 @@ describe("util/semver.ts", () => {
       const r = util.SemVer.parse("1.10.10.3");
       const err = r.failure()!;
       expect(r.isFailure()).toBe(true);
-      expect(err.error()).toBe(
-        "SemVer.Parse: Invalid semver string: 1.10.10.3",
-      );
+      expect(err.error()).toBe("SemVer.Parse: Invalid semver string: 1.10.10.3");
     });
   });
 

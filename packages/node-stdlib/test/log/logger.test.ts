@@ -70,9 +70,7 @@ describe("log/logger.ts", () => {
 
     it("writes a log at fatal level then exists", () => {
       let exitCode = 0;
-      const spyExit = jest.spyOn(process, "exit").mockImplementation(((
-        code,
-      ) => {
+      const spyExit = jest.spyOn(process, "exit").mockImplementation(((code) => {
         exitCode = code as number;
       }) as (code?: number) => never);
 
@@ -166,9 +164,7 @@ describe("log/logger.ts", () => {
       logger.addFields({ foo: "bar", baz: 1 });
       logger.info("log message", { baz: "foo" });
 
-      expect(b.toString()).toBe(
-        `level=info msg="log message" baz=foo foo=bar\n`,
-      );
+      expect(b.toString()).toBe(`level=info msg="log message" baz=foo foo=bar\n`);
     });
   });
 });

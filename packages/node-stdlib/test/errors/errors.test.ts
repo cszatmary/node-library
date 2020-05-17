@@ -94,9 +94,7 @@ describe("errors", () => {
         errors.withMessage(ioErr, "error reading file"),
         "error loading config",
       );
-      expect(err.error()).toBe(
-        "error loading config: error reading file: IO Error",
-      );
+      expect(err.error()).toBe("error loading config: error reading file: IO Error");
     });
   });
 
@@ -112,13 +110,8 @@ describe("errors", () => {
     });
 
     it("wraps nested errors", () => {
-      const err = errors.wrap(
-        errors.wrap(ioErr, "error reading file"),
-        "error loading config",
-      );
-      expect(err.error()).toBe(
-        "error loading config: error reading file: IO Error",
-      );
+      const err = errors.wrap(errors.wrap(ioErr, "error reading file"), "error loading config");
+      expect(err.error()).toBe("error loading config: error reading file: IO Error");
       // Check that the error is printed with a stack trace
       expect(err.detailedError()).toMatch(
         /^IO Error\nerror reading file\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/test\/errors\/errors\.test\.ts/m,

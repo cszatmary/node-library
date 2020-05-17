@@ -161,10 +161,7 @@ export function withStack(err: error | undefined): error | undefined {
  */
 export function withMessage(err: undefined, msg: string): undefined;
 export function withMessage(err: error, msg: string): error;
-export function withMessage(
-  err: error | undefined,
-  msg: string,
-): error | undefined {
+export function withMessage(err: error | undefined, msg: string): error | undefined {
   if (err === undefined) {
     return undefined;
   }

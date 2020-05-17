@@ -84,32 +84,25 @@ export const mkdir = resultifyPromise(fs.promises.mkdir);
 export const mkdirSync = resultify(fs.mkdirSync);
 
 export const mkdtemp: {
-  (
-    prefix: string,
-    options?: { encoding?: BufferEncoding | null } | BufferEncoding | null,
-  ): Promise<Result<string, Error>>;
-  (prefix: string, options: { encoding: "buffer" } | "buffer"): Promise<
-    Result<Buffer, Error>
+  (prefix: string, options?: { encoding?: BufferEncoding | null } | BufferEncoding | null): Promise<
+    Result<string, Error>
   >;
-  (
-    prefix: string,
-    options?: { encoding?: string | null } | string | null,
-  ): Promise<Result<string | Buffer, Error>>;
+  (prefix: string, options: { encoding: "buffer" } | "buffer"): Promise<Result<Buffer, Error>>;
+  (prefix: string, options?: { encoding?: string | null } | string | null): Promise<
+    Result<string | Buffer, Error>
+  >;
 } = resultifyPromise(fs.promises.mkdtemp) as any;
 
 export const mkdtempSync: {
-  (
-    prefix: string,
-    options?: { encoding?: BufferEncoding | null } | BufferEncoding | null,
-  ): Result<string, Error>;
-  (prefix: string, options: { encoding: "buffer" } | "buffer"): Result<
-    Buffer,
+  (prefix: string, options?: { encoding?: BufferEncoding | null } | BufferEncoding | null): Result<
+    string,
     Error
   >;
-  (
-    prefix: string,
-    options?: { encoding?: string | null } | string | null,
-  ): Result<string | Buffer, Error>;
+  (prefix: string, options: { encoding: "buffer" } | "buffer"): Result<Buffer, Error>;
+  (prefix: string, options?: { encoding?: string | null } | string | null): Result<
+    string | Buffer,
+    Error
+  >;
 } = resultify(fs.mkdtempSync) as any;
 
 export const open = resultifyPromise(fs.promises.open);
@@ -124,51 +117,37 @@ export const readSync = resultify(fs.readSync);
 export const readdir: {
   (
     path: PathLike,
-    options?:
-      | { encoding?: BufferEncoding | null; withFileTypes?: false }
-      | BufferEncoding
-      | null,
+    options?: { encoding?: BufferEncoding | null; withFileTypes?: false } | BufferEncoding | null,
   ): Promise<Result<string[], Error>>;
+  (path: PathLike, options: { encoding: "buffer"; withFileTypes?: false } | "buffer"): Promise<
+    Result<Buffer[], Error>
+  >;
   (
     path: PathLike,
-    options: { encoding: "buffer"; withFileTypes?: false } | "buffer",
-  ): Promise<Result<Buffer[], Error>>;
-  (
-    path: PathLike,
-    options?:
-      | { encoding?: string | null; withFileTypes?: false }
-      | string
-      | null,
+    options?: { encoding?: string | null; withFileTypes?: false } | string | null,
   ): Promise<Result<string[] | Buffer[], Error>>;
-  (
-    path: PathLike,
-    options: { encoding?: string | null; withFileTypes: true },
-  ): Promise<Result<fs.Dirent[], Error>>;
+  (path: PathLike, options: { encoding?: string | null; withFileTypes: true }): Promise<
+    Result<fs.Dirent[], Error>
+  >;
 } = resultifyPromise(fs.promises.readdir) as any;
 
 export const readdirSync: {
   (
     path: PathLike,
-    options?:
-      | { encoding: BufferEncoding | null; withFileTypes?: false }
-      | BufferEncoding
-      | null,
+    options?: { encoding: BufferEncoding | null; withFileTypes?: false } | BufferEncoding | null,
   ): Result<string[], Error>;
+  (path: PathLike, options: { encoding: "buffer"; withFileTypes?: false } | "buffer"): Result<
+    Buffer[],
+    Error
+  >;
   (
     path: PathLike,
-    options: { encoding: "buffer"; withFileTypes?: false } | "buffer",
-  ): Result<Buffer[], Error>;
-  (
-    path: PathLike,
-    options?:
-      | { encoding?: string | null; withFileTypes?: false }
-      | string
-      | null,
+    options?: { encoding?: string | null; withFileTypes?: false } | string | null,
   ): Result<string[] | Buffer[], Error>;
-  (
-    path: PathLike,
-    options: { encoding?: string | null; withFileTypes: true },
-  ): Result<fs.Dirent[], Error>;
+  (path: PathLike, options: { encoding?: string | null; withFileTypes: true }): Result<
+    fs.Dirent[],
+    Error
+  >;
 } = resultify(fs.readdirSync) as any;
 
 export const readFile: {
@@ -178,28 +157,23 @@ export const readFile: {
   ): Promise<Result<Buffer, Error>>;
   (
     path: PathLike | FileHandle,
-    options:
-      | { encoding: BufferEncoding; flag?: string | number }
-      | BufferEncoding,
+    options: { encoding: BufferEncoding; flag?: string | number } | BufferEncoding,
   ): Promise<Result<string, Error>>;
   (
     path: PathLike | FileHandle,
-    options?:
-      | { encoding?: string | null; flag?: string | number }
-      | string
-      | null,
+    options?: { encoding?: string | null; flag?: string | number } | string | null,
   ): Promise<Result<string | Buffer, Error>>;
 } = resultifyPromise(fs.promises.readFile) as any;
 
 export const readFileSync: {
-  (
-    path: PathLike | number,
-    options?: { encoding?: null; flag?: string } | null,
-  ): Result<Buffer, Error>;
-  (
-    path: PathLike | number,
-    options: { encoding: string; flag?: string } | string,
-  ): Result<string, Error>;
+  (path: PathLike | number, options?: { encoding?: null; flag?: string } | null): Result<
+    Buffer,
+    Error
+  >;
+  (path: PathLike | number, options: { encoding: string; flag?: string } | string): Result<
+    string,
+    Error
+  >;
   (
     path: PathLike | number,
     options?: { encoding?: string | null; flag?: string } | string | null,
@@ -207,61 +181,47 @@ export const readFileSync: {
 } = resultify(fs.readFileSync) as any;
 
 export const readlink: {
-  (
-    path: PathLike,
-    options?: { encoding?: BufferEncoding | null } | BufferEncoding | null,
-  ): Promise<Result<string, Error>>;
-  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Promise<
-    Result<Buffer, Error>
+  (path: PathLike, options?: { encoding?: BufferEncoding | null } | BufferEncoding | null): Promise<
+    Result<string, Error>
   >;
-  (
-    path: PathLike,
-    options?: { encoding?: string | null } | string | null,
-  ): Promise<Result<string | Buffer, Error>>;
+  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Promise<Result<Buffer, Error>>;
+  (path: PathLike, options?: { encoding?: string | null } | string | null): Promise<
+    Result<string | Buffer, Error>
+  >;
 } = resultifyPromise(fs.promises.readlink) as any;
 
 export const readlinkSync: {
-  (
-    path: PathLike,
-    options?: { encoding?: BufferEncoding | null } | BufferEncoding | null,
-  ): Result<string, Error>;
-  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Result<
-    Buffer,
+  (path: PathLike, options?: { encoding?: BufferEncoding | null } | BufferEncoding | null): Result<
+    string,
     Error
   >;
-  (
-    path: PathLike,
-    options?: { encoding?: string | null } | string | null,
-  ): Result<string | Buffer, Error>;
+  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Result<Buffer, Error>;
+  (path: PathLike, options?: { encoding?: string | null } | string | null): Result<
+    string | Buffer,
+    Error
+  >;
 } = resultify(fs.readlinkSync) as any;
 
 export const realpath: {
-  (
-    path: PathLike,
-    options?: { encoding?: BufferEncoding | null } | BufferEncoding | null,
-  ): Promise<Result<string, Error>>;
-  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Promise<
-    Result<Buffer, Error>
+  (path: PathLike, options?: { encoding?: BufferEncoding | null } | BufferEncoding | null): Promise<
+    Result<string, Error>
   >;
-  (
-    path: PathLike,
-    options?: { encoding?: string | null } | string | null,
-  ): Promise<Result<string | Buffer, Error>>;
+  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Promise<Result<Buffer, Error>>;
+  (path: PathLike, options?: { encoding?: string | null } | string | null): Promise<
+    Result<string | Buffer, Error>
+  >;
 } = resultifyPromise(fs.promises.realpath) as any;
 
 export const realpathSync: {
-  (
-    path: PathLike,
-    options?: { encoding?: BufferEncoding | null } | BufferEncoding | null,
-  ): Result<string, Error>;
-  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Result<
-    Buffer,
+  (path: PathLike, options?: { encoding?: BufferEncoding | null } | BufferEncoding | null): Result<
+    string,
     Error
   >;
-  (
-    path: PathLike,
-    options?: { encoding?: string | null } | string | null,
-  ): Result<string | Buffer, Error>;
+  (path: PathLike, options: { encoding: "buffer" } | "buffer"): Result<Buffer, Error>;
+  (path: PathLike, options?: { encoding?: string | null } | string | null): Result<
+    string | Buffer,
+    Error
+  >;
 } = resultify(fs.realpathSync) as any;
 
 export const rename = resultifyPromise(fs.promises.rename);
@@ -298,12 +258,9 @@ export const write: {
     length?: number | null,
     position?: number | null,
   ): Promise<Result<{ bytesWritten: number; buffer: TBuffer }, Error>>;
-  (
-    handle: FileHandle,
-    string: any,
-    position?: number | null,
-    encoding?: string | null,
-  ): Promise<Result<{ bytesWritten: number; buffer: string }, Error>>;
+  (handle: FileHandle, string: any, position?: number | null, encoding?: string | null): Promise<
+    Result<{ bytesWritten: number; buffer: string }, Error>
+  >;
 } = resultifyPromise(fs.promises.write) as any;
 
 export const writeSync: {
@@ -314,12 +271,10 @@ export const writeSync: {
     length?: number | null,
     position?: number | null,
   ): Result<number, Error>;
-  (
-    fd: number,
-    string: any,
-    position?: number | null,
-    encoding?: string | null,
-  ): Result<number, Error>;
+  (fd: number, string: any, position?: number | null, encoding?: string | null): Result<
+    number,
+    Error
+  >;
 } = resultify(fs.writeSync) as any;
 
 export const writeFile = resultifyPromise(fs.promises.writeFile);

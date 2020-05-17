@@ -26,11 +26,7 @@ const uuidSize = 16;
 const versionIndex = 6;
 const variantIndex = 8;
 
-function createNameBasedUUID(
-  namespace: Buffer,
-  name: string,
-  version: 3 | 5,
-): Buffer {
+function createNameBasedUUID(namespace: Buffer, name: string, version: 3 | 5): Buffer {
   // Section 4.3 describes the algorithm for creating a name based uuid
   // https://tools.ietf.org/html/rfc4122#section-4.3
   // This is used to create v3 and v5 uuids

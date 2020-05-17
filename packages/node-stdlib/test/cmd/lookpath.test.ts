@@ -17,9 +17,7 @@ describe("cmd.ts", () => {
         expect(err).toBeInstanceOf(cmd.LookUpError);
         expect(err.fileName).toBe("notacommandyo");
         expect(err.err).toBe(cmd.errNotFound);
-        expect(err.error()).toBe(
-          "LookUpError: notacommandyo: executable file not found in PATH",
-        );
+        expect(err.error()).toBe("LookUpError: notacommandyo: executable file not found in PATH");
         expect(err.detailedError()).toBe(
           "LookUpError: notacommandyo: executable file not found in PATH",
         );

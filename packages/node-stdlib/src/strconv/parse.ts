@@ -37,9 +37,7 @@ export class NumError {
   }
 
   detailedError(): string {
-    return `strconv.${this.func}: parsing "${
-      this.num
-    }": ${this.err.detailedError()}`;
+    return `strconv.${this.func}: parsing "${this.num}": ${this.err.detailedError()}`;
   }
 
   cause(): error {
@@ -52,9 +50,7 @@ export class NumError {
  */
 export function isNumError(err: unknown): err is NumError {
   const e = err as NumError;
-  return (
-    typeof e.func === "string" && typeof e.num === "string" && isError(e.err)
-  );
+  return typeof e.func === "string" && typeof e.num === "string" && isError(e.err);
 }
 
 const enum ASCIICode {
@@ -236,9 +232,7 @@ export function parseInt(str: string, base = 10): Result<number, error> {
       }
     }
   } else if (base < 2 || base > 36) {
-    return Result.failure(
-      new NumError(fnParseInt, str, errorString(`invalid base ${base}`)),
-    );
+    return Result.failure(new NumError(fnParseInt, str, errorString(`invalid base ${base}`)));
   }
 
   // Cutoff is the smallest number such that cutoff*base > Number.MAX_SAFE_INTEGER.

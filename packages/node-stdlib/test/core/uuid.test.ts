@@ -5,9 +5,7 @@ describe("core/uuid.ts", () => {
   describe("nil uuid", () => {
     it("treats all nil uuids as equal", () => {
       const nilUUID = core.UUID.nil;
-      const nilInstance = core.UUID.fromString(
-        "00000000-0000-0000-0000-000000000000",
-      );
+      const nilInstance = core.UUID.fromString("00000000-0000-0000-0000-000000000000");
 
       // nil uuid is a singleton and will always be the same instance
       expect(nilUUID).toBe(core.UUID.nil);
@@ -19,15 +17,11 @@ describe("core/uuid.ts", () => {
   describe("fromString()", () => {
     it("returns undefined when the string is an invalid uuid", () => {
       expect(core.UUID.fromString("abcde")).toBeUndefined();
-      expect(
-        core.UUID.fromString("1h4f6d02-1146-48a8-b0ad-f562220303de"),
-      ).toBeUndefined();
+      expect(core.UUID.fromString("1h4f6d02-1146-48a8-b0ad-f562220303de")).toBeUndefined();
     });
 
     it("returns undefined if the uuid has an invalid version", () => {
-      expect(
-        core.UUID.fromString("1d4f6d02-1146-78a8-b0ad-f562220303de"),
-      ).toBeUndefined();
+      expect(core.UUID.fromString("1d4f6d02-1146-78a8-b0ad-f562220303de")).toBeUndefined();
     });
   });
 
@@ -50,9 +44,7 @@ describe("core/uuid.ts", () => {
     });
 
     describe("v3 / v5", () => {
-      const namespace = core.UUID.fromString(
-        "1d4f6d02-1146-48a8-b0ad-f562220303de",
-      )!;
+      const namespace = core.UUID.fromString("1d4f6d02-1146-48a8-b0ad-f562220303de")!;
 
       it("creates a valid v3 uuid", () => {
         const uuid = core.UUID.v3(namespace, "hello");

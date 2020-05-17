@@ -89,9 +89,7 @@ describe("strconv/format.ts", () => {
       expect(strconv.formatFloat(12, "e", 5)).toBe("1.20000e+1");
       expect(strconv.formatFloat(123456700, "e", 5)).toBe("1.23457e+8");
       expect(strconv.formatFloat(1.2345e6, "e", 5)).toBe("1.23450e+6");
-      expect(strconv.formatFloat(1e23, "e", 17)).toBe(
-        "9.99999999999999916e+22",
-      );
+      expect(strconv.formatFloat(1e23, "e", 17)).toBe("9.99999999999999916e+22");
       expect(strconv.formatFloat(1e23, "e")).toBe("1e+23");
       expect(strconv.formatFloat(123456, "e", 2)).toBe("1.23e+5");
       expect(strconv.formatFloat(12345.6789, "e")).toBe("1.23456789e+4");

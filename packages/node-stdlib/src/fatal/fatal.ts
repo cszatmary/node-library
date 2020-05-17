@@ -13,11 +13,7 @@ export function showErrDetail(b: boolean): void {
  * @param message The message to log.
  * @param optionalParams Any additional parameters to log.
  */
-export function exitErr(
-  err: error,
-  message: string,
-  ...optionalParams: unknown[]
-): never {
+export function exitErr(err: error, message: string, ...optionalParams: unknown[]): never {
   console.error(message, ...optionalParams);
 
   if (shouldShowErrDetail) {
