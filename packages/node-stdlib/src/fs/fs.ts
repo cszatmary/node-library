@@ -42,7 +42,7 @@ export const close = (fd: number): Promise<Result<void, Error>> =>
 export const closeSync = resultify(fs.close);
 
 export const copyFile = resultifyPromise(fs.promises.copyFile);
-export const copyFileSync = resultify(fs.copyFile);
+export const copyFileSync = resultify(fs.copyFileSync);
 
 export const createReadStream = fs.createReadStream;
 export const createWriteStream = fs.createWriteStream;
