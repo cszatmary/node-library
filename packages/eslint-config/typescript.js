@@ -29,6 +29,7 @@ module.exports = {
     "no-dupe-class-members": "off",
     "@typescript-eslint/no-dupe-class-members": ["error"],
     "import/no-unresolved": ["off"],
+    "consistent-return": ["off"],
   },
   env: {
     node: true,
