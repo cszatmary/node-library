@@ -3,6 +3,41 @@
 
 import util from "util";
 import { panic, symbols } from "../global";
+import { isError } from "../errors/mod";
+
+/**
+ * An interface representing a type that can create a
+ * string representation of itself.
+ */
+export interface Stringer {
+  toString(): string;
+}
+
+/**
+ * Returns a string representation of the value `v`.
+ */
+export function toString(v: unknown): string {
+  if (v === undefined) {
+    return "undefined";
+  } else if (v === null) {
+    return "null";
+  } else if (typeof v === "string") {
+    return v;
+  } else if (typeof v === "boolean" || typeof v === "number") {
+    return v.toString();
+  } else if (isError(v)) {
+    return v.error();
+  }
+
+  const s = v as Stringer;
+  // Make sure toString isn't from Object.prototype or if will always be executed
+  // and we will get [object Object] instead of using util.inspect
+  if (typeof s.toString === "function" && s.toString !== Object.prototype.toString) {
+    return s.toString();
+  }
+
+  return util.inspect(v);
+}
 
 /**
  * An interface representing a type that can create copies of itself.

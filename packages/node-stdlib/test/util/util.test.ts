@@ -1,6 +1,33 @@
-import { util } from "../../src";
+import { errors, util } from "../../src";
 
 describe("util/util.ts", () => {
+  describe("toString()", () => {
+    it("returns a string representation of the primative value", () => {
+      expect(util.toString(10)).toBe("10");
+      expect(util.toString(-12.5)).toBe("-12.5");
+      expect(util.toString(true)).toBe("true");
+      expect(util.toString(false)).toBe("false");
+      expect(util.toString("hello")).toBe("hello");
+      expect(util.toString(undefined)).toBe("undefined");
+      expect(util.toString(null)).toBe("null");
+    });
+
+    it("returns a string representation of the error", () => {
+      const err = errors.errorString("oh no");
+      expect(util.toString(err)).toBe("oh no");
+    });
+
+    it("returns a string representation of a type that implements Stringer", () => {
+      const semver = new util.SemVer(1, 5, 12);
+      expect(util.toString(semver)).toBe("1.5.12");
+    });
+
+    it("returns a string representation of the object", () => {
+      const obj = { a: 1, b: "hello" };
+      expect(util.toString(obj)).toBe("{ a: 1, b: 'hello' }");
+    });
+  });
+
   describe("isObject()", () => {
     it("returns true if the value is an object", () => {
       expect(util.isObject({ hello: "world" })).toBe(true);
