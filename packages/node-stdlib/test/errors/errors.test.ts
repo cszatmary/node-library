@@ -26,10 +26,17 @@ describe("errors", () => {
   const ioErr = errors.errorString("IO Error");
 
   describe("isError()", () => {
-    const err = errors.errorString("foo");
-    const notErr = "not an error";
-    expect(errors.isError(err)).toBe(true);
-    expect(errors.isError(notErr)).toBe(false);
+    it("returns true if the value is an error", () => {
+      const err = errors.errorString("foo");
+      expect(errors.isError(err)).toBe(true);
+    });
+
+    it("returns false if the value is not an error", () => {
+      const notErr = "not an error";
+      expect(errors.isError(notErr)).toBe(false);
+      expect(errors.isError(undefined)).toBe(false);
+      expect(errors.isError(null)).toBe(false);
+    });
   });
 
   describe("errorString()", () => {

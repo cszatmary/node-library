@@ -7,6 +7,10 @@
 // https://github.com/pkg/errors/blob/master/LICENSE
 
 export function isError(err: unknown): err is error {
+  if (err == null) {
+    return false;
+  }
+
   const e = err as error;
   return typeof e.error === "function" && typeof e.detailedError === "function";
 }
