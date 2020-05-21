@@ -142,6 +142,7 @@ export function fromJSError(err: Error): error {
  */
 export function withStack(err: undefined): undefined;
 export function withStack(err: error): error;
+export function withStack(err: error | undefined): error | undefined;
 export function withStack(err: error | undefined): error | undefined {
   if (err === undefined) {
     return undefined;
@@ -161,6 +162,7 @@ export function withStack(err: error | undefined): error | undefined {
  */
 export function withMessage(err: undefined, msg: string): undefined;
 export function withMessage(err: error, msg: string): error;
+export function withMessage(err: error | undefined, msg: string): error | undefined;
 export function withMessage(err: error | undefined, msg: string): error | undefined {
   if (err === undefined) {
     return undefined;
@@ -177,6 +179,7 @@ export function withMessage(err: error | undefined, msg: string): error | undefi
  */
 export function wrap(err: undefined, msg: string): undefined;
 export function wrap(err: error, msg: string): error;
+export function wrap(err: error | undefined, msg: string): error | undefined;
 export function wrap(err: error | undefined, msg: string): error | undefined {
   if (err === undefined) {
     return undefined;

@@ -76,6 +76,15 @@ describe("errors", () => {
       const err = errors.withStack(errors.withStack(ioErr));
       expect(err.error()).toBe("IO Error");
     });
+
+    // Fix https://github.com/cszatma/node-library/issues/240
+    it("takes an error or undefined and handles it accordingly", () => {
+      const err1 = undefined as error | undefined;
+      const err2 = errors.newError("oops") as error | undefined;
+
+      expect(errors.withStack(err1)).toBeUndefined();
+      expect(errors.withStack(err2)).toBeDefined();
+    });
   });
 
   describe("withMessage", () => {
@@ -95,6 +104,15 @@ describe("errors", () => {
         "error loading config",
       );
       expect(err.error()).toBe("error loading config: error reading file: IO Error");
+    });
+
+    // Fix https://github.com/cszatma/node-library/issues/240
+    it("takes an error or undefined and handles it accordingly", () => {
+      const err1 = undefined as error | undefined;
+      const err2 = errors.newError("oops") as error | undefined;
+
+      expect(errors.withMessage(err1, "oh no")).toBeUndefined();
+      expect(errors.withMessage(err2, "oh no")).toBeDefined();
     });
   });
 
@@ -116,6 +134,15 @@ describe("errors", () => {
       expect(err.detailedError()).toMatch(
         /^IO Error\nerror reading file\n\s+at\s(?:.+?)\s\(.*packages\/node-stdlib\/test\/errors\/errors\.test\.ts/m,
       );
+    });
+
+    // Fix https://github.com/cszatma/node-library/issues/240
+    it("takes an error or undefined and handles it accordingly", () => {
+      const err1 = undefined as error | undefined;
+      const err2 = errors.newError("oops") as error | undefined;
+
+      expect(errors.wrap(err1, "oh no")).toBeUndefined();
+      expect(errors.wrap(err2, "oh no")).toBeDefined();
     });
   });
 
