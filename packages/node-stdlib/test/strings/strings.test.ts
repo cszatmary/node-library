@@ -33,11 +33,11 @@ describe("strings/strings.ts", () => {
 
   describe("trimPrefix()", () => {
     it("trims the prefix from the string", () => {
-      expect(strings.trimPrefx("abcd", "ab")).toBe("cd");
+      expect(strings.trimPrefix("abcd", "ab")).toBe("cd");
     });
 
     it("returns the string unchanged when there is no prefix", () => {
-      expect(strings.trimPrefx("abcd", "cd")).toBe("abcd");
+      expect(strings.trimPrefix("abcd", "cd")).toBe("abcd");
     });
   });
 

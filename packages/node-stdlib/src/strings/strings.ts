@@ -51,7 +51,7 @@ export function lastIndexAny(s: string, chars: string): number {
  * Removes the leading `prefix` string from `s`.
  * If `s` doesn't start with `prefix`, `s` is returned unchanged.
  */
-export function trimPrefx(s: string, prefix: string): string {
+export function trimPrefix(s: string, prefix: string): string {
   if (s.startsWith(prefix)) {
     return s.slice(prefix.length);
   }
