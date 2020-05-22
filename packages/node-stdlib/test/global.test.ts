@@ -1,4 +1,4 @@
-import { errors, panic, range } from "../src";
+import { errors, panic, range, util } from "../src";
 
 describe("global.ts", () => {
   describe("panic()", () => {
@@ -24,6 +24,24 @@ describe("global.ts", () => {
       expect(() => {
         panic({ error: "oops" });
       }).toPanic("{ error: 'oops' }");
+    });
+
+    it("panics with undefined", () => {
+      expect(() => {
+        panic(undefined);
+      }).toPanic("undefined");
+    });
+
+    it("panics with null", () => {
+      expect(() => {
+        panic(null);
+      }).toPanic("null");
+    });
+
+    it("panics with a value that implements Stringer", () => {
+      expect(() => {
+        panic(new util.SemVer(1, 5, 12));
+      }).toPanic("1.5.12");
     });
   });
 

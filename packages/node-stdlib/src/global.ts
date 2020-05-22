@@ -32,10 +32,31 @@ export const symbols = Object.freeze({
   readonly copy: unique symbol;
 };
 
-// Copy isError here so we don't need to import from the errors module
-function isError(err: unknown): err is error {
-  const e = err as error;
-  return typeof e.error === "function" && typeof e.detailedError === "function";
+// Copy toString so we don't need to import from the util module
+function toString(v: unknown): string {
+  if (v === undefined) {
+    return "undefined";
+  } else if (v === null) {
+    return "null";
+  } else if (typeof v === "string") {
+    return v;
+  } else if (typeof v === "boolean" || typeof v === "number") {
+    return v.toString();
+  }
+
+  // Inline isError so we don't need to import from the errors module
+  const err = v as error;
+  if (typeof err.error === "function" && typeof err.detailedError === "function") {
+    return err.error();
+  }
+
+  // Inline Stringer
+  const s = v as { toString(): string };
+  if (typeof s.toString === "function" && s.toString !== Object.prototype.toString) {
+    return s.toString();
+  }
+
+  return inspect(v);
 }
 
 /**
@@ -44,16 +65,7 @@ function isError(err: unknown): err is error {
  * @param msg A message to display when the program terminates.
  */
 export function panic(v: unknown): never {
-  let msg: string;
-  if (typeof v === "string") {
-    msg = v;
-  } else if (isError(v)) {
-    msg = v.error();
-  } else {
-    msg = inspect(v);
-  }
-
-  const exception = new Error(msg);
+  const exception = new Error(toString(v));
   exception.name = "panic";
   // Remove first line of stack trace since it is in this function
   Error.captureStackTrace(exception, panic);
