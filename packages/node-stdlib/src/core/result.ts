@@ -6,6 +6,33 @@
 import { inspect, InspectOptions } from "util";
 import { panic } from "../global";
 
+// Copy toString so we don't need to import from the util module
+function toString(v: unknown): string {
+  if (v === undefined) {
+    return "undefined";
+  } else if (v === null) {
+    return "null";
+  } else if (typeof v === "string") {
+    return v;
+  } else if (typeof v === "boolean" || typeof v === "number") {
+    return v.toString();
+  }
+
+  // Inline isError so we don't need to import from the errors module
+  const err = v as error;
+  if (typeof err.error === "function" && typeof err.detailedError === "function") {
+    return err.error();
+  }
+
+  // Inline Stringer
+  const s = v as { toString(): string };
+  if (typeof s.toString === "function" && s.toString !== Object.prototype.toString) {
+    return s.toString();
+  }
+
+  return inspect(v);
+}
+
 interface ResultCase<S, F> {
   /**
    * Returns `true` if the a `Success`.
@@ -100,14 +127,11 @@ class Success<S, F> implements ResultCase<S, F> {
   }
 
   unwrapFailure(msg?: string): never {
-    let m: string;
-    if (msg) {
-      m = `${msg}: ${this.#value}`;
-    } else {
-      m = `${this.#value}`;
+    if (msg === undefined) {
+      panic(this.#value);
     }
 
-    panic(m);
+    panic(`${msg}: ${toString(this.#value)}`);
   }
 
   success(): S {
@@ -173,14 +197,11 @@ class Failure<S, F> implements ResultCase<S, F> {
   }
 
   unwrap(msg?: string): never {
-    let m: string;
-    if (msg) {
-      m = `${msg}: ${this.#cause}`;
-    } else {
-      m = `${this.#cause}`;
+    if (msg === undefined) {
+      panic(this.#cause);
     }
 
-    panic(m);
+    panic(`${msg}: ${toString(this.#cause)}`);
   }
 
   unwrapFailure(msg?: string): F {

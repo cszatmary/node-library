@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import { core, errors } from "../../src";
+import { core, errors, util } from "../../src";
 
 const { Result, resultify, resultifyPromise } = core;
 
@@ -32,7 +32,7 @@ describe("Result", () => {
     });
   });
 
-  describe("unwrap() / unwrapFailure()", () => {
+  describe("unwrap()", () => {
     it("returns the value when the result a Success", () => {
       const r = Result.success(10);
       expect(r.unwrap()).toBe(10);
@@ -52,6 +52,15 @@ describe("Result", () => {
       }).toPanic("Oh no!");
     });
 
+    it("panics with the given message and stringified failure value", () => {
+      const r = Result.failure(errors.errorString("oops"));
+      expect(() => {
+        r.unwrap("Something broke");
+      }).toPanic("Something broke: oops");
+    });
+  });
+
+  describe("unwrapFailure()", () => {
     it("panics with the given message when the result is a Success", () => {
       const r = Result.success(10);
       expect(() => {
@@ -70,6 +79,13 @@ describe("Result", () => {
       const r = Result.failure("Oh no!");
       expect(r.unwrapFailure()).toBe("Oh no!");
     });
+
+    it("panics with the given message and stringified success value", () => {
+      const r = Result.success(new util.SemVer(1, 5, 12));
+      expect(() => {
+        r.unwrapFailure("Something broke");
+      }).toPanic("Something broke: 1.5.12");
+    });
   });
 
   describe("success()", () => {
@@ -84,7 +100,7 @@ describe("Result", () => {
     });
   });
 
-  describe("error()", () => {
+  describe("failure()", () => {
     it("returns undefined when the result a Success", () => {
       const r = Result.success(10);
       expect(r.failure()).toBeUndefined();
@@ -116,7 +132,7 @@ describe("Result", () => {
       expect(newR.success()).toBe(20);
     });
 
-    it("returns a new result with the same error value", () => {
+    it("returns a new result with the same failure value", () => {
       const err = "Oh no!";
       const r = Result.failure<number, string>(err);
       const newR = r.map((v) => v + 10);
@@ -125,7 +141,7 @@ describe("Result", () => {
     });
   });
 
-  describe("mapError()", () => {
+  describe("mapFailure()", () => {
     it("returns a new result with the same success value", () => {
       const r = Result.success<number, string>(10);
       const newR = r.mapFailure((e) => errors.newError(e));
@@ -133,7 +149,7 @@ describe("Result", () => {
       expect(newR.success()).toBe(10);
     });
 
-    it("creates a new result mapping the error value", () => {
+    it("creates a new result mapping the failure value", () => {
       const err = "Oh no!";
       const r = Result.failure<number, string>(err);
       const newR = r.mapFailure((e) => errors.newError(e));
@@ -150,7 +166,7 @@ describe("Result", () => {
       expect(newR.success()).toBe(20);
     });
 
-    it("returns a new result with the same error value", () => {
+    it("returns a new result with the same failure value", () => {
       const err = "Oh no!";
       const r = Result.failure<number, string>(err);
       const newR = r.flatMap((v) => Result.success(v + 10));
@@ -159,7 +175,7 @@ describe("Result", () => {
     });
   });
 
-  describe("flatMapError()", () => {
+  describe("flatMapFailure()", () => {
     it("returns a new result with the same success value", () => {
       const r = Result.success<number, string>(10);
       const newR = r.flatMapFailure((e) => Result.failure(errors.newError(e)));
@@ -167,7 +183,7 @@ describe("Result", () => {
       expect(newR.success()).toBe(10);
     });
 
-    it("creates a new result mapping the error value and unwrapping the result", () => {
+    it("creates a new result mapping the failure value and unwrapping the result", () => {
       const err = "Oh no!";
       const r = Result.failure<number, string>(err);
       const newR = r.flatMapFailure((e) => Result.failure(errors.newError(e)));
