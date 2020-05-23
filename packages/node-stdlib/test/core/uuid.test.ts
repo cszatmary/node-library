@@ -31,16 +31,16 @@ describe("core/uuid.ts", () => {
     it("creates a valid v4 uuid", () => {
       const uuid = core.UUID.v4();
       expect(uuid.toString()).toMatch(v4Regex);
-      expect(uuid.version()).toBe(core.UUIDVersion.v4);
-      expect(uuid.variant()).toBe(core.UUIDVariant.rfc4122);
+      expect(uuid.version()).toBe(core.UUID.Version.v4);
+      expect(uuid.variant()).toBe(core.UUID.Variant.rfc4122);
     });
 
     it("creates a v4 uuid from the uuid string", () => {
       const uuidString = "1d4f6d02-1146-48a8-b0ad-f562220303de";
       const uuid = core.UUID.fromString(uuidString);
       expect(uuid?.toString()).toBe(uuidString);
-      expect(uuid?.version()).toBe(core.UUIDVersion.v4);
-      expect(uuid?.variant()).toBe(core.UUIDVariant.rfc4122);
+      expect(uuid?.version()).toBe(core.UUID.Version.v4);
+      expect(uuid?.variant()).toBe(core.UUID.Variant.rfc4122);
     });
 
     describe("v3 / v5", () => {
