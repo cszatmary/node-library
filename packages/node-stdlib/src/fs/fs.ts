@@ -11,7 +11,9 @@ This allows this module to serve as a drop-in replacement for node's fs.
 */
 
 import fs from "fs";
-import { Result, resultify, resultifyPromise } from "../core/mod";
+import { Result } from "../core/mod";
+
+const { resultify, resultifyPromise } = Result;
 
 export type PathLike = fs.PathLike;
 export type FileHandle = fs.promises.FileHandle;

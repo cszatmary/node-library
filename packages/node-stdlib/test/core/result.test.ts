@@ -1,7 +1,7 @@
 import { inspect } from "util";
 import { core, errors, util } from "../../src";
 
-const { Result, resultify, resultifyPromise } = core;
+const { Result } = core;
 
 describe("Result", () => {
   describe("creation functions", () => {
@@ -222,7 +222,7 @@ describe("Result", () => {
         return a / b;
       }
 
-      const resultifiedDivide = resultify(divide);
+      const resultifiedDivide = Result.resultify(divide);
       const s = resultifiedDivide(6, 3);
       const f = resultifiedDivide(6, 0);
 
@@ -241,7 +241,7 @@ describe("Result", () => {
         return Promise.resolve(a / b);
       }
 
-      const resultifiedDivide = resultifyPromise(divide);
+      const resultifiedDivide = Result.resultifyPromise(divide);
       const s = await resultifiedDivide(6, 3);
       const f = await resultifiedDivide(6, 0);
 
