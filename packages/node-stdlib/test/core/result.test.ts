@@ -1,7 +1,5 @@
 import { inspect } from "util";
-import { core, errors, util } from "../../src";
-
-const { Result } = core;
+import { Result, errors, util } from "../../src";
 
 describe("Result", () => {
   describe("creation functions", () => {
@@ -252,8 +250,8 @@ describe("Result", () => {
 
   describe("inspect", () => {
     it("returns just the type when depth is zero", () => {
-      const success = core.Result.success(10);
-      const failure = core.Result.failure("oh no!");
+      const success = Result.success(10);
+      const failure = Result.failure("oh no!");
       const s1 = inspect(success, { depth: -1 });
       const s2 = inspect(failure, { depth: -1 });
       expect(s1).toBe("Result.success {}");
@@ -261,8 +259,8 @@ describe("Result", () => {
     });
 
     it("returns a string representation of the box", () => {
-      const success = core.Result.success(10);
-      const failure = core.Result.failure("oh no!");
+      const success = Result.success(10);
+      const failure = Result.failure("oh no!");
       const s1 = inspect(success);
       const s2 = inspect(failure);
       expect(s1).toBe("Result.success { 10 }");
