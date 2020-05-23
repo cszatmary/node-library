@@ -1,4 +1,4 @@
-import { core, log } from "../../src";
+import { bytes, log } from "../../src";
 
 describe("log/logger.ts", () => {
   describe("isLevelEnabled()", () => {
@@ -21,7 +21,7 @@ describe("log/logger.ts", () => {
 
   describe("logging methods", () => {
     it("writes a log at debug level", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -33,7 +33,7 @@ describe("log/logger.ts", () => {
     });
 
     it("writes a log at info level", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -45,7 +45,7 @@ describe("log/logger.ts", () => {
     });
 
     it("writes a log at warn level", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -57,7 +57,7 @@ describe("log/logger.ts", () => {
     });
 
     it("writes a log at error level", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -74,7 +74,7 @@ describe("log/logger.ts", () => {
         exitCode = code as number;
       }) as (code?: number) => never);
 
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -88,7 +88,7 @@ describe("log/logger.ts", () => {
     });
 
     it("writes a log at panic level, then panics", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -103,7 +103,7 @@ describe("log/logger.ts", () => {
     });
 
     it("doesn't log anything if the log level isn't enabled", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -117,7 +117,7 @@ describe("log/logger.ts", () => {
 
   describe("fields", () => {
     it("logs the message with the fields", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -129,7 +129,7 @@ describe("log/logger.ts", () => {
     });
 
     it("adds a global field that will be included in all logs", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -142,7 +142,7 @@ describe("log/logger.ts", () => {
     });
 
     it("adds global fields that will be included in all logs", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),
@@ -155,7 +155,7 @@ describe("log/logger.ts", () => {
     });
 
     it("overwrites the global field with the local field", () => {
-      const b = new core.DynamicBuffer();
+      const b = new bytes.DynamicBuffer();
       const logger = new log.StandardLogger({
         out: b,
         formatter: new log.TextFormatter({ disableTimestamp: true }),

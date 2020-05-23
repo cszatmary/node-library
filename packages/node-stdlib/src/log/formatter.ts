@@ -8,7 +8,8 @@
 import type { WriteStream } from "tty";
 import { inspect } from "util";
 import { blue, red, white, yellow } from "../colors/mod";
-import { DynamicBuffer, Result } from "../core/mod";
+import { DynamicBuffer } from "../bytes/mod";
+import { Result } from "../core/mod";
 import { fromJSError } from "../errors/mod";
 import { Fields, Log, Level, levelString, allLevels } from "./log";
 

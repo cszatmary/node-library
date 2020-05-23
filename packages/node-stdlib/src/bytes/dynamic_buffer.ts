@@ -7,8 +7,9 @@
 
 import { inspect } from "util";
 import { panic, symbols } from "../global";
-import { Result } from "./result";
+import { Result } from "../core/mod";
 import { errorString } from "../errors/mod";
+import { copy } from "./bytes";
 
 // Minimum capacity for a new DynamicBuffer
 const minSize = 64;
@@ -16,13 +17,6 @@ const minSize = 64;
 const maxSize = 2 ** 31 - 1;
 
 export const eof = errorString("EOF");
-
-function copy(dest: Buffer, src: Buffer, off = 0): number {
-  const l = dest.byteLength - off;
-  const b = src.byteLength > l ? src.subarray(0, l) : src;
-  dest.set(b, off);
-  return b.byteLength;
-}
 
 function isByte(c: number): boolean {
   return Number.isInteger(c) && c >= 0 && c < 256;
@@ -238,7 +232,7 @@ export class DynamicBuffer implements Iterable<number> {
    */
   write(p: Buffer): number {
     const m = this.#grow(p.byteLength);
-    return copy(this.#buf, p, m);
+    return copy(this.#buf.subarray(m), p);
   }
 
   /**
