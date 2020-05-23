@@ -9,10 +9,13 @@
 
 export * from "./global";
 
+// core is a special case since it contains core types
+// that will likely be used frequently
+export * from "./core/mod";
+
 export * as bytes from "./bytes/mod";
 export * as cmd from "./cmd/mod";
 export * as colors from "./colors/mod";
-export * as core from "./core/mod";
 export * as env from "./env/mod";
 export * as errors from "./errors/mod";
 export * as fatal from "./fatal/mod";
