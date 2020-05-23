@@ -2,6 +2,5 @@
 // All rights reserved. MIT License.
 
 export * from "./box";
-export * from "./dynamic_buffer";
 export * from "./result";
 export * from "./uuid";
