@@ -1,26 +1,10 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-/* eslint-disable no-bitwise */
+/* eslint-disable no-bitwise, import/export */
 
 import crypto from "crypto";
 import { inspect } from "util";
-
-export enum UUIDVersion {
-  nil,
-  v1,
-  v2,
-  v3,
-  v4,
-  v5,
-}
-
-export enum UUIDVariant {
-  ncs,
-  rfc4122,
-  microsoft,
-  future,
-}
 
 const uuidSize = 16;
 const versionIndex = 6;
@@ -101,24 +85,24 @@ export class UUID {
   /**
    * Returns the version of the uuid.
    */
-  version(): UUIDVersion {
+  version(): UUID.Version {
     return this.#uuid[versionIndex] >> 4;
   }
 
   /**
    * Returns the layout variant of the uuid.
    */
-  variant(): UUIDVariant {
+  variant(): UUID.Variant {
     const variantOctet = this.#uuid[variantIndex];
     if (variantOctet >> 7 === 0) {
-      return UUIDVariant.ncs;
+      return UUID.Variant.ncs;
     } else if (variantOctet >> 6 === 0b10) {
-      return UUIDVariant.rfc4122;
+      return UUID.Variant.rfc4122;
     } else if (variantOctet >> 5 === 0b110) {
-      return UUIDVariant.microsoft;
+      return UUID.Variant.microsoft;
     }
 
-    return UUIDVariant.future;
+    return UUID.Variant.future;
   }
 
   /**
@@ -225,7 +209,7 @@ export class UUID {
 
     // Make sure version is valid
     const version = uuid.version();
-    if (version < UUIDVersion.nil || version > UUIDVersion.v5) {
+    if (version < UUID.Version.nil || version > UUID.Version.v5) {
       return undefined;
     }
 
@@ -241,3 +225,22 @@ Object.defineProperty(UUID, "nil", {
 Object.defineProperty(UUID, "namespaceIDs", {
   writable: false,
 });
+
+// eslint-disable-next-line @typescript-eslint/no-namespace, no-redeclare
+export namespace UUID {
+  export enum Version {
+    nil,
+    v1,
+    v2,
+    v3,
+    v4,
+    v5,
+  }
+
+  export enum Variant {
+    ncs,
+    rfc4122,
+    microsoft,
+    future,
+  }
+}
