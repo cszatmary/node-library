@@ -2,24 +2,28 @@ import { log } from "../../src";
 
 describe("log/log.ts", () => {
   describe("levelString()", () => {
-    it("converts the level to a string representation", () => {
-      expect(log.levelString(log.Level.debug)).toBe("debug");
-      expect(log.levelString(log.Level.info)).toBe("info");
-      expect(log.levelString(log.Level.warn)).toBe("warn");
-      expect(log.levelString(log.Level.error)).toBe("error");
-      expect(log.levelString(log.Level.fatal)).toBe("fatal");
-      expect(log.levelString(log.Level.panic)).toBe("panic");
+    test.each([
+      [log.Level.debug, "debug"],
+      [log.Level.info, "info"],
+      [log.Level.warn, "warn"],
+      [log.Level.error, "error"],
+      [log.Level.fatal, "fatal"],
+      [log.Level.panic, "panic"],
+    ])("converts the level %d to a string representation: %s", (level, expected) => {
+      expect(log.levelString(level)).toBe(expected);
     });
   });
 
   describe("parseLevel()", () => {
-    it("returns the level matching the given string", () => {
-      expect(log.parseLevel("debug").unwrap()).toBe(log.Level.debug);
-      expect(log.parseLevel("info").unwrap()).toBe(log.Level.info);
-      expect(log.parseLevel("warn").unwrap()).toBe(log.Level.warn);
-      expect(log.parseLevel("error").unwrap()).toBe(log.Level.error);
-      expect(log.parseLevel("fatal").unwrap()).toBe(log.Level.fatal);
-      expect(log.parseLevel("panic").unwrap()).toBe(log.Level.panic);
+    test.each([
+      ["debug", log.Level.debug],
+      ["info", log.Level.info],
+      ["warn", log.Level.warn],
+      ["error", log.Level.error],
+      ["fatal", log.Level.fatal],
+      ["panic", log.Level.panic],
+    ])("returns the level matching the string: %s", (str, expectedLevel) => {
+      expect(log.parseLevel(str).unwrap()).toBe(expectedLevel);
     });
 
     it("returns an error if the string is an invalid level", () => {
