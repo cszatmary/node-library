@@ -26,56 +26,66 @@ describe("time/duration.ts", () => {
   });
 
   describe("duration", () => {
-    it("returns the duration as nanoseconds", () => {
-      expect(time.toNanoseconds(-1000)).toBe(-1000);
-      expect(time.toNanoseconds(1000)).toBe(1000);
-      expect(time.toNanoseconds(-1)).toBe(-1);
-      expect(time.toNanoseconds(1)).toBe(1);
+    test.each([
+      [-1000, -1000],
+      [1000, 1000],
+      [-1, -1],
+      [1, 1],
+    ])("returns the duration %d as nanoseconds", (d, expected) => {
+      expect(time.toNanoseconds(d)).toBe(expected);
     });
 
-    it("returns the duration as microseconds", () => {
-      expect(time.toMicroseconds(-1000)).toBe(-1);
-      expect(time.toMicroseconds(1000)).toBe(1);
+    test.each([
+      [-1000, -1],
+      [1000, 1],
+    ])("returns the duration %d as microseconds", (d, expected) => {
+      expect(time.toMicroseconds(d)).toBe(expected);
     });
 
-    it("returns the duration as milliseconds", () => {
-      expect(time.toMilliseconds(-1000000)).toBe(-1);
-      expect(time.toMilliseconds(1000000)).toBe(1);
+    test.each([
+      [-1000000, -1],
+      [1000000, 1],
+    ])("returns the duration %d as milliseconds", (d, expected) => {
+      expect(time.toMilliseconds(d)).toBe(expected);
     });
 
-    it("returns the duration as seconds", () => {
-      expect(time.toSeconds(300000000)).toBe(0.3);
+    test.each([[300000000, 0.3]])("returns the duration %d as seconds", (d, expected) => {
+      expect(time.toSeconds(d)).toBe(expected);
     });
 
-    it("returns the duration as minutes", () => {
-      expect(time.toMinutes(-60000000000)).toBe(-1);
-      expect(time.toMinutes(60000000000)).toBe(1);
-      expect(time.toMinutes(-1)).toBe(-1 / 60e9);
-      expect(time.toMinutes(1)).toBe(1 / 60e9);
-      expect(time.toMinutes(3000)).toBe(5e-8);
+    test.each([
+      [-60000000000, -1],
+      [60000000000, 1],
+      [-1, -1 / 60e9],
+      [1, 1 / 60e9],
+      [3000, 5e-8],
+    ])("returns the duration %d as minutes", (d, expected) => {
+      expect(time.toMinutes(d)).toBe(expected);
     });
 
-    it("returns the duration as hours", () => {
-      expect(time.toHours(-3600000000000)).toBe(-1);
-      expect(time.toHours(3600000000000)).toBe(1);
-      expect(time.toHours(-1)).toBe(-1 / 3600e9);
-      expect(time.toHours(1)).toBe(1 / 3600e9);
-      expect(time.toHours(36)).toBe(1e-11);
+    test.each([
+      [-3600000000000, -1],
+      [3600000000000, 1],
+      [-1, -1 / 3600e9],
+      [1, 1 / 3600e9],
+      [36, 1e-11],
+    ])("returns the duration %d as hours", (d, expected) => {
+      expect(time.toHours(d)).toBe(expected);
     });
 
-    it("returns a string representation of the duration", () => {
-      expect(time.durationString(0)).toBe("0s");
-      expect(time.durationString(1 * time.nanosecond)).toBe("1ns");
-      expect(time.durationString(1100 * time.nanosecond)).toBe("1.1µs");
-      expect(time.durationString(-1100 * time.nanosecond)).toBe("-1.1µs");
-      expect(time.durationString(2200 * time.microsecond)).toBe("2.2ms");
-      expect(time.durationString(3300 * time.millisecond)).toBe("3.3s");
-      expect(time.durationString(4 * time.minute + 5 * time.second)).toBe("4m5s");
-      expect(time.durationString(4 * time.minute + 5001 * time.millisecond)).toBe("4m5.001s");
-      expect(time.durationString(5 * time.hour + 6 * time.minute + 7001 * time.millisecond)).toBe(
-        "5h6m7.001s",
-      );
-      expect(time.durationString(8 * time.minute + 1 * time.nanosecond)).toBe("8m0.000000001s");
+    test.each([
+      [0, "0s"],
+      [1 * time.nanosecond, "1ns"],
+      [1100 * time.nanosecond, "1.1µs"],
+      [-1100 * time.nanosecond, "-1.1µs"],
+      [2200 * time.microsecond, "2.2ms"],
+      [3300 * time.millisecond, "3.3s"],
+      [4 * time.minute + 5 * time.second, "4m5s"],
+      [4 * time.minute + 5001 * time.millisecond, "4m5.001s"],
+      [5 * time.hour + 6 * time.minute + 7001 * time.millisecond, "5h6m7.001s"],
+      [8 * time.minute + 1 * time.nanosecond, "8m0.000000001s"],
+    ])("returns a string representation of the duration %d, %s", (d, expected) => {
+      expect(time.durationString(d)).toBe(expected);
     });
   });
 });

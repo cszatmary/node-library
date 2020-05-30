@@ -2,32 +2,40 @@ import { strings } from "../../src";
 
 describe("strings/strings.ts", () => {
   describe("indexAny()", () => {
-    it("returns the first index of any matching char", () => {
-      expect(strings.indexAny("a", "a")).toBe(0);
-      expect(strings.indexAny("aaa", "a")).toBe(0);
-      expect(strings.indexAny("abc", "xcz")).toBe(2);
+    test.each([
+      ["a", "a", 0],
+      ["aaa", "a", 0],
+      ["abc", "xcz", 2],
+    ])(`returns the first index of any matching char: "%s", "%s"`, (str, chars, expectedIndex) => {
+      expect(strings.indexAny(str, chars)).toBe(expectedIndex);
     });
 
-    it("returns -1 when no chars are present", () => {
-      expect(strings.indexAny("", "")).toBe(-1);
-      expect(strings.indexAny("", "a")).toBe(-1);
-      expect(strings.indexAny("a", "")).toBe(-1);
-      expect(strings.indexAny("abc", "xyz")).toBe(-1);
+    test.each([
+      ["", ""],
+      ["", "a"],
+      ["a", ""],
+      ["abc", "xyz"],
+    ])(`returns -1 when no chars are present: "%s", "%s"`, (str, chars) => {
+      expect(strings.indexAny(str, chars)).toBe(-1);
     });
   });
 
   describe("lastIndexAny()", () => {
-    it("returns the last index of any matching char", () => {
-      expect(strings.lastIndexAny("a", "a")).toBe(0);
-      expect(strings.lastIndexAny("aaa", "a")).toBe(2);
-      expect(strings.lastIndexAny("abc", "xcz")).toBe(2);
+    test.each([
+      ["a", "a", 0],
+      ["aaa", "a", 2],
+      ["abc", "xcz", 2],
+    ])(`returns the last index of any matching char: "%s", "%s"`, (str, chars, expectedIndex) => {
+      expect(strings.lastIndexAny(str, chars)).toBe(expectedIndex);
     });
 
-    it("returns -1 when no chars are present", () => {
-      expect(strings.lastIndexAny("", "")).toBe(-1);
-      expect(strings.lastIndexAny("", "a")).toBe(-1);
-      expect(strings.lastIndexAny("a", "")).toBe(-1);
-      expect(strings.lastIndexAny("abc", "xyz")).toBe(-1);
+    test.each([
+      ["", ""],
+      ["", "a"],
+      ["a", ""],
+      ["abc", "xyz"],
+    ])(`returns -1 when no chars are present: "%s", "%s"`, (str, chars) => {
+      expect(strings.lastIndexAny(str, chars)).toBe(-1);
     });
   });
 

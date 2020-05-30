@@ -2,14 +2,16 @@ import { errors, util } from "../../src";
 
 describe("util/util.ts", () => {
   describe("toString()", () => {
-    it("returns a string representation of the primative value", () => {
-      expect(util.toString(10)).toBe("10");
-      expect(util.toString(-12.5)).toBe("-12.5");
-      expect(util.toString(true)).toBe("true");
-      expect(util.toString(false)).toBe("false");
-      expect(util.toString("hello")).toBe("hello");
-      expect(util.toString(undefined)).toBe("undefined");
-      expect(util.toString(null)).toBe("null");
+    test.each([
+      [10, "10"],
+      [-12.5, "-12.5"],
+      [true, "true"],
+      [false, "false"],
+      ["hello", "hello"],
+      [undefined, "undefined"],
+      [null, "null"],
+    ])("returns a strnig representation of the primitive value: %s", (v, expected) => {
+      expect(util.toString(v)).toBe(expected);
     });
 
     it("returns a string representation of the error", () => {

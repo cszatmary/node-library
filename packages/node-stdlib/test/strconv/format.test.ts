@@ -2,37 +2,37 @@ import { strconv } from "../../src";
 
 describe("strconv/format.ts", () => {
   describe("formatBool()", () => {
-    it("formats the bool as a string", () => {
-      expect(strconv.formatBool(true)).toBe("true");
-      expect(strconv.formatBool(false)).toBe("false");
+    test.each([
+      [true, "true"],
+      [false, "false"],
+    ])("formats the bool %s as a string", (b, expected) => {
+      expect(strconv.formatBool(b)).toBe(expected);
     });
   });
 
   describe("formatInt()", () => {
-    it("formats the int in base 10", () => {
-      expect(strconv.formatInt(0)).toBe("0");
-      expect(strconv.formatInt(1)).toBe("1");
-      expect(strconv.formatInt(-1)).toBe("-1");
-      expect(strconv.formatInt(12345678)).toBe("12345678");
-      expect(strconv.formatInt(-98765432)).toBe("-98765432");
+    test.each([
+      [0, "0"],
+      [1, "1"],
+      [-1, "-1"],
+      [12345678, "12345678"],
+      [-98765432, "-98765432"],
+    ])("formats the int %d in base 10", (int, expected) => {
+      expect(strconv.formatInt(int)).toBe(expected);
     });
 
-    it("formats the int in base 2", () => {
-      expect(strconv.formatInt(0, 2)).toBe("0");
-      expect(strconv.formatInt(10, 2)).toBe("1010");
-      expect(strconv.formatInt(-1, 2)).toBe("-1");
-    });
-
-    it("formats the int in base 8", () => {
-      expect(strconv.formatInt(-8, 8)).toBe("-10");
-      expect(strconv.formatInt(0o57635, 8)).toBe("57635");
-      expect(strconv.formatInt(14, 8)).toBe("16");
-    });
-
-    it("formats the int in base 16", () => {
-      expect(strconv.formatInt(16, 16)).toBe("10");
-      expect(strconv.formatInt(-0x12345abcdef, 16)).toBe("-12345abcdef");
-      expect(strconv.formatInt(95, 16)).toBe("5f");
+    test.each([
+      [0, 2, "0"],
+      [10, 2, "1010"],
+      [-1, 2, "-1"],
+      [-8, 8, "-10"],
+      [0o57635, 8, "57635"],
+      [14, 8, "16"],
+      [16, 16, "10"],
+      [-0x12345abcdef, 16, "-12345abcdef"],
+      [95, 16, "5f"],
+    ])("formats the int %d in base %d", (int, base, expected) => {
+      expect(strconv.formatInt(int, base)).toBe(expected);
     });
 
     it("panics if i is not an integer", () => {
@@ -59,41 +59,44 @@ describe("strconv/format.ts", () => {
   });
 
   describe("formatFloat()", () => {
-    it("formats the float with fixed format", () => {
-      expect(strconv.formatFloat(1, "f", 5)).toBe("1.00000");
-      expect(strconv.formatFloat(0, "f", 5)).toBe("0.00000");
-      expect(strconv.formatFloat(-1, "f", 5)).toBe("-1.00000");
-      expect(strconv.formatFloat(12, "f", 5)).toBe("12.00000");
-      expect(strconv.formatFloat(123456700, "f", 5)).toBe("123456700.00000");
-      expect(strconv.formatFloat(1.2345e6, "f", 5)).toBe("1234500.00000");
-      expect(strconv.formatFloat(0.9, "f", 1)).toBe("0.9");
-      expect(strconv.formatFloat(0.09, "f", 1)).toBe("0.1");
-      expect(strconv.formatFloat(0.0999, "f", 1)).toBe("0.1");
-      expect(strconv.formatFloat(0.05, "f", 1)).toBe("0.1");
-      expect(strconv.formatFloat(0.05, "f", 0)).toBe("0");
-      expect(strconv.formatFloat(0.5, "f", 1)).toBe("0.5");
-      expect(strconv.formatFloat(0.5, "f", 0)).toBe("1");
-      expect(strconv.formatFloat(1.5, "f", 0)).toBe("2");
-
-      expect(strconv.formatFloat(123456, "f")).toBe("123456");
-      expect(strconv.formatFloat(12345.6789, "f")).toBe("12345.6789");
-      expect(strconv.formatFloat(12345.6789, "f", 0)).toBe("12346");
-      expect(strconv.formatFloat(12345.6789, "f", 1)).toBe("12345.7");
-      expect(strconv.formatFloat(12345.6789, "f", 6)).toBe("12345.678900");
+    test.each([
+      [1, 5, "1.00000"],
+      [0, 5, "0.00000"],
+      [-1, 5, "-1.00000"],
+      [12, 5, "12.00000"],
+      [123456700, 5, "123456700.00000"],
+      [1.2345e6, 5, "1234500.00000"],
+      [0.9, 1, "0.9"],
+      [0.09, 1, "0.1"],
+      [0.0999, 1, "0.1"],
+      [0.05, 1, "0.1"],
+      [0.05, 0, "0"],
+      [0.5, 1, "0.5"],
+      [0.5, 0, "1"],
+      [1.5, 0, "2"],
+      [123456, undefined, "123456"],
+      [12345.6789, undefined, "12345.6789"],
+      [12345.6789, 0, "12346"],
+      [12345.6789, 1, "12345.7"],
+      [12345.6789, 6, "12345.678900"],
+    ])("formats the float %f with fixed format and precision %d", (float, prec, expected) => {
+      expect(strconv.formatFloat(float, "f", prec)).toBe(expected);
     });
 
-    it("formats the float with exponential format", () => {
-      expect(strconv.formatFloat(1, "e", 5)).toBe("1.00000e+0");
-      expect(strconv.formatFloat(0, "e", 5)).toBe("0.00000e+0");
-      expect(strconv.formatFloat(-1, "e", 5)).toBe("-1.00000e+0");
-      expect(strconv.formatFloat(12, "e", 5)).toBe("1.20000e+1");
-      expect(strconv.formatFloat(123456700, "e", 5)).toBe("1.23457e+8");
-      expect(strconv.formatFloat(1.2345e6, "e", 5)).toBe("1.23450e+6");
-      expect(strconv.formatFloat(1e23, "e", 17)).toBe("9.99999999999999916e+22");
-      expect(strconv.formatFloat(1e23, "e")).toBe("1e+23");
-      expect(strconv.formatFloat(123456, "e", 2)).toBe("1.23e+5");
-      expect(strconv.formatFloat(12345.6789, "e")).toBe("1.23456789e+4");
-      expect(strconv.formatFloat(12345.6789, "e", 0)).toBe("1e+4");
+    test.each([
+      [1, 5, "1.00000e+0"],
+      [0, 5, "0.00000e+0"],
+      [-1, 5, "-1.00000e+0"],
+      [12, 5, "1.20000e+1"],
+      [123456700, 5, "1.23457e+8"],
+      [1.2345e6, 5, "1.23450e+6"],
+      [1e23, 17, "9.99999999999999916e+22"],
+      [1e23, undefined, "1e+23"],
+      [123456, 2, "1.23e+5"],
+      [12345.6789, undefined, "1.23456789e+4"],
+      [12345.6789, 0, "1e+4"],
+    ])("formats the float %f with exponential format and precision %d", (float, prec, expected) => {
+      expect(strconv.formatFloat(float, "e", prec)).toBe(expected);
     });
 
     it("panics if fmt isn't f or e", () => {
