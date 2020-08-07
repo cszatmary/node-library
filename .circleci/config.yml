@@ -1,37 +1,33 @@
 version: 2.1
 
+executors:
+  docker:
+    docker:
+      - image: cimg/node:lts
+
 aliases:
   - &restore_cache
     name: Restore yarn cache
     keys:
-      - node-library-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
-
-defaults: &defaults
-  docker:
-    - image: circleci/node:12
-  working_directory: ~/repo
+      - node-library-20200807-{{ checksum "yarn.lock" }}
 
 jobs:
   install:
-    <<: *defaults
+    executor: docker
     steps:
       - checkout
       - restore_cache: *restore_cache
-      - run:
-          name: Make scripts executable
-          command: chmod -R +x .circleci/
       - run:
           name: Install dependencies
           command: .circleci/yarn_frozen_lockfile.sh
       - save_cache:
           name: Save yarn cache
-          key: node-library-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: node-library-20200807-{{ checksum "yarn.lock" }}
           paths:
             - node_modules/
-            - ~/.cache
 
   build:
-    <<: *defaults
+    executor: docker
     steps:
       - checkout
       - restore_cache: *restore_cache
@@ -40,7 +36,7 @@ jobs:
           command: yarn build
 
   lint:
-    <<: *defaults
+    executor: docker
     steps:
       - checkout
       - restore_cache: *restore_cache
@@ -49,7 +45,7 @@ jobs:
           command: yarn lint
 
   test:
-    <<: *defaults
+    executor: docker
     steps:
       - checkout
       - restore_cache: *restore_cache
