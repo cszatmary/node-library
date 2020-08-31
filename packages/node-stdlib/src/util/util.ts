@@ -50,6 +50,7 @@ export interface Copyable {
  * Returns a boolean indication whether or not
  * `v` is a proper object and not an array.
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function isObject(v: unknown): v is object {
   return v != null && typeof v === "object" && !Array.isArray(v);
 }
@@ -152,7 +153,7 @@ export function merge<T extends Record<string, unknown>, S extends Record<string
     }
 
     if (k in x && (isObject(v) || Array.isArray(v))) {
-      dest[k] = merge(x[k] as object, v);
+      dest[k] = merge(x[k] as Record<string, unknown>, v);
       continue;
     }
 

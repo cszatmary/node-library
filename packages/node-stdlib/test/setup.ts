@@ -8,6 +8,7 @@ declare global {
 }
 
 expect.extend({
+  // eslint-disable-next-line @typescript-eslint/ban-types
   toPanic(received: Function, expected: unknown): jest.CustomMatcherResult {
     let thrown: Error | undefined;
 

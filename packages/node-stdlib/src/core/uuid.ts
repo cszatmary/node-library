@@ -44,10 +44,12 @@ export class UUID {
    * https://tools.ietf.org/html/rfc4122#appendix-C
    */
   static readonly namespaceIDs = Object.freeze({
+    /* eslint-disable @typescript-eslint/naming-convention */
     DNS: new UUID(Buffer.from("6ba7b8109dad11d180b400c04fd430c8", "hex")),
     URL: new UUID(Buffer.from("6ba7b8119dad11d180b400c04fd430c8", "hex")),
     OID: new UUID(Buffer.from("6ba7b8129dad11d180b400c04fd430c8", "hex")),
     X500: new UUID(Buffer.from("6ba7b8149dad11d180b400c04fd430c8", "hex")),
+    /* eslint-enable @typescript-eslint/naming-convention */
   });
 
   #uuid: Buffer;
