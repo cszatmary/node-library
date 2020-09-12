@@ -1,10 +1,22 @@
+import { util } from "../src";
+
 declare global {
   // eslint-disable-next-line
   namespace jest {
     interface Matchers<R> {
       toPanic(msg?: string): R;
+      toBeSuccess(): R;
+      toBeFailure(): R;
     }
   }
+}
+
+interface Succeedable {
+  isSuccess(): boolean;
+}
+
+interface Failable {
+  isFailure(): boolean;
 }
 
 expect.extend({
@@ -79,6 +91,58 @@ Expected to panic with message:${pass ? " not" : ""}
 
 Received
   ${printReceived(message)}`,
+    };
+  },
+
+  toBeSuccess(received: Succeedable): jest.CustomMatcherResult {
+    const { matcherErrorMessage, matcherHint, printReceived, printWithType } = this.utils;
+
+    if (typeof received.isSuccess !== "function") {
+      throw new Error(
+        matcherErrorMessage(
+          matcherHint("toBeSuccess"),
+          `${this.utils.RECEIVED_COLOR("received")} value must be a Result`,
+          printWithType("Received", util.toString(received), printReceived),
+        ),
+      );
+    }
+
+    const pass = received.isSuccess();
+    const matcherName = pass ? ".not.toBeSuccess" : ".toBeSuccess";
+
+    return {
+      pass,
+      message: (): string => `${matcherHint(matcherName)}
+
+Expected value to${pass ? "not" : ""} be Success
+Received:
+  ${printReceived(util.toString(received))}`,
+    };
+  },
+
+  toBeFailure(received: Failable): jest.CustomMatcherResult {
+    const { matcherErrorMessage, matcherHint, printReceived, printWithType } = this.utils;
+
+    if (typeof received.isFailure !== "function") {
+      throw new Error(
+        matcherErrorMessage(
+          matcherHint("toBeFailure"),
+          `${this.utils.RECEIVED_COLOR("received")} value must be a Result`,
+          printWithType("Received", util.toString(received), printReceived),
+        ),
+      );
+    }
+
+    const pass = received.isFailure();
+    const matcherName = pass ? ".not.toBeFailure" : ".toBeFailure";
+
+    return {
+      pass,
+      message: (): string => `${matcherHint(matcherName)}
+
+Expected value to${pass ? "not" : ""} be Failure
+Received:
+  ${printReceived(util.toString(received))}`,
     };
   },
 });

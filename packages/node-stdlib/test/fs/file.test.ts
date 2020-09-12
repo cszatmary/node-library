@@ -61,7 +61,7 @@ describe("fs/file.ts", () => {
       const p = path.join(tmpDir, "foo.ts");
       fs.writeFileSync(p, "const n = 1;").unwrap();
       const r = await fs.remove(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
       expect(fs.fileExistsSync(p)).toBe(false);
     });
 
@@ -69,7 +69,7 @@ describe("fs/file.ts", () => {
       const p = path.join(tmpDir, "bar");
       fs.mkdirSync(p).unwrap();
       const r = await fs.remove(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
       expect(fs.fileExistsSync(p)).toBe(false);
     });
 
@@ -79,7 +79,7 @@ describe("fs/file.ts", () => {
       const fp = path.join(p, "foo.ts");
       fs.writeFileSync(fp, "const n = 1;").unwrap();
       const r = await fs.remove(p);
-      expect(r.isFailure()).toBe(true);
+      expect(r).toBeFailure();
       expect(fs.fileExistsSync(p)).toBe(true);
     });
   });
@@ -89,7 +89,7 @@ describe("fs/file.ts", () => {
       const p = path.join(tmpDir, "foo.ts");
       fs.writeFileSync(p, "const n = 1;").unwrap();
       const r = fs.removeSync(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
       expect(fs.fileExistsSync(p)).toBe(false);
     });
 
@@ -97,7 +97,7 @@ describe("fs/file.ts", () => {
       const p = path.join(tmpDir, "bar");
       fs.mkdirSync(p).unwrap();
       const r = fs.removeSync(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
       expect(fs.fileExistsSync(p)).toBe(false);
     });
 
@@ -107,7 +107,7 @@ describe("fs/file.ts", () => {
       const fp = path.join(p, "foo.ts");
       fs.writeFileSync(fp, "const n = 1;").unwrap();
       const r = fs.removeSync(p);
-      expect(r.isFailure()).toBe(true);
+      expect(r).toBeFailure();
       expect(fs.fileExistsSync(p)).toBe(true);
     });
   });
@@ -116,14 +116,14 @@ describe("fs/file.ts", () => {
     it("deletes files and directories recursively", async () => {
       const p = createFixture(tmpDir);
       const r = await fs.removeAll(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
       expect(fs.fileExistsSync(p)).toBe(false);
     });
 
     it("does nothing when the file doesn't exist", async () => {
       const p = path.join(tmpDir, "foo");
       const r = await fs.removeAll(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
     });
   });
 
@@ -131,14 +131,14 @@ describe("fs/file.ts", () => {
     it("deletes files and directories recursively", () => {
       const p = createFixture(tmpDir);
       const r = fs.removeAllSync(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
       expect(fs.fileExistsSync(p)).toBe(false);
     });
 
     it("does nothing when the file doesn't exist", () => {
       const p = path.join(tmpDir, "foo");
       const r = fs.removeAllSync(p);
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
     });
   });
 });

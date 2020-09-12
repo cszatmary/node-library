@@ -93,8 +93,7 @@ describe("util/semver.ts", () => {
   describe("parse()", () => {
     it("creates a SemVer from the given string", () => {
       const r = util.SemVer.parse("1.5.12");
-      const sv = r.success()!;
-      expect(r.isSuccess()).toBe(true);
+      const sv = r.unwrap();
       expect(sv.major).toBe(1);
       expect(sv.minor).toBe(5);
       expect(sv.patch).toBe(12);
@@ -102,8 +101,7 @@ describe("util/semver.ts", () => {
 
     it("fails with an error if the string is not a valid semver", () => {
       const r = util.SemVer.parse("1.10.10.3");
-      const err = r.failure()!;
-      expect(r.isFailure()).toBe(true);
+      const err = r.unwrapFailure();
       expect(err.error()).toBe("SemVer.Parse: Invalid semver string: 1.10.10.3");
     });
   });
