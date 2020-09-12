@@ -142,7 +142,7 @@ describe("bytes/dynamic_buffer.ts", () => {
       const buf = new bytes.DynamicBuffer("10ffab23ef5d", "hex");
       const b = Buffer.alloc(4);
       const r = buf.read(b);
-      expect(r.isSuccess());
+      expect(r.isSuccess()).toBe(true);
       expect(r.success()).toBe(4);
       expect(b.toString("hex")).toBe("10ffab23");
       expect(buf.length).toBe(2);
@@ -152,7 +152,7 @@ describe("bytes/dynamic_buffer.ts", () => {
       const buf = new bytes.DynamicBuffer("10ffab23ef5d", "hex");
       const b = Buffer.alloc(10);
       const r = buf.read(b);
-      expect(r.isSuccess());
+      expect(r.isSuccess()).toBe(true);
       expect(r.success()).toBe(6);
       expect(b.toString("hex")).toBe("10ffab23ef5d00000000");
       expect(buf.length).toBe(0);
@@ -189,7 +189,7 @@ describe("bytes/dynamic_buffer.ts", () => {
     it("reads the next byte", () => {
       const buf = new bytes.DynamicBuffer("10ffab23ef5d", "hex");
       const r = buf.readByte();
-      expect(r.isSuccess());
+      expect(r.isSuccess()).toBe(true);
       expect(r.success()).toBe(0x10);
       expect(buf.length).toBe(5);
     });
