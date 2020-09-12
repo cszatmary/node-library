@@ -17,7 +17,7 @@ describe("core/uuid.ts", () => {
   describe("fromString()", () => {
     it("creates a UUID from the string", () => {
       const r = uuid.fromString("1d4f6d02-1146-48a8-b0ad-f562220303de");
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
     });
 
     test.each([
