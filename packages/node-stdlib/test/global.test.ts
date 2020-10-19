@@ -1,47 +1,54 @@
-import { errors, panic, range, util } from "../src";
+import { errors, panic, range, recover, util } from "../src";
 
 describe("global.ts", () => {
   describe("panic()", () => {
-    it("panics with the given message and a stack trace", () => {
+    test.each([
+      ["string", "something broke", "something broke"],
+      ["error", errors.errorString("something broke"), "something broke"],
+      ["number", 10, "10"],
+      ["object", { error: "oops" }, "{ error: 'oops' }"],
+      ["undefined", undefined, "undefined"],
+      ["null", null, "null"],
+      ["value that implements Stringer", new util.SemVer(1, 5, 12), "1.5.12"],
+    ])("panics with the given %s", (_name, v, expected) => {
       expect(() => {
-        panic("something broke");
-      }).toPanic("something broke");
+        panic(v);
+      }).toPanic(expected);
+    });
+  });
+
+  describe("recover()", () => {
+    test.each([
+      ["string", "something broke"],
+      ["error", errors.errorString("something broke")],
+      ["number", 10],
+      ["object", { error: "oops" }],
+      ["undefined", undefined],
+      ["null", null],
+      ["value that implements Stringer", new util.SemVer(1, 5, 12)],
+    ])("recovers the panic reason that was a %s", (_name, v) => {
+      try {
+        panic(v);
+      } catch (e) {
+        const cause = recover(e);
+        // TODO(@cszatmary): This feels brittle because it relies on
+        // reference equality. See if there's a better way to do this.
+        expect(cause).toBe(v);
+        return;
+      }
+
+      fail("no panic was recovered");
     });
 
-    it("panics with the given error", () => {
-      expect(() => {
-        panic(errors.errorString("something broke"));
-      }).toPanic("something broke");
+    it("returns undefined if called with undefined", () => {
+      expect(recover(undefined)).toBeUndefined();
     });
 
-    it("panics with the given number", () => {
+    it("panics if caught error was not a panic", () => {
       expect(() => {
-        panic(10);
-      }).toPanic("10");
-    });
-
-    it("panics with the given object", () => {
-      expect(() => {
-        panic({ error: "oops" });
-      }).toPanic("{ error: 'oops' }");
-    });
-
-    it("panics with undefined", () => {
-      expect(() => {
-        panic(undefined);
-      }).toPanic("undefined");
-    });
-
-    it("panics with null", () => {
-      expect(() => {
-        panic(null);
-      }).toPanic("null");
-    });
-
-    it("panics with a value that implements Stringer", () => {
-      expect(() => {
-        panic(new util.SemVer(1, 5, 12));
-      }).toPanic("1.5.12");
+        const e = new Error("some error");
+        recover(e);
+      }).toPanic("Error: some error");
     });
   });
 

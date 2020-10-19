@@ -59,17 +59,47 @@ function toString(v: unknown): string {
   return inspect(v);
 }
 
+class Panic extends Error {
+  reason: unknown;
+
+  constructor(reason: unknown) {
+    super(toString(reason));
+    this.name = "panic";
+    this.reason = reason;
+  }
+}
+
 /**
  * Allows the program to be terminated with a message and a stack trace
  * when the program reaches an unrecoverable state.
  * @param msg A message to display when the program terminates.
  */
 export function panic(v: unknown): never {
-  const exception = new Error(toString(v));
-  exception.name = "panic";
+  const p = new Panic(v);
   // Remove first line of stack trace since it is in this function
-  Error.captureStackTrace(exception, panic);
-  throw exception;
+  Error.captureStackTrace(p, panic);
+  // The rare case where throw is allowed
+  throw p;
+}
+
+/**
+ * recover takes an error that was caused by a panic and returns the cause
+ * of the panic. This can be useful if you wish to recover from a panic.
+ * Recovering from a panic can be done by using a try/catch block.
+ * If `e` is `undefined`, `undefined` will be returned. If `e` was
+ * not caused by a panic, recover will panic with `e`.
+ * @param e The error caught with a catch statement.
+ */
+export function recover(e: unknown): unknown {
+  if (e === undefined) {
+    return undefined;
+  }
+
+  if (e instanceof Panic) {
+    return e.reason;
+  }
+
+  panic(e);
 }
 
 /**
