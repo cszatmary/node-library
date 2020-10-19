@@ -226,4 +226,13 @@ describe("errors", () => {
       expect(errors.is(err3, err1)).toBe(false);
     });
   });
+
+  describe("isStackTracer", () => {
+    test.each([
+      ["implements StackTracer", errors.newError("oops"), true],
+      ["does't implement StackTracer", errors.errorString("nope"), false],
+    ])("%s", (_name, err, expected) => {
+      expect(errors.isStackTracer(err)).toBe(expected);
+    });
+  });
 });

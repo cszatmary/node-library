@@ -281,7 +281,7 @@ export const Result = {
 
   /**
    * Creates a new result by evaluating a throwing closure,
-   * captyrubg the returned value as a success, or any thrown error as a failure.
+   * capturing the returned value as a success, or any thrown error as a failure.
    * @param catching A throwing closure to evaluate.
    */
   of<S, F extends Error = Error>(catching: () => S): Result<S, F> {

@@ -63,6 +63,10 @@ class FundamentalError {
   detailedError(): string {
     return `${this.msg}\n${this.stack}`;
   }
+
+  stackTrace(): string {
+    return this.stack;
+  }
 }
 
 class ErrorWithStack {
@@ -84,6 +88,10 @@ class ErrorWithStack {
 
   cause(): error {
     return this.err;
+  }
+
+  stackTrace(): string {
+    return this.stack;
   }
 }
 
@@ -260,4 +268,15 @@ export function is(err: error, target: error): boolean {
 
     e = cerr;
   }
+}
+
+/**
+ * StackTracer represents any type that can produce a stack trace.
+ */
+interface StackTracer {
+  stackTrace(): string;
+}
+
+export function isStackTracer(err: unknown): err is StackTracer {
+  return typeof (err as StackTracer).stackTrace === "function";
 }
