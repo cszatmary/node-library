@@ -1,4 +1,4 @@
-import { util } from "../src";
+import { recover, util } from "../src";
 
 declare global {
   // eslint-disable-next-line
@@ -61,12 +61,29 @@ expect.extend({
       }
     }
 
-    if (!thrown || !(thrown instanceof Error) || thrown.name !== "panic") {
+    // If no error was thrown, obviously it didn't panic
+    if (!thrown) {
       return {
         pass: false,
         message: (): string => `${matcherHint(".toPanic")}
 
 Expected received function to panic`,
+      };
+    }
+
+    // Make sure it was actually a panic that was thrown
+    try {
+      recover(thrown);
+    } catch {
+      // recover will panic if thrown was not a panic
+      // so if we got here then there wasn't a panic
+
+      return {
+        pass: false,
+        message: (): string => `${matcherHint(".toPanic")}
+
+Expected received function to panic, instead it threw an error:
+  ${printReceived(thrown)}`,
       };
     }
 
