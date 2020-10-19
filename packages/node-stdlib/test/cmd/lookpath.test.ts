@@ -1,13 +1,28 @@
-import { cmd } from "../../src";
+import os from "os";
+import path from "path";
+
+import { cmd, fs } from "../../src";
 
 describe("cmd.ts", () => {
   describe("lookPath()", () => {
     if (/^win/i.test(process.platform)) {
       // TODO write windows tests
     } else {
+      // This test must by synchronous because it modifies the PATH env var
       it("returns a Result with the path to the executable", () => {
-        const r = cmd.lookPath("sh");
-        expect(r.success()).toBe("/bin/sh");
+        // Create temp dir with a file
+        const tmpDir = fs.mkdtempSync(`${os.tmpdir}${path.sep}`).unwrap();
+        fs.writeFileSync(path.join(tmpDir, "foo"), "", { mode: 0o755 }).unwrap();
+
+        // Add temp dir to path
+        const envPath = process.env.PATH;
+        process.env.PATH = tmpDir;
+
+        const r = cmd.lookPath("foo");
+        expect(r.success()).toBe(`${tmpDir}/foo`);
+
+        process.env.PATH = envPath;
+        fs.removeAllSync(tmpDir);
       });
 
       it("returns a Result with an error when the executable was not found", () => {
