@@ -230,7 +230,7 @@ export class DynamicBuffer implements Iterable<number> {
    * If the buffer becomes too large, write will panic.
    * @returns The number of bytes written, i.e. the length of `p`.
    */
-  write(p: Buffer): number {
+  write(p: Uint8Array): number {
     const m = this.#grow(p.byteLength);
     return copy(this.#buf.subarray(m), p);
   }
@@ -264,10 +264,11 @@ export class DynamicBuffer implements Iterable<number> {
   /**
    * Reads the next `p.byteLength` bytes from the buffer
    * or until the buffer is drained.
+   * @param p A buffer to read the data into.
    * @returns A `Result` with the number of bytes read
    * or an eof error if the buffer has no data.
    */
-  read(p: Buffer): Result<number, error> {
+  read(p: Uint8Array): Result<number, error> {
     if (this.isEmpty) {
       // Buffer is empty, reset to recover space.
       this.reset();
