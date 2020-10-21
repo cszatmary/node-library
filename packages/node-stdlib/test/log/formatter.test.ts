@@ -1,4 +1,4 @@
-import { colors, log } from "../../src";
+import { colors, errors, log, util } from "../../src";
 
 const isoRegex = `\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z)`;
 
@@ -77,6 +77,50 @@ describe("log/formatter.ts", () => {
         time: "noon",
         level: 56,
         msg: "some stuff",
+      });
+    });
+
+    it("formats errors properly", () => {
+      const l = createLogFixture({
+        data: {
+          err1: errors.errorString("oops"),
+          err2: errors.newError("boom!"),
+        },
+      });
+      const f = new log.JSONFormatter();
+      const s = f.format(l).unwrap().toString();
+      const json = JSON.parse(s);
+
+      expect(json).toEqual({
+        time: l.date.toISOString(),
+        level: "debug",
+        msg: "log message",
+        err1: "oops",
+        err2: "boom!",
+      });
+    });
+
+    it("nests fields under the specified key", () => {
+      const l = createLogFixture({
+        data: {
+          foo: "bar",
+          baz: 2,
+        },
+      });
+      const f = new log.JSONFormatter({
+        dataKey: "props",
+      });
+      const s = f.format(l).unwrap().toString();
+      const json = JSON.parse(s);
+
+      expect(json).toEqual({
+        time: l.date.toISOString(),
+        level: "debug",
+        msg: "log message",
+        props: {
+          foo: "bar",
+          baz: 2,
+        },
       });
     });
   });
@@ -200,6 +244,29 @@ describe("log/formatter.ts", () => {
       const s = f.format(l).unwrap().toString();
 
       expect(s).toBe(`${colors.blue("INFO ")} log message ${colors.blue("foo")}=bar\n`);
+    });
+
+    it("stringifies values according to util.toString semantics", () => {
+      const l = createLogFixture({
+        data: {
+          bool: true,
+          error: errors.errorString("oh no"),
+          nil: null,
+          num: 10.5,
+          obj: { a: 1, b: "prop" },
+          semver: new util.SemVer(1, 12, 5),
+          str: "hello",
+          undef: undefined,
+        },
+      });
+      const f = new log.TextFormatter({
+        disableColors: true,
+        disableTimestamp: true,
+      });
+      const s = f.format(l).unwrap().toString();
+
+      const e = `level=debug msg="log message" bool=true error="oh no" nil=null num=10.5 obj="{ a: 1, b: 'prop' }" semver=1.12.5 str=hello undef=undefined\n`;
+      expect(s).toBe(e);
     });
   });
 });

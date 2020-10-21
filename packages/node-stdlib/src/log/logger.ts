@@ -78,7 +78,9 @@ export class StandardLogger implements Logger {
    * fields which will be included in all logs.
    */
   addFields(fields: Fields): void {
-    this.#fields = { ...this.#fields, ...fields };
+    for (const [k, v] of Object.entries(fields)) {
+      this.#fields[k] = v;
+    }
   }
 
   /**

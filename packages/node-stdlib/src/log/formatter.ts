@@ -6,11 +6,11 @@
 // https://github.com/sirupsen/logrus/blob/master/LICENSE
 
 import type { WriteStream } from "tty";
-import { inspect } from "util";
 import { blue, red, white, yellow } from "../colors/mod";
 import { DynamicBuffer } from "../bytes/mod";
 import { Result } from "../core/mod";
-import { fromJSError } from "../errors/mod";
+import { fromJSError, isError } from "../errors/mod";
+import { toString } from "../util/mod";
 import { Fields, Log, Level, levelString, allLevels } from "./log";
 
 /**
@@ -62,6 +62,13 @@ function prefixFieldClashes(data: Fields, fieldMap: Map<string, string>): void {
  */
 export class JSONFormatter implements Formatter {
   disableTimestamp: boolean;
+  /**
+   * Allows for putting the log fields into a nested dictionary using this key.
+   */
+  dataKey: string;
+  /**
+   * Indents all JSON logs using 2 spaces.
+   */
   prettyPrint: boolean;
   /**
    * Allows for customizing the names of keys for default fields.
@@ -70,16 +77,35 @@ export class JSONFormatter implements Formatter {
 
   constructor(opts?: {
     disableTimestamp?: boolean;
+    dataKey?: string;
     prettyPrint?: boolean;
     fieldMap?: Map<string, string>;
   }) {
     this.disableTimestamp = opts?.disableTimestamp ?? false;
+    this.dataKey = opts?.dataKey ?? "";
     this.prettyPrint = opts?.prettyPrint ?? false;
     this.fieldMap = opts?.fieldMap ?? new Map();
   }
 
   format(log: Log): Result<Buffer, error> {
-    const data = { ...log.data };
+    let data: Fields = {};
+    for (const [k, v] of Object.entries(log.data)) {
+      // Handle errors specially so they get stringified properly
+      if (isError(v)) {
+        data[k] = v.error();
+        continue;
+      }
+
+      data[k] = v;
+    }
+
+    if (this.dataKey !== "") {
+      const newData: Fields = {
+        [this.dataKey]: data,
+      };
+      data = newData;
+    }
+
     prefixFieldClashes(data, this.fieldMap);
 
     if (!this.disableTimestamp) {
@@ -210,7 +236,7 @@ export class TextFormatter implements Formatter {
   };
 
   #appendValue = (b: DynamicBuffer, value: unknown): void => {
-    const str = typeof value === "string" ? value : inspect(value);
+    const str = typeof value === "string" ? value : toString(value);
     if (!this.#needsQuoting(str)) {
       b.writeString(str);
     } else {
