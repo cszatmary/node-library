@@ -182,6 +182,32 @@ describe("errors", () => {
       const cause = errors.cause(err);
       expect(cause).toBe(ioErr);
     });
+
+    it("unwraps multiple wrapped errors", () => {
+      let err = errors.wrap(ioErr, "wrap 1");
+      err = errors.wrap(err, "wrap 2");
+      const cause = errors.cause(err);
+      expect(cause).toBe(ioErr);
+    });
+  });
+
+  describe("unwrap", () => {
+    it("returns undefined if the error is undefined", () => {
+      const err = errors.unwrap(undefined);
+      expect(err).toBeUndefined();
+    });
+
+    it("returns undefined if there is no cause", () => {
+      const err = errors.newError("oops");
+      const cause = errors.unwrap(err);
+      expect(cause).toBeUndefined();
+    });
+
+    it("returns the cause after wrap", () => {
+      const err = errors.withMessage(ioErr, "wrapped");
+      const cause = errors.unwrap(err);
+      expect(cause).toBe(ioErr);
+    });
   });
 
   describe("is", () => {
@@ -225,12 +251,21 @@ describe("errors", () => {
 
       expect(errors.is(err3, err1)).toBe(false);
     });
+
+    test.each([
+      ["undefined is undefined", undefined, undefined, true],
+      ["undefined is not target", undefined, errors.errorString("oops"), false],
+      ["err is not undefined", errors.errorString("oops"), undefined, false],
+    ])("%s", (_name, err, target, expected) => {
+      expect(errors.is(err, target)).toBe(expected);
+    });
   });
 
   describe("isStackTracer", () => {
     test.each([
       ["implements StackTracer", errors.newError("oops"), true],
       ["doesn't implement StackTracer", errors.errorString("nope"), false],
+      ["err is undefined", undefined, false],
     ])("%s", (_name, err, expected) => {
       expect(errors.isStackTracer(err)).toBe(expected);
     });
