@@ -6,6 +6,10 @@
 // All rights reserved.
 // https://github.com/pkg/errors/blob/master/LICENSE
 
+/**
+ * isError returns whether or not an error implements the
+ * `error` interface.
+ */
 export function isError(err: unknown): err is error {
   if (err == null) {
     return false;
@@ -210,16 +214,23 @@ interface Causer {
 }
 
 function isCauser(err: unknown): err is Causer {
+  if (err == null) {
+    return false;
+  }
+
   return typeof (err as Causer).cause === "function";
 }
 
 /**
  * Returns the underlying cause of the error if it exists.
+ * This function will continue calling the `cause` method until an error
+ * is encountered that doesn't have a `cause` method.
  * If the error does not implement the Cause interface the original error will be returned.
  * @param err The error to get the cause of.
  */
 export function cause(err: undefined): undefined;
 export function cause(err: error): error;
+export function cause(err: error | undefined): error | undefined;
 export function cause(err: error | undefined): error | undefined {
   let e = err;
 
@@ -234,11 +245,28 @@ export function cause(err: error | undefined): error | undefined {
   return e;
 }
 
+/**
+ * unwrap returns the result of calling the `cause` method on `err`,
+ * if `err`'s type contains an unwrap method returning an error.
+ * Otherwise, unwrap returns `undefined`.
+ */
+export function unwrap(err: error | undefined): error | undefined {
+  if (!isCauser(err)) {
+    return undefined;
+  }
+
+  return err.cause();
+}
+
 interface Is {
   is(err: error): boolean;
 }
 
 function hasIs(err: unknown): err is Is {
+  if (err == null) {
+    return false;
+  }
+
   return typeof (err as Is).is === "function";
 }
 
@@ -250,9 +278,12 @@ function hasIs(err: unknown): err is Is {
  * that target or implements a method `is(error): boolean`
  * such that `is(target)` returns true.
  */
-export function is(err: error, target: error): boolean {
-  let e = err;
+export function is(err: error | undefined, target: error | undefined): boolean {
+  if (target === undefined) {
+    return err === target;
+  }
 
+  let e = err;
   while (true) {
     if (e === target) {
       return true;
@@ -273,10 +304,18 @@ export function is(err: error, target: error): boolean {
 /**
  * StackTracer represents any type that can produce a stack trace.
  */
-interface StackTracer {
+export interface StackTracer {
   stackTrace(): string;
 }
 
+/**
+ * isStackTracer returns whether or not a given value implements
+ * the `StackTracer` interface.
+ */
 export function isStackTracer(err: unknown): err is StackTracer {
+  if (err == null) {
+    return false;
+  }
+
   return typeof (err as StackTracer).stackTrace === "function";
 }
