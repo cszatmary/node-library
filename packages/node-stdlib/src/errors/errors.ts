@@ -122,6 +122,36 @@ class ErrorWithMessage {
 }
 
 /**
+ * JSError is a wrapper over the `Error` type which implements the
+ * `error` interface. This allows the original JS error to be preserved.
+ */
+export class JSError {
+  jsError: Error;
+
+  constructor(error: Error) {
+    this.jsError = error;
+  }
+
+  error(): string {
+    return this.jsError.toString();
+  }
+
+  detailedError(): string {
+    /* istanbul ignore next */
+    return this.jsError.stack ?? "";
+  }
+
+  stackTrace(): string {
+    // Stack is lazily computed when first accessed so it should never be undefined
+    // This makes TS happy though
+    /* istanbul ignore next */
+    const stack = this.jsError.stack ?? "";
+    const i = stack.indexOf("\n") + 1;
+    return stack.slice(i);
+  }
+}
+
+/**
  * Creates a new error with the given message.
  * It also records the stack trace at the point it was called.
  * @param msg The message to create the error with.
@@ -144,11 +174,8 @@ export function newError(msg: string): error {
  * Creates a new error from the given JS Error.
  * @param err A JS error to convert to an error.
  */
-export function fromJSError(err: Error): error {
-  /* istanbul ignore next */
-  const stack = err.stack ?? "";
-  const i = stack.indexOf("\n") + 1;
-  return new FundamentalError(`${err.name}: ${err.message}`, stack.slice(i));
+export function fromJSError(jsError: Error): error {
+  return new JSError(jsError);
 }
 
 /**
