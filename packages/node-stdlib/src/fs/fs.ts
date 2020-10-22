@@ -7,7 +7,7 @@
 
 /*
 This file resultifies and exports all functions from the node `fs` module.
-This allows this module to serve as a drop-in replacement for node's fs.
+This allows this module to serve as a replacement for node's fs.
 */
 
 import fs from "fs";

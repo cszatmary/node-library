@@ -4,6 +4,7 @@
 import * as fs from "./fs";
 import { rimraf, rimrafSync } from "./rm";
 import { Result } from "../core/mod";
+import * as util from "../util/mod";
 
 /**
  * Asynchronously checks if the given path exists.
@@ -58,12 +59,36 @@ export function removeSync(path: fs.PathLike): Result<void, Error> {
   return rmdirErr.code !== "ENOTDIR" ? rmdirRes : unlinkRes;
 }
 
+// The minimum node version required for native rm support.
+const rmRequiredVersion = new util.SemVer(12, 10, 0);
+
 /**
  * Asynchronously removes path and any children it contains.
  * It removes everything it can but returns the first error it encounters.
  * If the path does not exist, `removeAll` does nothing.
  */
-export function removeAll(path: fs.PathLike): Promise<Result<void, Error>> {
+export async function removeAll(path: fs.PathLike): Promise<Result<void, Error>> {
+  // Try remove, if it works we're done.
+  const removeRes = await remove(path);
+  if (removeRes.isSuccess()) {
+    // That was easy
+    return removeRes;
+  }
+
+  const removeErr = removeRes.failure() as NodeJS.ErrnoException;
+  if (removeErr.code === "ENOENT") {
+    // If path doesn't exist that is considered success based on the semantics of removeAll
+    return Result.success(undefined);
+  } else if (removeErr.code !== "ENOTEMPTY") {
+    return removeRes;
+  }
+
+  if (util.nodeVersion.compare(rmRequiredVersion) >= 0) {
+    // We can use the builtin recursive removal
+    return fs.rmdir(path, { recursive: true });
+  }
+
+  // Node version is less than min required, need to use the polyfill
   return new Promise((resolve) => {
     rimraf(path, (e) => {
       if (e) {
@@ -81,6 +106,27 @@ export function removeAll(path: fs.PathLike): Promise<Result<void, Error>> {
  * If the path does not exist, `removeAll` does nothing.
  */
 export function removeAllSync(path: fs.PathLike): Result<void, Error> {
+  // Try remove, if it works we're done.
+  const removeRes = removeSync(path);
+  if (removeRes.isSuccess()) {
+    // That was easy
+    return removeRes;
+  }
+
+  const removeErr = removeRes.failure() as NodeJS.ErrnoException;
+  if (removeErr.code === "ENOENT") {
+    // If path doesn't exist that is considered success based on the semantics of removeAll
+    return Result.success(undefined);
+  } else if (removeErr.code !== "ENOTEMPTY") {
+    return removeRes;
+  }
+
+  if (util.nodeVersion.compare(rmRequiredVersion) >= 0) {
+    // We can use the builtin recursive removal
+    return fs.rmdirSync(path, { recursive: true });
+  }
+
+  // Node version is less than min required, need to use the polyfill
   try {
     rimrafSync(path);
     return Result.success(undefined);
