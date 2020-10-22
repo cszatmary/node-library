@@ -5,6 +5,12 @@
 // Copyright Node.js contributors. All rights reserved.
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
+/* istanbul ignore file */
+
+/*
+This file exists only as a polyfill because recursive removal is only supported by
+Node v12.10.0+. Hopefully one day this can be removed.
+*/
 
 import { sep } from "path";
 import fs from "fs";
