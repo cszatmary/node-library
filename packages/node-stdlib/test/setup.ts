@@ -43,6 +43,8 @@ expect.extend({
 
     let thrown: Error | undefined;
 
+    // Going to disable this one for now because I need to look into how jest works
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (this.promise && received instanceof Error) {
       thrown = received;
     } else if (typeof received !== "function") {
@@ -62,7 +64,7 @@ expect.extend({
     }
 
     // If no error was thrown, obviously it didn't panic
-    if (!thrown) {
+    if (thrown === undefined) {
       return {
         pass: false,
         message: (): string => `${matcherHint(".toPanic")}

@@ -40,7 +40,7 @@ export function exec(
     const stderrChunks: Buffer[] = [];
 
     // Collect stdout chunks if stdout was `pipe`
-    if (cp.stdout) {
+    if (cp.stdout != null) {
       cp.stdout.on("data", (data) => {
         if (!Buffer.isBuffer(data)) {
           stdoutChunks.push(Buffer.from(data));
@@ -51,7 +51,7 @@ export function exec(
     }
 
     // Collect stderr chunks if stdout was `pipe`
-    if (cp.stderr) {
+    if (cp.stderr != null) {
       cp.stderr.on("data", (data) => {
         if (!Buffer.isBuffer(data)) {
           stderrChunks.push(Buffer.from(data));
@@ -69,11 +69,11 @@ export function exec(
       const execResult: ExecResult = {};
 
       // Combine stdout and stderr chunks into single buffers if they exist
-      if (cp.stdout) {
+      if (cp.stdout != null) {
         execResult.stdout = Buffer.concat(stdoutChunks);
       }
 
-      if (cp.stderr) {
+      if (cp.stderr != null) {
         execResult.stderr = Buffer.concat(stderrChunks);
       }
 
@@ -102,17 +102,17 @@ export function execSync(
   )
     .mapFailure((e) => fromJSError(e))
     .flatMap((res) => {
-      if (res.error) {
+      if (res.error != null) {
         return Result.failure(fromJSError(res.error));
       }
 
       const execResult: ExecResult = {};
 
-      if (res.stdout) {
+      if (res.stdout != null) {
         execResult.stdout = res.stdout;
       }
 
-      if (res.stderr) {
+      if (res.stderr != null) {
         execResult.stderr = res.stderr;
       }
 

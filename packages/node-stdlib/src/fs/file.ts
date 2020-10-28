@@ -91,7 +91,7 @@ export async function removeAll(path: fs.PathLike): Promise<Result<void, Error>>
   // Node version is less than min required, need to use the polyfill
   return new Promise((resolve) => {
     rimraf(path, (e) => {
-      if (e) {
+      if (e != null) {
         resolve(Result.failure(e));
       }
 

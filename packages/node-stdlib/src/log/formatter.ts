@@ -179,7 +179,7 @@ export class TextFormatter implements Formatter {
   }
 
   #init = (log: Log): void => {
-    if (log.out) {
+    if (log.out !== undefined) {
       this.#isTerminal = (log.out as WriteStream).isTTY ?? false;
     }
 
@@ -325,7 +325,7 @@ export class TextFormatter implements Formatter {
     }
 
     if (!this.disableSorting) {
-      if (!this.sortFn) {
+      if (this.sortFn === undefined) {
         keys.sort();
         fixedKeys.push(...keys);
       } else if (!this.#isColored()) {
