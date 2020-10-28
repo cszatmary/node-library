@@ -4,6 +4,7 @@
 // Adapted from https://github.com/nodejs/node/blob/master/lib/internal/fs/rimraf.js
 // Copyright Node.js contributors. All rights reserved.
 
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* istanbul ignore file */
 

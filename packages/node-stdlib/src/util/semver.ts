@@ -113,7 +113,7 @@ export class SemVer {
    * Custom inspect implementation for use with node's `util.inspect`.
    */
   [inspect.custom](depth?: number | null): string {
-    if (depth && depth < 0) {
+    if (depth == null || depth < 0) {
       return "SemVer {}";
     }
 
@@ -127,7 +127,7 @@ export class SemVer {
    */
   static parse(s: string): Result<SemVer, error> {
     const m = s.trim().match(re);
-    if (!m) {
+    if (m == null) {
       const err = errorString(`SemVer.Parse: Invalid semver string: ${s}`);
       return Result.failure(err);
     }

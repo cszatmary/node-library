@@ -167,7 +167,7 @@ class Success<S, F> implements ResultCase<S, F> {
   }
 
   [inspect.custom](depth?: number | null, options?: InspectOptions): string {
-    if (depth && depth < 0) {
+    if (depth == null || depth < 0) {
       return "Result.success {}";
     }
 
@@ -241,7 +241,7 @@ class Failure<S, F> implements ResultCase<S, F> {
   }
 
   [inspect.custom](depth?: number | null, options?: InspectOptions): string {
-    if (depth && depth < 0) {
+    if (depth == null || depth < 0) {
       return "Result.failure {}";
     }
 

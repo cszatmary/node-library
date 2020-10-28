@@ -33,7 +33,7 @@ export class Box<T> {
    * Custom inspect implementation for use with node's `util.inspect`.
    */
   [inspect.custom](depth?: number | null, options?: InspectOptions): string {
-    if (depth && depth < 0) {
+    if (depth == null || depth < 0) {
       return "Box {}";
     }
 

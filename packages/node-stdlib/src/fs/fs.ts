@@ -34,7 +34,7 @@ export const chownSync = resultify(fs.chownSync);
 export const close = (fd: number): Promise<Result<void, Error>> =>
   new Promise((resolve) => {
     fs.close(fd, (err) => {
-      if (err) {
+      if (err != null) {
         resolve(Result.failure(err));
       }
 
