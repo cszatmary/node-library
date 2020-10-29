@@ -2,7 +2,7 @@
 // All rights reserved. MIT License.
 
 import { Result } from "../core/mod";
-import { errorString } from "../errors/mod";
+import * as errors from "../errors/mod";
 
 /**
  * The available log levels for a logger.
@@ -109,6 +109,6 @@ export function parseLevel(level: string): Result<Level, error> {
     case "panic":
       return Result.success(Level.panic);
     default:
-      return Result.failure(errorString(`not a valid log level: ${level}`));
+      return Result.failure(errors.errorString(`not a valid log level: ${level}`));
   }
 }

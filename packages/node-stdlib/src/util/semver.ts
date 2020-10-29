@@ -4,7 +4,7 @@
 import { inspect } from "util";
 import { panic } from "../global";
 import { Result } from "../core/mod";
-import { errorString } from "../errors/mod";
+import * as errors from "../errors/mod";
 
 const re = /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 
@@ -128,7 +128,7 @@ export class SemVer {
   static parse(s: string): Result<SemVer, error> {
     const m = s.trim().match(re);
     if (m == null) {
-      const err = errorString(`SemVer.Parse: Invalid semver string: ${s}`);
+      const err = errors.errorString(`SemVer.Parse: Invalid semver string: ${s}`);
       return Result.failure(err);
     }
 

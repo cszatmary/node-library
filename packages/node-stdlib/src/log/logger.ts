@@ -1,9 +1,9 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-import { Logger, Level, Fields, Log, Writable } from "./log";
-import { Formatter, TextFormatter } from "./formatter";
 import { panic } from "../global";
+import { Formatter, TextFormatter } from "./formatter";
+import { Logger, Level, Fields, Log, Writable } from "./log";
 
 /**
  * A basic logger that writes logs to a `Writable` object.

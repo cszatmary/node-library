@@ -3,7 +3,7 @@
 
 import util from "util";
 import { panic, symbols } from "../global";
-import { isError } from "../errors/mod";
+import * as errors from "../errors/mod";
 
 /**
  * An interface representing a type that can create a
@@ -25,7 +25,7 @@ export function toString(v: unknown): string {
     return v;
   } else if (typeof v === "boolean" || typeof v === "number") {
     return v.toString();
-  } else if (isError(v)) {
+  } else if (errors.isError(v)) {
     return v.error();
   }
 

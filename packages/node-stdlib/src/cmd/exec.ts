@@ -5,7 +5,7 @@ import type { Stream } from "stream";
 import { spawn, spawnSync } from "child_process";
 
 import { Result } from "../core/mod";
-import { fromJSError } from "../errors/mod";
+import * as errors from "../errors/mod";
 
 export type Stdio = "inherit" | "ignore" | "pipe" | Stream;
 
@@ -62,7 +62,7 @@ export function exec(
     }
 
     cp.on("error", (err) => {
-      resolve(Result.failure(fromJSError(err)));
+      resolve(Result.failure(errors.fromJSError(err)));
     });
 
     cp.on("close", (code: number | null, signal: NodeJS.Signals | null) => {
@@ -100,10 +100,10 @@ export function execSync(
       stdio: [opts?.stdin ?? "pipe", opts?.stdout ?? "pipe", opts?.stderr ?? "pipe"],
     }),
   )
-    .mapFailure((e) => fromJSError(e))
+    .mapFailure((e) => errors.fromJSError(e))
     .flatMap((res) => {
       if (res.error != null) {
-        return Result.failure(fromJSError(res.error));
+        return Result.failure(errors.fromJSError(res.error));
       }
 
       const execResult: ExecResult = {};
