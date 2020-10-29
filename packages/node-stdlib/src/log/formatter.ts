@@ -6,11 +6,11 @@
 // https://github.com/sirupsen/logrus/blob/master/LICENSE
 
 import type { WriteStream } from "tty";
-import { blue, red, white, yellow } from "../colors/mod";
-import { DynamicBuffer } from "../bytes/mod";
 import { Result } from "../core/mod";
-import { fromJSError, isError } from "../errors/mod";
-import { toString } from "../util/mod";
+import * as bytes from "../bytes/mod";
+import * as colors from "../colors/mod";
+import * as errors from "../errors/mod";
+import * as util from "../util/mod";
 import { Fields, Log, Level, levelString, allLevels } from "./log";
 
 /**
@@ -91,7 +91,7 @@ export class JSONFormatter implements Formatter {
     let data: Fields = {};
     for (const [k, v] of Object.entries(log.data)) {
       // Handle errors specially so they get stringified properly
-      if (isError(v)) {
+      if (errors.isError(v)) {
         data[k] = v.error();
         continue;
       }
@@ -121,7 +121,7 @@ export class JSONFormatter implements Formatter {
     const indent = this.prettyPrint ? 2 : undefined;
     return Result.of(() => JSON.stringify(data, null, indent))
       .map((json) => Buffer.from(json))
-      .mapFailure((err) => fromJSError(err));
+      .mapFailure((err) => errors.fromJSError(err));
   }
 }
 
@@ -235,8 +235,8 @@ export class TextFormatter implements Formatter {
     return false;
   };
 
-  #appendValue = (b: DynamicBuffer, value: unknown): void => {
-    const str = typeof value === "string" ? value : toString(value);
+  #appendValue = (b: bytes.DynamicBuffer, value: unknown): void => {
+    const str = typeof value === "string" ? value : util.toString(value);
     if (!this.#needsQuoting(str)) {
       b.writeString(str);
     } else {
@@ -244,7 +244,7 @@ export class TextFormatter implements Formatter {
     }
   };
 
-  #appendKeyValue = (b: DynamicBuffer, key: string, value: unknown): void => {
+  #appendKeyValue = (b: bytes.DynamicBuffer, key: string, value: unknown): void => {
     if (b.length > 0) {
       b.writeString(" ");
     }
@@ -253,22 +253,22 @@ export class TextFormatter implements Formatter {
     this.#appendValue(b, value);
   };
 
-  #printColored = (b: DynamicBuffer, log: Log, keys: string[], data: Fields): void => {
+  #printColored = (b: bytes.DynamicBuffer, log: Log, keys: string[], data: Fields): void => {
     let colorFn: (str: string) => string;
     switch (log.level) {
       case Level.debug:
-        colorFn = white;
+        colorFn = colors.white;
         break;
       case Level.warn:
-        colorFn = yellow;
+        colorFn = colors.yellow;
         break;
       case Level.error:
       case Level.fatal:
       case Level.panic:
-        colorFn = red;
+        colorFn = colors.red;
         break;
       default:
-        colorFn = blue;
+        colorFn = colors.blue;
         break;
     }
 
@@ -338,7 +338,7 @@ export class TextFormatter implements Formatter {
       fixedKeys.push(...keys);
     }
 
-    const b = new DynamicBuffer();
+    const b = new bytes.DynamicBuffer();
 
     if (!this.#initCalled) {
       this.#init(log);

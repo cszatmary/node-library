@@ -6,17 +6,17 @@
 // https://github.com/golang/go/blob/master/LICENSE
 
 import { Result } from "../core/mod";
-import { errorString, isError } from "../errors/mod";
+import * as errors from "../errors/mod";
 
 /**
  * Indicates that a value is out or range for the target type.
  */
-export const errRange = errorString("value out of range");
+export const errRange = errors.errorString("value out of range");
 
 /**
  * ErrSyntax indicates that a value does not have the right syntax for the target type.
  */
-export const errSyntax = errorString("invalid syntax");
+export const errSyntax = errors.errorString("invalid syntax");
 
 /**
  * An error that records a failed converstion.
@@ -50,7 +50,7 @@ export class NumError {
  */
 export function isNumError(err: unknown): err is NumError {
   const e = err as NumError;
-  return typeof e.func === "string" && typeof e.num === "string" && isError(e.err);
+  return typeof e.func === "string" && typeof e.num === "string" && errors.isError(e.err);
 }
 
 const enum ASCIICode {
@@ -232,7 +232,9 @@ export function parseInt(str: string, base = 10): Result<number, error> {
       }
     }
   } else if (base < 2 || base > 36) {
-    return Result.failure(new NumError(fnParseInt, str, errorString(`invalid base ${base}`)));
+    return Result.failure(
+      new NumError(fnParseInt, str, errors.errorString(`invalid base ${base}`)),
+    );
   }
 
   // Cutoff is the smallest number such that cutoff*base > Number.MAX_SAFE_INTEGER.

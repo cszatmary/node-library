@@ -8,7 +8,7 @@
 import { inspect } from "util";
 import { panic, symbols } from "../global";
 import { Result } from "../core/mod";
-import { errorString } from "../errors/mod";
+import * as errors from "../errors/mod";
 import { copy } from "./bytes";
 
 // Minimum capacity for a new DynamicBuffer
@@ -16,7 +16,7 @@ const minSize = 64;
 // Node limit for the size of ArrayBuffers
 const maxSize = 2 ** 31 - 1;
 
-export const eof = errorString("EOF");
+export const eof = errors.errorString("EOF");
 
 function isByte(c: number): boolean {
   return Number.isInteger(c) && c >= 0 && c < 256;

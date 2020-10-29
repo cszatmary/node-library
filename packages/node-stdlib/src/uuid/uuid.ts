@@ -7,7 +7,7 @@ import crypto from "crypto";
 import { inspect } from "util";
 import { panic } from "../global";
 import { Result } from "../core/mod";
-import { errorString } from "../errors/mod";
+import * as errors from "../errors/mod";
 
 export enum Version {
   nil,
@@ -203,7 +203,7 @@ export function newV5(namespace: UUID, name: string): UUID {
 export function fromString(uuidString: string): Result<UUID, error> {
   // uuid strings are 36 chars, 32 hex digits + 4 dashes
   if (uuidString.length !== 36) {
-    return Result.failure(errorString(`uuid: incorrect UUID length: ${uuidString}`));
+    return Result.failure(errors.errorString(`uuid: incorrect UUID length: ${uuidString}`));
   }
 
   // Make sure dashes are present at the correct indices
@@ -213,7 +213,7 @@ export function fromString(uuidString: string): Result<UUID, error> {
     uuidString[18] !== "-" ||
     uuidString[23] !== "-"
   ) {
-    return Result.failure(errorString(`uuid: incorrect UUID format: ${uuidString}`));
+    return Result.failure(errors.errorString(`uuid: incorrect UUID format: ${uuidString}`));
   }
 
   const buf = Buffer.alloc(uuidSize);
@@ -233,7 +233,7 @@ export function fromString(uuidString: string): Result<UUID, error> {
 
       // Char was not a valid hex digit
       if (Number.isNaN(firstDigit) || Number.isNaN(secondDigit)) {
-        return Result.failure(errorString(`uuid: invalid character in UUID: ${uuidString}`));
+        return Result.failure(errors.errorString(`uuid: invalid character in UUID: ${uuidString}`));
       }
 
       // Combine digits into one byte
@@ -247,7 +247,7 @@ export function fromString(uuidString: string): Result<UUID, error> {
   // Make sure version is valid
   const version = uuid.version();
   if (version < Version.nil || version > Version.v5) {
-    return Result.failure(errorString(`uuid: invalid UUID version: ${uuidString}`));
+    return Result.failure(errors.errorString(`uuid: invalid UUID version: ${uuidString}`));
   }
 
   return Result.success(uuid);

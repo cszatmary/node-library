@@ -1,10 +1,10 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-import * as fs from "./fs";
-import { rimraf, rimrafSync } from "./rm";
 import { Result } from "../core/mod";
 import * as util from "../util/mod";
+import * as fs from "./fs";
+import { rimraf, rimrafSync } from "./rm";
 
 /**
  * Asynchronously checks if the given path exists.

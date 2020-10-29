@@ -15,7 +15,7 @@ Node v12.10.0+. Hopefully one day this can be removed.
 
 import { sep } from "path";
 import fs from "fs";
-import { millisecond, sleepSync } from "../time/mod";
+import * as time from "../time/mod";
 
 const notEmptyErrorCodes = new Set(["ENOTEMPTY", "EEXIST", "EPERM"]);
 const retryErrorCodes = new Set(["EBUSY", "EMFILE", "ENFILE", "ENOTEMPTY", "EPERM"]);
@@ -251,7 +251,7 @@ function _rmdirSync(path: fs.PathLike, originalErr?: Error): void {
           // Only sleep if this is not the last try, and the delay is greater
           // than zero, and an error was encountered that warrants a retry.
           if (retryErrorCodes.has(err1.code) && i < tries && retryDelay > 0) {
-            sleepSync(i * retryDelay * millisecond);
+            time.sleepSync(i * retryDelay * time.millisecond);
           }
         }
       }
