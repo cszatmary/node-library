@@ -8,10 +8,9 @@
 import { inspect } from "util";
 import { Result, panic, symbols } from "../global";
 import * as errors from "../errors/mod";
+import * as hex from "../hex/mod";
 import { copy } from "./bytes";
 
-// Minimum capacity for a new DynamicBuffer
-const minSize = 64;
 // Node limit for the size of ArrayBuffers
 const maxSize = 2 ** 31 - 1;
 
@@ -26,49 +25,56 @@ function isByte(c: number): boolean {
  * It will automatically grow as needed.
  */
 export class DynamicBuffer implements Iterable<number> {
-  #buf: Buffer; // contents are the bytes #buf[#off : #buf.byteLength]
+  #buf: Uint8Array; // contents are the bytes #buf[#off : #buf.byteLength]
   #off = 0; // read at #buf[#off], write at #buf[#buf.byteLength]
 
+  /**
+   * Creates an empty DynamicBuffer ready for use.
+   */
   constructor();
+  /**
+   * Creates a new DynamicBuffer using `buf` as it's initial contents.
+   * The new DynamicBuffer will take ownership of `buf`, and the caller should
+   * not use `buf` after this call.
+   */
   constructor(buf: ArrayBuffer);
-  constructor(buf: Buffer);
-  constructor(s: string, encoding?: BufferEncoding);
-  constructor(src?: ArrayBuffer | Buffer | string, encoding?: BufferEncoding) {
+  /**
+   * Creates a new DynamicBuffer using `buf` as it's initial contents.
+   * The new DynamicBuffer will take ownership of `buf`, and the caller should
+   * not use `buf` after this call.
+   */
+  constructor(buf: Uint8Array);
+  /**
+   * Creates a new DynamicBuffer using string `s` as it's initial contents.
+   */
+  constructor(s: string);
+  constructor(src?: ArrayBuffer | Uint8Array | string) {
     if (src === undefined) {
-      this.#buf = Buffer.from(new ArrayBuffer(minSize), 0, 0);
+      this.#buf = new Uint8Array(0);
       return;
     }
 
     if (src instanceof ArrayBuffer) {
-      this.#buf = Buffer.from(src);
+      this.#buf = new Uint8Array(src);
       return;
     }
-
-    // We need to make sure it doesn't allocate a buffer from the shared pool
-    // Otherwise when we grow the buffer we could overwrite bytes in the shared
-    // pool that belongs to other buffers
-    // Future thought: consider using Buffer.allocUnsafeSlow() if speed is
-    // a concern. This works fine for now though.
 
     if (typeof src === "string") {
-      const ab = new ArrayBuffer(Buffer.byteLength(src, encoding));
-      this.#buf = Buffer.from(ab);
-      this.#buf.write(src, encoding);
+      this.#buf = new TextEncoder().encode(src);
       return;
     }
 
-    this.#buf = Buffer.from(new ArrayBuffer(src.byteLength));
-    copy(this.#buf, src);
+    this.#buf = src;
   }
 
   // Functions like the slice operator in go, i.e. #buf[low:high]
-  #slice = (low: number, high: number): Buffer => {
+  #slice = (low: number, high: number): Uint8Array => {
     // Want to panic instead of node throwing some other type of error
     if (high > this.capacity) {
       panic(`out of index in buffer: ${high}`);
     }
 
-    return Buffer.from(this.#buf.buffer, low, high);
+    return new Uint8Array(this.#buf.buffer, low, high);
   };
 
   /**
@@ -117,7 +123,7 @@ export class DynamicBuffer implements Iterable<number> {
       panic("DynamicBuffer: too large");
     } else {
       // Not enough space anywhere, we need to allocate.
-      const buf = Buffer.alloc(2 * c + n);
+      const buf = new Uint8Array(2 * c + n);
       copy(buf, this.#buf.subarray(this.#off));
       this.#buf = buf;
     }
@@ -130,7 +136,7 @@ export class DynamicBuffer implements Iterable<number> {
   /**
    * #readSlice is like readBytes but returns a reference to internal buffer data.
    */
-  #readSlice = (delim: number): [Buffer, error | undefined] => {
+  #readSlice = (delim: number): [Uint8Array, error | undefined] => {
     const i = this.#buf.indexOf(delim, this.#off);
     let end = this.#off + i + 1;
     let err: error | undefined;
@@ -167,18 +173,18 @@ export class DynamicBuffer implements Iterable<number> {
   }
 
   /**
-   * Returns a `Buffer` holding the unread portion of the buffer.
-   * The returned Buffer shares the underlying memory of the DynamicBuffer instance.
+   * Returns a `Uint8Array` holding the unread portion of the buffer.
+   * The returned buffer shares the underlying memory of the DynamicBuffer instance.
    */
-  bytes(): Buffer {
+  bytes(): Uint8Array {
     return this.#buf.subarray(this.#off);
   }
 
   /**
    * Returns the contents of the unread portion of the buffer as a string.
    */
-  toString(encoding?: BufferEncoding): string {
-    return this.#buf.toString(encoding, this.#off);
+  toString(): string {
+    return new TextDecoder("utf-8").decode(this.#buf.subarray(this.#off));
   }
 
   /**
@@ -235,15 +241,14 @@ export class DynamicBuffer implements Iterable<number> {
   }
 
   /**
-   *  Appends the contents of `s` to the buffer, growing the buffer as needed.
-   * If the buffer becomes too large, writeString will panic..
-   * @param encoding An optional encoding for the `s`.
+   * Appends the contents of `s` to the buffer, growing the buffer as needed.
+   * If the buffer becomes too large, writeString will panic.
    * @returns The number of bytes written, i.e. the byte length of `s`.
    */
-  writeString(s: string, encoding?: BufferEncoding): number {
-    const l = Buffer.byteLength(s, encoding);
-    const m = this.#grow(l);
-    return this.#buf.write(s, m, encoding);
+  writeString(s: string): number {
+    const p = new TextEncoder().encode(s);
+    const m = this.#grow(p.byteLength);
+    return copy(this.#buf.subarray(m), p);
   }
 
   /**
@@ -257,7 +262,7 @@ export class DynamicBuffer implements Iterable<number> {
     }
 
     const m = this.#grow(1);
-    this.#buf.writeUInt8(c, m);
+    this.#buf[m] = c;
   }
 
   /**
@@ -289,7 +294,7 @@ export class DynamicBuffer implements Iterable<number> {
    * If there are fewer than `n` bytes in the buffer, the entire buffer is returned.
    * The returned buffer is only valid until the next call to a read or write method.
    */
-  next(n: number): Buffer {
+  next(n: number): Uint8Array {
     const l = this.length;
     const m = n > l ? l : n;
     const data = this.#buf.subarray(this.#off, this.#off + m);
@@ -309,7 +314,7 @@ export class DynamicBuffer implements Iterable<number> {
       return Result.failure(eof);
     }
 
-    const c = this.#buf.readUInt8(this.#off);
+    const c = this.#buf[this.#off];
     this.#off++;
     return Result.success(c);
   }
@@ -320,14 +325,15 @@ export class DynamicBuffer implements Iterable<number> {
    * If an error is encountered before finding a delimiter,
    * the data read before the error and the error itself (often eof) are returned.
    */
-  readBytes(delim: number): [Buffer, error | undefined] {
+  readBytes(delim: number): [Uint8Array, error | undefined] {
     if (!isByte(delim)) {
       panic("DynamicBuffer.readBytes: delim is not a valid byte");
     }
 
     const [slice, err] = this.#readSlice(delim);
     // return a copy of slice. #buf may be overwritten by later calls.
-    const line = Buffer.from(slice);
+    // Use call just be safe in case this DynamicBuffer was created with a Node Buffer
+    const line = Uint8Array.prototype.slice.call(slice);
     return [line, err];
   }
 
@@ -338,13 +344,13 @@ export class DynamicBuffer implements Iterable<number> {
    * the data read before the error and the error itself (often eof) are returned.
    * @param encoding An optional encoding to use for the string.
    */
-  readString(delim: number, encoding?: BufferEncoding): [string, error | undefined] {
+  readString(delim: number): [string, error | undefined] {
     if (!isByte(delim)) {
       panic("DynamicBuffer.readBytes: delim is not a valid byte");
     }
 
     const [slice, err] = this.#readSlice(delim);
-    return [slice.toString(encoding), err];
+    return [new TextDecoder("utf-8").decode(slice), err];
   }
 
   /**
@@ -384,8 +390,8 @@ export class DynamicBuffer implements Iterable<number> {
     const actualMax = Math.min(max, this.length);
     const remaining = this.length - max;
 
-    let bytes = this.#buf
-      .toString("hex", this.#off, actualMax + this.#off)
+    let bytes = hex
+      .encodeToString(this.#buf.subarray(this.#off, actualMax + this.#off))
       .replace(/(.{2})/g, "$1 ")
       .trim();
 

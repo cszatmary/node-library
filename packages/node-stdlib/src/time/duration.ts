@@ -150,7 +150,7 @@ const ascii0 = 48;
 // tail of buf, omitting trailing zeros. It omits the decimal
 // point too when the fraction is 0. It returns the index where the
 // output bytes begin and the value v/10**prec.
-function fmtFrac(buf: Buffer, v: number, prec: number): [number, number] {
+function fmtFrac(buf: Uint8Array, v: number, prec: number): [number, number] {
   // Omit trailing zeros up to and including decimal point.
   let w = buf.length;
   let print = false;
@@ -162,7 +162,7 @@ function fmtFrac(buf: Buffer, v: number, prec: number): [number, number] {
 
     if (print) {
       w--;
-      buf.write(String.fromCharCode(digit + ascii0), w);
+      buf[w] = digit + ascii0;
     }
 
     nv = Math.trunc(nv / 10);
@@ -170,7 +170,7 @@ function fmtFrac(buf: Buffer, v: number, prec: number): [number, number] {
 
   if (print) {
     w--;
-    buf.write(".", w);
+    buf[w] = 46; // '.'
   }
 
   return [w, nv];
@@ -178,19 +178,19 @@ function fmtFrac(buf: Buffer, v: number, prec: number): [number, number] {
 
 // fmtInt formats v into the tail of buf.
 // It returns the index where the output begins.
-function fmtInt(buf: Buffer, v: number): number {
+function fmtInt(buf: Uint8Array, v: number): number {
   let w = buf.length;
 
   if (v === 0) {
     w--;
-    buf.write("0", w);
+    buf[w] = ascii0;
     return w;
   }
 
   let nv = v;
   while (nv > 0) {
     w--;
-    buf.write(String.fromCharCode((nv % 10) + ascii0), w);
+    buf[w] = (nv % 10) + ascii0;
     nv = Math.trunc(nv / 10);
   }
 
@@ -205,7 +205,7 @@ function fmtInt(buf: Buffer, v: number): number {
  */
 export function durationString(d: Duration): string {
   // Largest time is 2501h59m59.254740991s
-  const buf = Buffer.alloc(32);
+  const buf = new Uint8Array(32);
   let w = buf.length;
 
   let u = d;
@@ -214,12 +214,16 @@ export function durationString(d: Duration): string {
     u = -u;
   }
 
+  // Some ascii codes so we avoid magic numbers
+  const sCode = 115;
+  const mCode = 109;
+
   if (u < second) {
     // Special case: if duration is smaller than a second,
     // use smaller units, like 1.2ms
     let prec = 0;
     w--;
-    buf.write("s", w);
+    buf[w] = sCode;
     w--;
 
     if (u === 0) {
@@ -227,24 +231,25 @@ export function durationString(d: Duration): string {
     } else if (u < microsecond) {
       // print nanoseconds
       prec = 0;
-      buf.write("n", w);
+      buf[w] = 110; // 'n'
     } else if (u < millisecond) {
       // print microseconds
       prec = 3;
       // U+00B5 'µ' micro sign == 0xC2 0xB5
-      w--; // Need room for two bytes.
-      buf.write("µ", w);
+      buf[w] = 0xb5;
+      w--; // Need to write two bytes.
+      buf[w] = 0xc2;
     } else {
       // print milliseconds
       prec = 6;
-      buf.write("m", w);
+      buf[w] = mCode;
     }
 
     [w, u] = fmtFrac(buf.subarray(0, w), u, prec);
     w = fmtInt(buf.subarray(0, w), u);
   } else {
     w--;
-    buf.write("s", w);
+    buf[w] = sCode;
 
     [w, u] = fmtFrac(buf.subarray(0, w), u, 9);
 
@@ -255,7 +260,7 @@ export function durationString(d: Duration): string {
     // u is now integer minutes
     if (u > 0) {
       w--;
-      buf.write("m", w);
+      buf[w] = mCode;
       w = fmtInt(buf.subarray(0, w), u % 60);
       u = Math.trunc(u / 60);
 
@@ -263,7 +268,7 @@ export function durationString(d: Duration): string {
       // Stop at hours because days can be different lengths
       if (u > 0) {
         w--;
-        buf.write("h", w);
+        buf[w] = 104; // 'h'
         w = fmtInt(buf.subarray(0, w), u);
       }
     }
@@ -271,8 +276,8 @@ export function durationString(d: Duration): string {
 
   if (neg) {
     w--;
-    buf.write("-", w);
+    buf[w] = 45; // '-'
   }
 
-  return buf.toString("utf-8", w);
+  return new TextDecoder("utf-8").decode(buf.subarray(w));
 }

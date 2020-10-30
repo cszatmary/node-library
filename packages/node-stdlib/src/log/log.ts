@@ -54,7 +54,7 @@ export interface Logger {
  * Generally implemented by a Stream or Buffer.
  */
 export interface Writable {
-  write(buffer: Buffer | Uint8Array): void;
+  write(buffer: Uint8Array): void;
 }
 
 /**
