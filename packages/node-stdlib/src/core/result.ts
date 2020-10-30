@@ -40,7 +40,8 @@ function isJSError(v: unknown): v is Error {
     return false;
   }
 
-  // Sometimes instanceof fails, this is hacky but seems to handle this case
+  // instanceof fails in jest: https://github.com/facebook/jest/issues/2549
+  // this handles that case, it's hacky but it works
   const o = v as Record<string, unknown>;
   if (
     o.constructor.name === "Error" &&
