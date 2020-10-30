@@ -1,4 +1,5 @@
-import { errors, panic, range, recover, util } from "../src";
+import { inspect } from "util";
+import { Ref, errors, panic, range, recover, util } from "../src";
 
 describe("global.ts", () => {
   describe("panic()", () => {
@@ -64,6 +65,31 @@ describe("global.ts", () => {
     it("creates an array from the range with the given step", () => {
       const vals = [...range(0, 10, 2)];
       expect(vals).toEqual([0, 2, 4, 6, 8]);
+    });
+  });
+
+  describe("Ref", () => {
+    it("creates a ref to the value", () => {
+      const ref1 = new Ref(10);
+      const ref2 = ref1;
+      ref2.set(20);
+
+      expect(ref1.deref()).toBe(20);
+      expect(ref2.deref()).toBe(20);
+    });
+
+    describe("inspect", () => {
+      it("returns just the type when depth is zero", () => {
+        const ref = new Ref(10);
+        const s = inspect(ref, { depth: -1 });
+        expect(s).toBe("Ref {}");
+      });
+
+      it("returns a string representation of the ref", () => {
+        const ref = new Ref(10);
+        const s = inspect(ref);
+        expect(s).toBe("Ref { 10 }");
+      });
     });
   });
 });
