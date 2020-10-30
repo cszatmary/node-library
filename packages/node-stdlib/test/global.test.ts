@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import { Ref, errors, panic, range, recover, util } from "../src";
+import { Ref, errors, panic, recover, util } from "../src";
 
 describe("global.ts", () => {
   describe("panic()", () => {
@@ -50,21 +50,6 @@ describe("global.ts", () => {
         const e = new Error("some error");
         recover(e);
       }).toPanic("Error: some error");
-    });
-  });
-
-  describe("range()", () => {
-    it("creates a range that can be iterated over", () => {
-      const vals: number[] = [];
-      for (const i of range(0, 10)) {
-        vals.push(i);
-      }
-      expect(vals).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    });
-
-    it("creates an array from the range with the given step", () => {
-      const vals = [...range(0, 10, 2)];
-      expect(vals).toEqual([0, 2, 4, 6, 8]);
     });
   });
 

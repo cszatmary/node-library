@@ -103,17 +103,6 @@ export function recover(e: unknown): unknown {
 }
 
 /**
- * Creates a range from `lower` up to, but not including, `upper`.
- * @param step The amount by which the range increases at each step.
- * Defaults to `1`.
- */
-export function* range(lower: number, upper: number, step = 1): Generator<number, void> {
-  for (let i = lower; i < upper; i += step) {
-    yield i;
-  }
-}
-
-/**
  * `Ref` provides a way to wrap a value so that it can be used as a reference.
  * This allows functionality similar to that of references or pointers from
  * other languages.
