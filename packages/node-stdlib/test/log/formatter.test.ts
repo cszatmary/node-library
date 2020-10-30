@@ -12,6 +12,10 @@ function createLogFixture(l?: Partial<log.Log>): log.Log {
   };
 }
 
+function bufToString(buf: Uint8Array): string {
+  return new TextDecoder("utf-8").decode(buf);
+}
+
 describe("log/formatter.ts", () => {
   describe("JSONFormatter", () => {
     it("formats the log as json", () => {
@@ -19,7 +23,7 @@ describe("log/formatter.ts", () => {
         data: { foo: "bar" },
       });
       const f = new log.JSONFormatter();
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
       const json = JSON.parse(s);
 
       expect(json).toEqual({
@@ -39,7 +43,7 @@ describe("log/formatter.ts", () => {
         },
       });
       const f = new log.JSONFormatter();
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
       const json = JSON.parse(s);
 
       expect(json).toEqual({
@@ -67,7 +71,7 @@ describe("log/formatter.ts", () => {
           [log.FieldKey.msg, "@msg"],
         ]),
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
       const json = JSON.parse(s);
 
       expect(json).toEqual({
@@ -88,7 +92,7 @@ describe("log/formatter.ts", () => {
         },
       });
       const f = new log.JSONFormatter();
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
       const json = JSON.parse(s);
 
       expect(json).toEqual({
@@ -110,7 +114,7 @@ describe("log/formatter.ts", () => {
       const f = new log.JSONFormatter({
         dataKey: "props",
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
       const json = JSON.parse(s);
 
       expect(json).toEqual({
@@ -131,7 +135,7 @@ describe("log/formatter.ts", () => {
         data: { foo: "bar" },
       });
       const f = new log.TextFormatter();
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       const regex = new RegExp(`time="${isoRegex}" level=debug msg="log message" foo=bar`);
       expect(s).toMatch(regex);
@@ -146,7 +150,7 @@ describe("log/formatter.ts", () => {
         },
       });
       const f = new log.TextFormatter();
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       const regex = new RegExp(
         `time="${isoRegex}" level=debug msg="log message" fields.level=56 fields.msg="some stuff" fields.time=noon`,
@@ -169,7 +173,7 @@ describe("log/formatter.ts", () => {
           [log.FieldKey.msg, "@msg"],
         ]),
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       const regex = new RegExp(
         `@time="${isoRegex}" @level=debug @msg="log message" level=56 msg="some stuff" time=noon`,
@@ -184,7 +188,7 @@ describe("log/formatter.ts", () => {
       const f = new log.TextFormatter({
         forceQuote: true,
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       const regex = new RegExp(`time="${isoRegex}" level="debug" msg="log message" foo="bar"`);
       expect(s).toMatch(regex);
@@ -197,7 +201,7 @@ describe("log/formatter.ts", () => {
       const f = new log.TextFormatter({
         disableQuote: true,
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       const regex = new RegExp(`time=${isoRegex} level=debug msg=log message foo=bar`);
       expect(s).toMatch(regex);
@@ -211,7 +215,7 @@ describe("log/formatter.ts", () => {
         forceColors: true,
         disableTimestamp: true,
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       expect(s).toBe(`${colors.white("DEBU")} log message ${colors.white("foo")}=bar\n`);
     });
@@ -226,7 +230,7 @@ describe("log/formatter.ts", () => {
         disableTimestamp: true,
         disableLevelTruncation: true,
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       expect(s).toBe(`${colors.red("ERROR")} log message ${colors.red("foo")}=bar\n`);
     });
@@ -241,7 +245,7 @@ describe("log/formatter.ts", () => {
         disableTimestamp: true,
         padLevelText: true,
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       expect(s).toBe(`${colors.blue("INFO ")} log message ${colors.blue("foo")}=bar\n`);
     });
@@ -263,7 +267,7 @@ describe("log/formatter.ts", () => {
         disableColors: true,
         disableTimestamp: true,
       });
-      const s = f.format(l).unwrap().toString();
+      const s = bufToString(f.format(l).unwrap());
 
       const e = `level=debug msg="log message" bool=true error="oh no" nil=null num=10.5 obj="{ a: 1, b: 'prop' }" semver=1.12.5 str=hello undef=undefined\n`;
       expect(s).toBe(e);

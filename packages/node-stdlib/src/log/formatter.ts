@@ -26,7 +26,7 @@ export enum FieldKey {
  * Represents a type that can format logs.
  */
 export interface Formatter {
-  format(log: Log): Result<Buffer, error>;
+  format(log: Log): Result<Uint8Array, error>;
 }
 
 function resolveKey(key: string, f: Map<string, string>): string {
@@ -87,7 +87,7 @@ export class JSONFormatter implements Formatter {
     this.fieldMap = opts?.fieldMap ?? new Map();
   }
 
-  format(log: Log): Result<Buffer, error> {
+  format(log: Log): Result<Uint8Array, error> {
     let data: Fields = {};
     for (const [k, v] of Object.entries(log.data)) {
       // Handle errors specially so they get stringified properly
@@ -120,7 +120,7 @@ export class JSONFormatter implements Formatter {
 
     const indent = this.prettyPrint ? 2 : undefined;
     return Result.of(() => JSON.stringify(data, null, indent))
-      .map((json) => Buffer.from(json))
+      .map((json) => new TextEncoder().encode(json))
       .mapFailure((err) => errors.fromJSError(err));
   }
 }
@@ -301,7 +301,7 @@ export class TextFormatter implements Formatter {
     }
   };
 
-  format(log: Log): Result<Buffer, error> {
+  format(log: Log): Result<Uint8Array, error> {
     const data = { ...log.data };
     prefixFieldClashes(data, this.fieldMap);
 
