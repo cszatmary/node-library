@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-import { Result } from "../core/mod";
+import { Result } from "../global";
 import * as util from "../util/mod";
 import * as fs from "./fs";
 import { rimraf, rimrafSync } from "./rm";

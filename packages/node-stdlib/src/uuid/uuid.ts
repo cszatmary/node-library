@@ -5,8 +5,7 @@
 
 import crypto from "crypto";
 import { inspect } from "util";
-import { panic } from "../global";
-import { Result } from "../core/mod";
+import { Result, panic } from "../global";
 import * as errors from "../errors/mod";
 
 export enum Version {

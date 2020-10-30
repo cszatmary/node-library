@@ -1,7 +1,7 @@
 import { inspect } from "util";
 import { uuid } from "../../src";
 
-describe("core/uuid.ts", () => {
+describe("uuid/uuid.ts", () => {
   describe("nil uuid", () => {
     it("treats all nil uuids as equal", () => {
       const nilUUID = uuid.nil;
