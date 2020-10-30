@@ -107,18 +107,11 @@ describe("uuid/uuid.ts", () => {
     });
 
     describe("inspect", () => {
-      it("returns just the type when depth is zero", () => {
-        const uuidString = "1d4f6d02-1146-48a8-b0ad-f562220303de";
-        const u = uuid.mustFromString(uuidString);
-        const s = inspect(u, { depth: -1 });
-        expect(s).toBe("UUID {}");
-      });
-
       it("returns a string representation of the UUID", () => {
         const uuidString = "1d4f6d02-1146-48a8-b0ad-f562220303de";
         const u = uuid.mustFromString(uuidString);
         const s = inspect(u);
-        expect(s).toBe("UUID { 1d4f6d02-1146-48a8-b0ad-f562220303de }");
+        expect(s).toBe("UUID(1d4f6d02-1146-48a8-b0ad-f562220303de)");
       });
     });
   });

@@ -122,12 +122,8 @@ class UUID {
   /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
-  [inspect.custom](depth?: number | null): string {
-    if (depth == null || depth < 0) {
-      return "UUID {}";
-    }
-
-    return `UUID { ${this.toString()} }`;
+  [inspect.custom](): string {
+    return `UUID(${this.toString()})`;
   }
 }
 

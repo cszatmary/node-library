@@ -8,7 +8,6 @@
 import { inspect } from "util";
 import { Result, panic, symbols } from "../global";
 import * as errors from "../errors/mod";
-import * as hex from "../hex/mod";
 import { copy } from "./bytes";
 
 // Node limit for the size of ArrayBuffers
@@ -380,25 +379,7 @@ export class DynamicBuffer implements Iterable<number> {
   /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
-  [inspect.custom](depth?: number | null): string {
-    if (depth == null || depth < 0) {
-      return "DynamicBuffer {}";
-    }
-
-    // Limit to a max of 50 bytes to display
-    const max = 50;
-    const actualMax = Math.min(max, this.length);
-    const remaining = this.length - max;
-
-    let bytes = hex
-      .encodeToString(this.#buf.subarray(this.#off, actualMax + this.#off))
-      .replace(/(.{2})/g, "$1 ")
-      .trim();
-
-    if (remaining > 0) {
-      bytes += ` ... ${remaining} more byte${remaining > 1 ? "s" : ""}`;
-    }
-
-    return `DynamicBuffer { ${bytes} }`;
+  [inspect.custom](): string {
+    return `DynamicBuffer(${this.length})`;
   }
 }

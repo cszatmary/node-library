@@ -64,16 +64,10 @@ describe("global.ts", () => {
     });
 
     describe("inspect", () => {
-      it("returns just the type when depth is zero", () => {
-        const ref = new Ref(10);
-        const s = inspect(ref, { depth: -1 });
-        expect(s).toBe("Ref {}");
-      });
-
       it("returns a string representation of the ref", () => {
         const ref = new Ref(10);
         const s = inspect(ref);
-        expect(s).toBe("Ref { 10 }");
+        expect(s).toBe("Ref(10)");
       });
     });
   });
@@ -308,22 +302,19 @@ describe("global.ts", () => {
     });
 
     describe("inspect", () => {
-      it("returns just the type when depth is zero", () => {
-        const success = Result.success(10);
-        const failure = Result.failure("oh no!");
-        const s1 = inspect(success, { depth: -1 });
-        const s2 = inspect(failure, { depth: -1 });
-        expect(s1).toBe("Result.success {}");
-        expect(s2).toBe("Result.failure {}");
-      });
-
-      it("returns a string representation of the box", () => {
+      it("returns a string representation of the Result", () => {
         const success = Result.success(10);
         const failure = Result.failure("oh no!");
         const s1 = inspect(success);
         const s2 = inspect(failure);
-        expect(s1).toBe("Result.success { 10 }");
-        expect(s2).toBe("Result.failure { 'oh no!' }");
+        expect(s1).toBe("Result.success(10)");
+        expect(s2).toBe("Result.failure(oh no!)");
+      });
+
+      it("handles errors specially", () => {
+        const failure = Result.failure(errors.errorString("err something blew up"));
+        const s = inspect(failure);
+        expect(s).toBe("Result.failure(err something blew up)");
       });
     });
   });
