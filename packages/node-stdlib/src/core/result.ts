@@ -69,11 +69,6 @@ interface ResultCase<S, F> {
   failure(): F | undefined;
 
   /**
-   * Returns the success value or `defaultValue` if the result is a `Failure`.
-   */
-  orElse(defaultValue: S): S;
-
-  /**
    * Returns a new result, mapping the `Success` value using the given `transform` closure.
    */
   map<T>(transform: (value: S) => T): Result<T, F>;
@@ -96,12 +91,6 @@ interface ResultCase<S, F> {
   flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E>;
 
   /**
-   * Returns the result of calling `onSuccess` if the result is a `Success`
-   * or `onFailure` if the result is a `Failure`.
-   */
-  fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T;
-
-  /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
   [inspect.custom](depth?: number | null, options?: InspectOptions): string;
@@ -122,7 +111,7 @@ class Success<S, F> implements ResultCase<S, F> {
     return false;
   }
 
-  unwrap(msg?: string): S {
+  unwrap(_msg?: string): S {
     return this.#value;
   }
 
@@ -142,15 +131,11 @@ class Success<S, F> implements ResultCase<S, F> {
     return undefined;
   }
 
-  orElse(defaultValue: S): S {
-    return this.#value;
-  }
-
   map<T>(transform: (value: S) => T): Result<T, F> {
     return new Success(transform(this.#value));
   }
 
-  mapFailure<E>(transform: (err: F) => E): Result<S, E> {
+  mapFailure<E>(_transform: (err: F) => E): Result<S, E> {
     return new Success(this.#value);
   }
 
@@ -158,12 +143,8 @@ class Success<S, F> implements ResultCase<S, F> {
     return transform(this.#value);
   }
 
-  flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E> {
+  flatMapFailure<E>(_transform: (err: F) => Result<S, E>): Result<S, E> {
     return new Success(this.#value);
-  }
-
-  fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T {
-    return onSuccess(this.#value);
   }
 
   [inspect.custom](depth?: number | null, options?: InspectOptions): string {
@@ -204,7 +185,7 @@ class Failure<S, F> implements ResultCase<S, F> {
     panic(`${msg}: ${toString(this.#cause)}`);
   }
 
-  unwrapFailure(msg?: string): F {
+  unwrapFailure(_msg?: string): F {
     return this.#cause;
   }
 
@@ -216,11 +197,7 @@ class Failure<S, F> implements ResultCase<S, F> {
     return this.#cause;
   }
 
-  orElse(defaultValue: S): S {
-    return defaultValue;
-  }
-
-  map<T>(transform: (value: S) => T): Result<T, F> {
+  map<T>(_transform: (value: S) => T): Result<T, F> {
     return new Failure(this.#cause);
   }
 
@@ -228,16 +205,12 @@ class Failure<S, F> implements ResultCase<S, F> {
     return new Failure(transform(this.#cause));
   }
 
-  flatMap<T>(transform: (value: S) => Result<T, F>): Result<T, F> {
+  flatMap<T>(_transform: (value: S) => Result<T, F>): Result<T, F> {
     return new Failure(this.#cause);
   }
 
   flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E> {
     return transform(this.#cause);
-  }
-
-  fold<T>(onSuccess: (value: S) => T, onFailure: (err: F) => T): T {
-    return onFailure(this.#cause);
   }
 
   [inspect.custom](depth?: number | null, options?: InspectOptions): string {

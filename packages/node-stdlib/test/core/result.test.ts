@@ -110,18 +110,6 @@ describe("Result", () => {
     });
   });
 
-  describe("orElse()", () => {
-    it("returns the value when the result a Success", () => {
-      const r = Result.success(10);
-      expect(r.orElse(2)).toBe(10);
-    });
-
-    it("returns the default value when the result is Failure", () => {
-      const r = Result.failure("Oh no!");
-      expect(r.orElse(2)).toBe(2);
-    });
-  });
-
   describe("map()", () => {
     it("creates a new result mapping the success value", () => {
       const r = Result.success(10);
@@ -187,26 +175,6 @@ describe("Result", () => {
       const newR = r.flatMapFailure((e) => Result.failure(errors.newError(e)));
       expect(newR).not.toBe(r);
       expect(newR.failure()?.error()).toBe(err);
-    });
-  });
-
-  describe("fold()", () => {
-    it("returns the result of onSuccess when the result is a Success", () => {
-      const r = Result.success(10);
-      const val = r.fold(
-        (s) => s + 10,
-        (_e) => 100,
-      );
-      expect(val).toBe(20);
-    });
-
-    it("returns the result of onFailure when the result is a Failure", () => {
-      const r = Result.failure<number, string>("Oh no!");
-      const val = r.fold(
-        (s) => s + 10,
-        (_e) => 100,
-      );
-      expect(val).toBe(100);
     });
   });
 
