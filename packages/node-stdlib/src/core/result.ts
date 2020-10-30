@@ -1,8 +1,6 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { inspect, InspectOptions } from "util";
 import { panic } from "../global";
 
@@ -31,6 +29,28 @@ function toString(v: unknown): string {
   }
 
   return inspect(v);
+}
+
+function isJSError(v: unknown): v is Error {
+  if (v instanceof Error) {
+    return true;
+  }
+
+  if (typeof v !== "object" || v == null) {
+    return false;
+  }
+
+  // Sometimes instanceof fails, this is hacky but seems to handle this case
+  const o = v as Record<string, unknown>;
+  if (
+    o.constructor.name === "Error" &&
+    typeof o.name === "string" &&
+    typeof o.message === "string"
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
 interface ResultCase<S, F> {
@@ -257,11 +277,32 @@ export const Result = {
    * capturing the returned value as a success, or any thrown error as a failure.
    * @param catching A throwing closure to evaluate.
    */
-  of<S, F extends Error = Error>(catching: () => S): Result<S, F> {
+  of<S>(catching: () => S): Result<S, Error> {
     try {
       return new Success(catching());
-    } catch (err) {
-      return new Failure(err);
+    } catch (err: unknown) {
+      if (isJSError(err)) {
+        return new Failure(err);
+      }
+
+      return new Failure(new Error(toString(err)));
+    }
+  },
+
+  /**
+   * ofPromise is like `Result.of` but takes a closure that returns a promise.
+   * The returned promise will always resolve to a Result.
+   * @param catching A closure that returns a promise.
+   */
+  async ofPromise<S>(catching: () => Promise<S>): Promise<Result<S, Error>> {
+    try {
+      return new Success(await catching());
+    } catch (err: unknown) {
+      if (isJSError(err)) {
+        return new Failure(err);
+      }
+
+      return new Failure(new Error(toString(err)));
     }
   },
 
@@ -278,8 +319,12 @@ export const Result = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return new Success(fn(...args));
-      } catch (err) {
-        return new Failure(err);
+      } catch (err: unknown) {
+        if (isJSError(err)) {
+          return new Failure(err);
+        }
+
+        return new Failure(new Error(toString(err)));
       }
     };
   },
@@ -297,8 +342,16 @@ export const Result = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         fn(...args)
-          .then((val) => resolve(new Success(val)))
-          .catch((err) => resolve(new Failure(err)));
+          .then((val) => {
+            return resolve(new Success(val));
+          })
+          .catch((err: unknown) => {
+            if (isJSError(err)) {
+              resolve(new Failure(err));
+            }
+
+            resolve(new Failure(new Error(toString(err))));
+          });
       });
     };
   },

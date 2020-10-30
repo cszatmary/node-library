@@ -19,14 +19,28 @@ describe("Result", () => {
       const r = Result.of(() => {
         return 2;
       });
-      expect(r.isSuccess()).toBe(true);
+      expect(r).toBeSuccess();
     });
 
     it("converts a throwing function to a Failure", () => {
       const r = Result.of(() => {
         throw new Error("Oh no!");
       });
-      expect(r.isFailure()).toBe(true);
+      expect(r).toBeFailure();
+    });
+
+    it("converts a throwing async function to a Success", async () => {
+      const r = await Result.ofPromise(async () => {
+        return 2;
+      });
+      expect(r).toBeSuccess();
+    });
+
+    it("converts a throwing async function to a Failure", async () => {
+      const r = await Result.ofPromise(async () => {
+        throw new Error("Oh no!");
+      });
+      expect(r).toBeFailure();
     });
   });
 
