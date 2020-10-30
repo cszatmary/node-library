@@ -5,7 +5,7 @@
 // Copyright (c) 2009 The Go Authors. All rights reserved.
 // https://github.com/golang/go/blob/master/LICENSE
 
-import { Result } from "../core/mod";
+import { Result } from "../global";
 import * as errors from "../errors/mod";
 
 /**

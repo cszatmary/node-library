@@ -6,7 +6,7 @@
 // https://github.com/sirupsen/logrus/blob/master/LICENSE
 
 import type { WriteStream } from "tty";
-import { Result } from "../core/mod";
+import { Result } from "../global";
 import * as bytes from "../bytes/mod";
 import * as colors from "../colors/mod";
 import * as errors from "../errors/mod";

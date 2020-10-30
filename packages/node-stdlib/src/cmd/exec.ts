@@ -4,7 +4,7 @@
 import type { Stream } from "stream";
 import { spawn, spawnSync } from "child_process";
 
-import { Result } from "../core/mod";
+import { Result } from "../global";
 import * as errors from "../errors/mod";
 
 export type Stdio = "inherit" | "ignore" | "pipe" | Stream;

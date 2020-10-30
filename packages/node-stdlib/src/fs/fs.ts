@@ -11,7 +11,7 @@ This allows this module to serve as a replacement for node's fs.
 */
 
 import fs from "fs";
-import { Result } from "../core/mod";
+import { Result } from "../global";
 
 const { resultify, resultifyPromise } = Result;
 

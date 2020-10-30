@@ -6,8 +6,7 @@
 // https://github.com/golang/go/blob/master/LICENSE
 
 import { inspect } from "util";
-import { panic, symbols } from "../global";
-import { Result } from "../core/mod";
+import { Result, panic, symbols } from "../global";
 import * as errors from "../errors/mod";
 import { copy } from "./bytes";
 

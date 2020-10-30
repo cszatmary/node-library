@@ -2,8 +2,7 @@
 // All rights reserved. MIT License.
 
 import { inspect } from "util";
-import { panic } from "../global";
-import { Result } from "../core/mod";
+import { Result, panic } from "../global";
 import * as errors from "../errors/mod";
 
 const re = /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;

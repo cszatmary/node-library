@@ -8,7 +8,7 @@
 import fs from "fs";
 import path from "path";
 
-import { Result } from "../core/mod";
+import { Result } from "../global";
 import * as errors from "../errors/mod";
 
 export const errNotFound = errors.errorString("executable file not found in PATH");
