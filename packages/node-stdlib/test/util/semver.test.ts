@@ -122,16 +122,10 @@ describe("util/semver.ts", () => {
   });
 
   describe("inspect", () => {
-    it("returns just the type when depth is zero", () => {
-      const sv = new util.SemVer(1, 5, 12);
-      const s = inspect(sv, { depth: -1 });
-      expect(s).toBe("SemVer {}");
-    });
-
-    it("returns a string representation of the box", () => {
+    it("returns a string representation of the semver", () => {
       const sv = new util.SemVer(1, 5, 12);
       const s = inspect(sv);
-      expect(s).toBe("SemVer { 1.5.12 }");
+      expect(s).toBe("SemVer(1.5.12)");
     });
   });
 });

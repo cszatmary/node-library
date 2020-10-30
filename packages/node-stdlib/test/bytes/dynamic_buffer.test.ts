@@ -264,18 +264,11 @@ describe("bytes/dynamic_buffer.ts", () => {
   });
 
   describe("inspect", () => {
-    it("returns just the type when depth is zero", () => {
-      const src = hex.decodeString("10ffab23ef5d").unwrap();
-      const buf = new bytes.DynamicBuffer(src);
-      const s = inspect(buf, { depth: -1 });
-      expect(s).toBe("DynamicBuffer {}");
-    });
-
-    it("returns a string representation of the box", () => {
+    it("returns the name of the class and the buffer length", () => {
       const src = hex.decodeString("10ffab23ef5d").unwrap();
       const buf = new bytes.DynamicBuffer(src);
       const s = inspect(buf);
-      expect(s).toBe("DynamicBuffer { 10 ff ab 23 ef 5d }");
+      expect(s).toBe("DynamicBuffer(6)");
     });
   });
 });

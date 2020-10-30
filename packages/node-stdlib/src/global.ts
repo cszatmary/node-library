@@ -10,7 +10,7 @@ This file should not import any other files from this library since it
 should be able to be imported by any other file.
 */
 
-import { inspect, InspectOptions } from "util";
+import { inspect } from "util";
 
 declare global {
   /**
@@ -32,6 +32,16 @@ export const symbols = Object.freeze({
   readonly copy: unique symbol;
 };
 
+// Copy isError so we don't need to import from the errors module
+function isError(err: unknown): err is error {
+  if (err == null) {
+    return false;
+  }
+
+  const e = err as error;
+  return typeof e.error === "function" && typeof e.detailedError === "function";
+}
+
 // Copy toString so we don't need to import from the util module
 function toString(v: unknown): string {
   if (v === undefined) {
@@ -44,10 +54,8 @@ function toString(v: unknown): string {
     return v.toString();
   }
 
-  // Inline isError so we don't need to import from the errors module
-  const err = v as error;
-  if (typeof err.error === "function" && typeof err.detailedError === "function") {
-    return err.error();
+  if (isError(v)) {
+    return v.error();
   }
 
   // Inline Stringer
@@ -154,18 +162,8 @@ export class Ref<T> {
   /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
-  [inspect.custom](depth?: number | null, options?: InspectOptions): string {
-    if (depth == null || depth < 0) {
-      return "Ref {}";
-    }
-
-    const newOpts = {
-      ...options,
-      depth: options?.depth == null ? null : options.depth - 1,
-    };
-
-    const value = inspect(this.#value, newOpts);
-    return `Ref { ${value} }`;
+  [inspect.custom](): string {
+    return `Ref(${this.#value})`;
   }
 }
 
@@ -232,7 +230,7 @@ interface ResultCase<S, F> {
   /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
-  [inspect.custom](depth?: number | null, options?: InspectOptions): string;
+  [inspect.custom](): string;
 }
 
 class Success<S, F> implements ResultCase<S, F> {
@@ -286,18 +284,8 @@ class Success<S, F> implements ResultCase<S, F> {
     return new Success(this.#value);
   }
 
-  [inspect.custom](depth?: number | null, options?: InspectOptions): string {
-    if (depth == null || depth < 0) {
-      return "Result.success {}";
-    }
-
-    const newOpts = {
-      ...options,
-      depth: options?.depth == null ? null : options.depth - 1,
-    };
-
-    const value = inspect(this.#value, newOpts);
-    return `Result.success { ${value} }`;
+  [inspect.custom](): string {
+    return `Result.success(${this.#value})`;
   }
 }
 
@@ -352,18 +340,13 @@ class Failure<S, F> implements ResultCase<S, F> {
     return transform(this.#cause);
   }
 
-  [inspect.custom](depth?: number | null, options?: InspectOptions): string {
-    if (depth == null || depth < 0) {
-      return "Result.failure {}";
+  [inspect.custom](): string {
+    // Handle error specially since Failure is frequently used with error
+    if (isError(this.#cause)) {
+      return `Result.failure(${this.#cause.error()})`;
     }
 
-    const newOpts = {
-      ...options,
-      depth: options?.depth == null ? null : options.depth - 1,
-    };
-
-    const cause = inspect(this.#cause, newOpts);
-    return `Result.failure { ${cause} }`;
+    return `Result.failure(${this.#cause})`;
   }
 }
 

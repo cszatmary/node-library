@@ -111,12 +111,8 @@ export class SemVer {
   /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
-  [inspect.custom](depth?: number | null): string {
-    if (depth == null || depth < 0) {
-      return "SemVer {}";
-    }
-
-    return `SemVer { ${this.toString()} }`;
+  [inspect.custom](): string {
+    return `SemVer(${this.toString()})`;
   }
 
   /**
