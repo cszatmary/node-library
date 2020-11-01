@@ -1,6 +1,8 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
+import { runtime } from "../_runtime/runtime";
+
 let shouldShowErrDetail = false;
 
 export function showErrDetail(b: boolean): void {
@@ -22,7 +24,7 @@ export function exitErr(err: error, message: string, ...optionalParams: unknown[
     console.error(`Error: ${err.error()}`);
   }
 
-  process.exit(1);
+  runtime.exit(1);
 }
 
 /**
@@ -32,5 +34,5 @@ export function exitErr(err: error, message: string, ...optionalParams: unknown[
  */
 export function exit(message: string, ...optionalParams: unknown[]): never {
   console.error(message, ...optionalParams);
-  process.exit(1);
+  runtime.exit(1);
 }

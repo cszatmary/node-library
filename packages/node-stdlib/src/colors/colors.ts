@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-import * as env from "../env/mod";
+import { runtime } from "../_runtime/runtime";
 
 // Available ANSI codes
 const ansiCodes = {
@@ -43,7 +43,7 @@ const ansiCodes = {
   bgWhite: 47,
 };
 
-const noColor = env.isEnvSet("NO_COLOR");
+const noColor = runtime.env.get("NO_COLOR") !== undefined;
 let colorEnabled = !noColor;
 
 export function isColorEnabled(): boolean {

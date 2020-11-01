@@ -11,6 +11,7 @@ function fail(msg: string): never {
 }
 
 interface TargetConfig {
+  requiresRuntime?: boolean;
   entrypoint?: {
     name: string;
     includeExtension: boolean;
@@ -27,6 +28,7 @@ interface Config {
 
 interface Target {
   name: string;
+  requiresRuntime: boolean;
   entrypoint?: {
     name: string;
     includeExtension: boolean;
@@ -60,6 +62,7 @@ function parseConfig(rootDir: string, targetName: string): Target {
 
   return {
     name: targetName,
+    requiresRuntime: targetConfig.requiresRuntime ?? false,
     entrypoint: targetConfig.entrypoint,
     deleteImports: targetConfig.deleteImports ?? [],
     replace,
@@ -100,6 +103,7 @@ const targetName = args[0];
 const rootDir = path.resolve(__dirname, "../");
 const srcDir = path.join(rootDir, "src");
 const dstDir = path.join(rootDir, "dist", targetName);
+const runtimeDir = path.join(srcDir, "_runtime");
 const target = parseConfig(rootDir, targetName);
 
 const srcs: Source[] = [];
@@ -127,8 +131,11 @@ const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
 
         const module = node.moduleSpecifier.text;
 
-        if (target.deleteImports.includes(module)) {
-          return undefined;
+        // Check if any matching imports to delete
+        for (const im of target.deleteImports) {
+          if (module.includes(im)) {
+            return undefined;
+          }
         }
 
         return context.factory.updateImportDeclaration(
@@ -155,27 +162,6 @@ const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
           node.exportClause,
           context.factory.createStringLiteral(`${module}.ts`, false),
         );
-      }
-
-      if (ts.isComputedPropertyName(node)) {
-        // TODO: This is hardcoded for inspect.custom, make this generic
-        if (ts.isPropertyAccessExpression(node.expression)) {
-          if (ts.isIdentifier(node.expression.expression)) {
-            const propertyName = `${node.expression.expression.text}.${node.expression.name.text}`;
-            const replaceName = target.replace.get(propertyName);
-            if (replaceName !== undefined) {
-              const parts = replaceName.split(".");
-              return context.factory.createComputedPropertyName(
-                context.factory.createPropertyAccessExpression(
-                  context.factory.createIdentifier(parts[0]),
-                  parts[1],
-                ),
-              );
-            }
-          }
-        }
-
-        return node;
       }
 
       if (ts.isIdentifier(node)) {
@@ -230,4 +216,21 @@ if (target.entrypoint !== undefined) {
 
   const filename = path.join(dstDir, target.entrypoint.name);
   fs.writeFileSync(filename, lines.join("\n"));
+}
+
+// Create runtime if required
+if (target.requiresRuntime) {
+  const dstRuntimeDir = path.join(dstDir, "_runtime");
+  fs.mkdirSync(dstRuntimeDir, { recursive: true });
+  const runtimeFiles = fs.readdirSync(runtimeDir);
+  for (const f of runtimeFiles) {
+    // Runtime file names are of the form *_target.ts
+    const parts = path.basename(f, ".ts").split("_");
+    if (parts.pop() !== target.name) {
+      continue;
+    }
+
+    const dstPath = path.join(dstRuntimeDir, `${parts.join("_")}.ts`);
+    fs.copyFileSync(path.join(runtimeDir, f), dstPath);
+  }
 }

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "lerna run build",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc --noEmit && lerna run check-types",
     "clean": "lerna run clean && rimraf coverage",
     "fmt": "prettier --write 'packages/**/{src,test}/**/*.{js,ts}'",
     "lint": "eslint --ext=js,ts ./packages",

@@ -108,3 +108,4 @@ Temporary Items
 .vscode
 lib
 dist
+deno.d.ts

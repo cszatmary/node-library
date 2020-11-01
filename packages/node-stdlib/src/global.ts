@@ -10,7 +10,7 @@ This file should not import any other files from this library since it
 should be able to be imported by any other file.
 */
 
-import { inspect } from "util";
+import { runtime } from "./_runtime/runtime";
 
 declare global {
   /**
@@ -64,7 +64,7 @@ function toString(v: unknown): string {
     return s.toString();
   }
 
-  return inspect(v);
+  return runtime.inspect(v);
 }
 
 function isJSError(v: unknown): v is Error {
@@ -160,9 +160,9 @@ export class Ref<T> {
   }
 
   /**
-   * Custom inspect implementation for use with node's `util.inspect`.
+   * Custom inspect implementation to print a debug description.
    */
-  [inspect.custom](): string {
+  [runtime.customInspect](): string {
     return `Ref(${this.#value})`;
   }
 }
@@ -228,9 +228,9 @@ interface ResultCase<S, F> {
   flatMapFailure<E>(transform: (err: F) => Result<S, E>): Result<S, E>;
 
   /**
-   * Custom inspect implementation for use with node's `util.inspect`.
+   * Custom inspect implementation to print a debug description.
    */
-  [inspect.custom](): string;
+  [runtime.customInspect](): string;
 }
 
 class Success<S, F> implements ResultCase<S, F> {
@@ -284,7 +284,7 @@ class Success<S, F> implements ResultCase<S, F> {
     return new Success(this.#value);
   }
 
-  [inspect.custom](): string {
+  [runtime.customInspect](): string {
     return `Result.success(${this.#value})`;
   }
 }
@@ -340,7 +340,7 @@ class Failure<S, F> implements ResultCase<S, F> {
     return transform(this.#cause);
   }
 
-  [inspect.custom](): string {
+  [runtime.customInspect](): string {
     // Handle error specially since Failure is frequently used with error
     if (isError(this.#cause)) {
       return `Result.failure(${this.#cause.error()})`;
