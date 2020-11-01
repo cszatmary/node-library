@@ -16,10 +16,10 @@
     "url": "https://github.com/cszatmary/node-library/issues"
   },
   "license": "MIT",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/node/index.js",
+  "types": "dist/node/index.d.ts",
   "files": [
-    "lib/"
+    "dist/node/"
   ],
   "engines": {
     "node": ">= 10.0.0"
@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build:deno": "ts-node scripts/target_generator.ts deno",
-    "build:node": "tsc -p tsconfig.build.json",
+    "build:node": "ts-node scripts/target_generator.ts node",
     "build": "yarn build:node && yarn build:deno",
     "check-types:deno": "ts-node scripts/check_deno_runtime.ts",
     "check-types": "yarn check-types:deno",

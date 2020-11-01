@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 import cp from "child_process";
 import fs from "fs";
 import path from "path";
@@ -24,8 +22,15 @@ const denoDeclarationsPath = path.join(runtimeDir, "deno.d.ts");
 
 // Generate the deno declarations
 const fd = fs.openSync(denoDeclarationsPath, "w");
-cp.spawnSync("deno", ["types"], { stdio: ["ignore", fd, "inherit"] });
+const result = cp.spawnSync("deno", ["types"], { stdio: ["ignore", fd, "inherit"] });
 fs.closeSync(fd);
+if (result.status !== 0) {
+  console.error("Failed to create deno declaration file");
+  if (result.error != null) {
+    console.error(result.error);
+  }
+  process.exit(1);
+}
 
 const program = ts.createProgram([denoRuntimePath], {
   noEmit: true,
