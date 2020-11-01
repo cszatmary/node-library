@@ -1,0 +1,33 @@
+{
+  "targets": {
+    "node": {},
+    "deno": {
+      "entrypoint": {
+        "name": "mod.ts",
+        "includeExtension": true
+      },
+      "deleteImports": ["util"],
+      "replace": {
+        "inspect.custom": "Deno.customInspect",
+        "inspect": "Deno.inspect"
+      }
+    }
+  },
+  "global": ["global.ts"],
+  "modules": {
+    "bytes": "*",
+    "cmd": "node",
+    "colors": "node",
+    "env": "node",
+    "errors": "*",
+    "fatal": "node",
+    "fs": "node",
+    "hex": "*",
+    "log": "node",
+    "sets": "*",
+    "strings": "*",
+    "time": "*",
+    "util": "node",
+    "uuid": "node"
+  }
+}
