@@ -1,10 +1,10 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "dist/node",
     "allowJs": false,
     "declaration": true
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/*_deno.ts"]
 }

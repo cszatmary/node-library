@@ -1,7 +1,12 @@
 {
   "targets": {
-    "node": {},
+    "node": {
+      "action": "compile",
+      "requiresRuntime": true,
+      "tsconfigPath": "./tsconfig.build.json"
+    },
     "deno": {
+      "action": "transform",
       "entrypoint": {
         "name": "mod.ts",
         "includeExtension": true
