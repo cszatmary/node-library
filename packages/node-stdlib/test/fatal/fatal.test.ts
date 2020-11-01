@@ -1,3 +1,4 @@
+import { runtime } from "../../src/_runtime/runtime";
 import { errors, fatal } from "../../src";
 
 describe("src/exit.ts tests", () => {
@@ -13,7 +14,7 @@ describe("src/exit.ts tests", () => {
       stderrData += inputs;
       stderrData += "\n";
     });
-    spyExit = jest.spyOn(process, "exit").mockImplementation(((code) => {
+    spyExit = jest.spyOn(runtime, "exit").mockImplementation(((code) => {
       exitCode = code;
     }) as (code?: number) => never);
   });

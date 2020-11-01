@@ -6,10 +6,9 @@
         "name": "mod.ts",
         "includeExtension": true
       },
-      "deleteImports": ["util"],
+      "deleteImports": ["_runtime/runtime"],
       "replace": {
-        "inspect.custom": "Deno.customInspect",
-        "inspect": "Deno.inspect"
+        "runtime": "Deno"
       }
     }
   },
@@ -17,8 +16,8 @@
   "modules": {
     "bytes": "*",
     "cmd": "node",
-    "colors": "node",
-    "env": "node",
+    "colors": "*",
+    "env": "*",
     "errors": "*",
     "fatal": "node",
     "fs": "node",

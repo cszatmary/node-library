@@ -31,6 +31,8 @@
     "build:deno": "ts-node scripts/target_generator.ts deno",
     "build:node": "tsc -p tsconfig.build.json",
     "build": "yarn build:node && yarn build:deno",
+    "check-types:deno": "ts-node scripts/check_deno_runtime.ts",
+    "check-types": "yarn check-types:deno",
     "clean": "rimraf lib && rimraf dist"
   }
 }

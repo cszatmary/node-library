@@ -5,7 +5,7 @@
 // Copyright 2009 The Go Authors. All rights reserved. BSD license.
 // https://github.com/golang/go/blob/master/LICENSE
 
-import { inspect } from "util";
+import { runtime } from "../_runtime/runtime";
 import { Result, panic, symbols } from "../global";
 import * as errors from "../errors/mod";
 import { copy } from "./bytes";
@@ -377,9 +377,9 @@ export class DynamicBuffer implements Iterable<number> {
   }
 
   /**
-   * Custom inspect implementation for use with node's `util.inspect`.
+   * Custom inspect implementation to print a debug description.
    */
-  [inspect.custom](): string {
+  [runtime.customInspect](): string {
     return `DynamicBuffer(${this.length})`;
   }
 }
