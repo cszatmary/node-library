@@ -28,7 +28,9 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "clean": "rimraf lib"
+    "build:deno": "ts-node scripts/target_generator.ts deno",
+    "build:node": "tsc -p tsconfig.build.json",
+    "build": "yarn build:node && yarn build:deno",
+    "clean": "rimraf lib && rimraf dist"
   }
 }
