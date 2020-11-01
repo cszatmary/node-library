@@ -11,9 +11,9 @@
     "email": "cs@christopherszatmary.com",
     "url": "https://christopherszatmary.com"
   },
-  "repository": "cszatma/node-library",
+  "repository": "cszatmary/node-library",
   "bugs": {
-    "url": "https://github.com/cszatma/node-library/issues"
+    "url": "https://github.com/cszatmary/node-library/issues"
   },
   "license": "MIT",
   "main": "lib/index.js",
