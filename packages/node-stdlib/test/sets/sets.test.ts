@@ -72,13 +72,4 @@ describe("sets.ts", () => {
       expect(c).toBe(false);
     });
   });
-
-  describe("map()", () => {
-    it("maps the set using the given function", () => {
-      const a = new Set([1, 2, 3]);
-      const r = sets.map(a, (v) => v * v);
-
-      expect(r.sort()).toEqual([1, 4, 9]);
-    });
-  });
 });

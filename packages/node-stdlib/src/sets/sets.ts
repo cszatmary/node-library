@@ -66,16 +66,3 @@ export function isSubset<T>(a: Set<T>, b: Set<T>): boolean {
 
   return true;
 }
-
-/**
- * Returns an array containing the results of calling `f` on each element of `a`.
- */
-export function map<T, S>(a: Set<T>, f: (v: T) => S): S[] {
-  const mapped: S[] = [];
-
-  for (const v of a) {
-    mapped.push(f(v));
-  }
-
-  return mapped;
-}
