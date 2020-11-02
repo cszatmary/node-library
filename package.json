@@ -8,8 +8,11 @@
     "node": ">=10.0.0"
   },
   "scripts": {
+    "build:deno": "lerna run build:deno",
+    "build:node": "lerna run build:node",
     "build": "lerna run build",
-    "check-types": "tsc --noEmit && lerna run check-types",
+    "check-types:deno": "lerna run check-types:deno",
+    "check-types": "tsc --noEmit",
     "clean": "lerna run clean && rimraf coverage",
     "fmt": "prettier --write 'packages/**/{src,test}/**/*.{js,ts}'",
     "lint": "eslint --ext=js,ts ./packages",

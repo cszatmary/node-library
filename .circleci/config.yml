@@ -1,18 +1,20 @@
 version: 2.1
 
+cache_key: &cache_key node-library-20200807-{{ checksum "yarn.lock" }}
+
 executors:
   docker:
     docker:
-      - image: cimg/node:lts
+      - image: cszatma/cimg-node:lts
 
 aliases:
   - &restore_cache
     name: Restore yarn cache
     keys:
-      - node-library-20200807-{{ checksum "yarn.lock" }}
+      - *cache_key
 
 jobs:
-  install:
+  install-lint-check:
     executor: docker
     steps:
       - checkout
@@ -22,47 +24,56 @@ jobs:
           command: .circleci/yarn_frozen_lockfile.sh
       - save_cache:
           name: Save yarn cache
-          key: node-library-20200807-{{ checksum "yarn.lock" }}
+          key: *cache_key
           paths:
             - node_modules/
-
-  build:
-    executor: docker
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
-      - run:
-          name: build
-          command: yarn build
-
-  lint:
-    executor: docker
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
       - run:
           name: lint
           command: yarn lint
+      - run:
+          name: check deno runtime types
+          command: yarn check-types:deno
 
-  test:
+  build-node:
     executor: docker
     steps:
       - checkout
       - restore_cache: *restore_cache
       - run:
-          name: test
+          name: build node target
+          command: yarn build:node
+
+  test-node:
+    executor: docker
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - run:
+          name: run node tests
           command: yarn test:ci
+
+  build-test-deno:
+    executor: docker
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - run:
+          name: build deno target
+          command: yarn build:deno
+      - run:
+          name: run deno tests
+          command: yarn test:deno
 
 workflows:
   build-test:
     jobs:
-      - install
-      - build:
+      - install-lint-check
+      - build-node:
           requires:
-            - install
-      - lint:
+            - install-lint-check
+      - test-node:
           requires:
-            - install
-      - test:
+            - install-lint-check
+      - build-test-deno:
           requires:
-            - install
+            - install-lint-check
