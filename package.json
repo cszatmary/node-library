@@ -16,6 +16,7 @@
     "lint:fix": "eslint --fix --ext=js,ts ./packages",
     "prepublishOnly": "yarn clean && yarn build && yarn verify",
     "release": "lerna publish --conventional-commits",
+    "test:deno": "deno test --allow-env packages/node-stdlib/test/deno/**/*_test.ts",
     "test": "NODE_ENV=test jest --coverage",
     "test:ci": "yarn test --runInBand --colors",
     "test:nocover": "NODE_ENV=test jest",
