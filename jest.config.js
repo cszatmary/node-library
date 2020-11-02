@@ -7,6 +7,7 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest",
   },
   testMatch: ["**/test/**/*.test.(ts|js)"],
+  testPathIgnorePatterns: ["/test/deno/"],
   testEnvironment: "node",
   collectCoverageFrom: ["packages/**/src/**/*.(js|ts)"],
   coveragePathIgnorePatterns: ["<rootDir>/packages/node-stdlib/src/_runtime"],
