@@ -11,5 +11,5 @@ module.exports = {
   testEnvironment: "node",
   collectCoverageFrom: ["packages/**/src/**/*.(js|ts)"],
   coveragePathIgnorePatterns: ["<rootDir>/packages/node-stdlib/src/_runtime"],
-  setupFilesAfterEnv: ["<rootDir>/packages/node-stdlib/test/setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/packages/node-stdlib/test/node/setup.ts"],
 };

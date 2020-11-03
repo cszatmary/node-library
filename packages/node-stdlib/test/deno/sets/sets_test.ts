@@ -1,4 +1,4 @@
-import { testing } from "../deps.ts";
+import * as testing from "../testing.ts";
 import { sets } from "../../../dist/deno/mod.ts";
 
 Deno.test("sets.union", () => {
@@ -41,11 +41,11 @@ Deno.test("sets.difference", () => {
 });
 
 Deno.test("sets.isSubset", () => {
-  const tests = [
+  const tests: [Set<number>, Set<number>, boolean][] = [
     // a, b, expected
     [new Set([1, 2, 3]), new Set([1, 2, 3, 4, 5, 6]), true],
     [new Set([1, 2, 3]), new Set([1, 2, 4]), false],
-  ] as const;
+  ];
 
   for (const [a, b, expected] of tests) {
     const c = sets.isSubset(a, b);
