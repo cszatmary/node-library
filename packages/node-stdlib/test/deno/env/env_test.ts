@@ -1,12 +1,12 @@
-import { testing } from "../deps.ts";
+import * as testing from "../testing.ts";
 import { env } from "../../../dist/deno/mod.ts";
 
 Deno.test("env.isEnvSet", () => {
-  const tests = [
+  const tests: [string, boolean][] = [
     // var, expected
     ["ISAVAR", true],
     ["NOTAVAR", false],
-  ] as const;
+  ];
 
   for (const [key, expected] of tests) {
     if (expected) {
@@ -22,12 +22,12 @@ Deno.test("env.isEnvSet", () => {
 });
 
 Deno.test("env.getEnv", () => {
-  const tests = [
+  const tests: [string, boolean, string | undefined, string][] = [
     // var, set, default, expected
     ["ISAVAR", true, undefined, "true"],
     ["NOTAVAR", false, undefined, ""],
     ["NOTAVAR", false, "nope", "nope"],
-  ] as const;
+  ];
 
   for (const [key, set, defaultValue, expected] of tests) {
     if (set) {
