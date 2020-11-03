@@ -144,8 +144,3 @@ export class SemVer {
     return r.success();
   }
 }
-
-/**
- * The current node version as a `SemVer` instance.
- */
-export const nodeVersion = SemVer.mustParse(process.versions.node);

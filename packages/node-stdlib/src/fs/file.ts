@@ -59,9 +59,6 @@ export function removeSync(path: fs.PathLike): Result<void, Error> {
   return rmdirErr.code !== "ENOTDIR" ? rmdirRes : unlinkRes;
 }
 
-// The minimum node version required for native rm support.
-const rmRequiredVersion = new util.SemVer(12, 10, 0);
-
 /**
  * Asynchronously removes path and any children it contains.
  * It removes everything it can but returns the first error it encounters.
@@ -83,7 +80,11 @@ export async function removeAll(path: fs.PathLike): Promise<Result<void, Error>>
     return removeRes;
   }
 
-  if (util.nodeVersion.compare(rmRequiredVersion) >= 0) {
+  // The minimum node version required for native rm support.
+  const rmRequiredVersion = new util.SemVer(12, 10, 0);
+  const nodeVersion = util.SemVer.mustParse(process.versions.node);
+
+  if (nodeVersion.compare(rmRequiredVersion) >= 0) {
     // We can use the builtin recursive removal
     return fs.rmdir(path, { recursive: true });
   }
@@ -121,7 +122,11 @@ export function removeAllSync(path: fs.PathLike): Result<void, Error> {
     return removeRes;
   }
 
-  if (util.nodeVersion.compare(rmRequiredVersion) >= 0) {
+  // The minimum node version required for native rm support.
+  const rmRequiredVersion = new util.SemVer(12, 10, 0);
+  const nodeVersion = util.SemVer.mustParse(process.versions.node);
+
+  if (nodeVersion.compare(rmRequiredVersion) >= 0) {
     // We can use the builtin recursive removal
     return fs.rmdirSync(path, { recursive: true });
   }
