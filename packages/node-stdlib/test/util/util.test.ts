@@ -44,6 +44,24 @@ describe("util/util.ts", () => {
     });
   });
 
+  describe("isTypedArray()", () => {
+    test.each([
+      ["Uint8Array", new Uint8Array(), true],
+      ["Uint8ClampedArray", new Uint8ClampedArray(), true],
+      ["Uint16Array", new Uint16Array(), true],
+      ["Uint32Array", new Uint32Array(), true],
+      ["Int8Array", new Int8Array(), true],
+      ["Int16Array", new Int16Array(), true],
+      ["Int32Array", new Int32Array(), true],
+      ["Float32Array", new Float32Array(), true],
+      ["Float64Array", new Float64Array(), true],
+      ["DataView", new DataView(new ArrayBuffer(0)), false],
+      ["Array", [], false],
+    ])("isTypedArray: %s", (_name, v, expected) => {
+      expect(util.isTypedArray(v)).toBe(expected);
+    });
+  });
+
   describe("copy", () => {
     it("returns null if the value is null", () => {
       const v = null;
@@ -76,13 +94,6 @@ describe("util/util.ts", () => {
       const setCopy = util.copy(set);
       expect(setCopy).toEqual(set);
       expect(setCopy).not.toBe(set);
-    });
-
-    it("creates a copy of the buffer", () => {
-      const buf = Buffer.from("10ff", "hex");
-      const bufCopy = util.copy(buf);
-      expect(bufCopy).toEqual(buf);
-      expect(bufCopy).not.toBe(buf);
     });
 
     it("creates a copy of the typed array", () => {
