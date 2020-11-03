@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-import util from "util";
+import { runtime } from "../_runtime/runtime";
 import { panic, symbols } from "../global";
 import * as errors from "../errors/mod";
 
@@ -36,7 +36,7 @@ export function toString(v: unknown): string {
     return s.toString();
   }
 
-  return util.inspect(v);
+  return runtime.inspect(v);
 }
 
 /**

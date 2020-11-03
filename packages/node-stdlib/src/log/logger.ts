@@ -1,6 +1,7 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
+import { runtime } from "../_runtime/runtime";
 import { panic } from "../global";
 import { Formatter, TextFormatter } from "./formatter";
 import { Logger, Level, Fields, Log, Writable } from "./log";
@@ -25,7 +26,7 @@ export class StandardLogger implements Logger {
   level: Level;
 
   constructor(opts?: { out?: Writable; formatter?: Formatter; level?: Level }) {
-    this.out = opts?.out ?? process.stderr;
+    this.out = opts?.out ?? runtime.stderr;
     this.formatter = opts?.formatter ?? new TextFormatter();
     this.level = opts?.level ?? Level.info;
   }
@@ -121,7 +122,7 @@ export class StandardLogger implements Logger {
    */
   fatal(msg: string, fields?: Fields): void {
     this.#log(Level.fatal, msg, fields);
-    process.exit(1);
+    runtime.exit(1);
   }
 
   /**

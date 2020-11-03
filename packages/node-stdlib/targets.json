@@ -27,12 +27,12 @@
     "fatal": "*",
     "fs": "node",
     "hex": "*",
-    "log": "node",
+    "log": "*",
     "sets": "*",
     "strconv": "*",
     "strings": "*",
     "time": "*",
-    "util": "node",
+    "util": "*",
     "uuid": "node"
   }
 }

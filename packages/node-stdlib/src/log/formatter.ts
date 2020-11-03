@@ -5,7 +5,7 @@
 // Copyright (c) 2014 Simon Eskildsen
 // https://github.com/sirupsen/logrus/blob/master/LICENSE
 
-import type { WriteStream } from "tty";
+import { runtime } from "../_runtime/runtime";
 import { Result } from "../global";
 import * as bytes from "../bytes/mod";
 import * as colors from "../colors/mod";
@@ -180,7 +180,22 @@ export class TextFormatter implements Formatter {
 
   #init = (log: Log): void => {
     if (log.out !== undefined) {
-      this.#isTerminal = (log.out as WriteStream).isTTY ?? false;
+      // Deno uses rid (resource id) while Node uses fd (file descriptor)
+      // This is a hack to make this work cross target
+
+      // Need to use any because we are checking for runtime properties
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const out = log.out as any;
+      if (typeof out.rid === "number") {
+        // Deno will throw if an invalid rid is used
+        // Do this to be safe
+        try {
+          this.#isTerminal = runtime.isatty(out.rid);
+          // eslint-disable-next-line no-empty
+        } catch {}
+      } else if (typeof out.fd === "number") {
+        this.#isTerminal = runtime.isatty(out.fd);
+      }
     }
 
     for (const level of allLevels) {
@@ -194,7 +209,7 @@ export class TextFormatter implements Formatter {
   };
 
   #isColored = (): boolean => {
-    const isColored = this.forceColors || (this.#isTerminal && process.platform !== "win32");
+    const isColored = this.forceColors || (this.#isTerminal && runtime.build.os !== "windows");
     return isColored && !this.disableColors;
   };
 

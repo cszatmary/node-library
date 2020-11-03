@@ -55,7 +55,6 @@ describe("util/util.ts", () => {
         ["b", { b: "world" }],
       ]),
     ],
-    [Buffer.from("10ff", "hex")],
     [new Int32Array([21, 31, 41])],
   ])("util.copy: %s", (v) => {
     const copy = util.copy(v);
