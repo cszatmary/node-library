@@ -47,12 +47,31 @@ export interface Copyable {
 }
 
 /**
- * Returns a boolean indication whether or not
+ * Returns a boolean indicating whether or not
  * `v` is a proper object and not an array.
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function isObject(v: unknown): v is object {
   return v != null && typeof v === "object" && !Array.isArray(v);
+}
+
+export type TypedArray =
+  | Uint8Array
+  | Uint8ClampedArray
+  | Uint16Array
+  | Uint32Array
+  | Int8Array
+  | Int16Array
+  | Int32Array
+  | Float32Array
+  | Float64Array;
+
+/**
+ * Returns a boolean indicating whether or not `v`
+ * is a typed array.
+ */
+export function isTypedArray(v: unknown): v is TypedArray {
+  return ArrayBuffer.isView(v) && !(v instanceof DataView);
 }
 
 /**
@@ -103,11 +122,7 @@ export function copy<T>(v: T): T {
     return (s as unknown) as T;
   }
 
-  if (Buffer.isBuffer(v)) {
-    return (Buffer.from(v) as unknown) as T;
-  }
-
-  if (util.types.isTypedArray(v)) {
+  if (isTypedArray(v)) {
     return (v.slice() as unknown) as T;
   }
 
