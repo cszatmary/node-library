@@ -1,3 +1,4 @@
+import { runtime } from "../../../src/_runtime/runtime";
 import { bytes, log } from "../../../src";
 
 describe("log/logger.ts", () => {
@@ -67,7 +68,7 @@ describe("log/logger.ts", () => {
 
   test("logger.fatal", () => {
     let exitCode = 0;
-    const spyExit = jest.spyOn(process, "exit").mockImplementation(((code) => {
+    const spyExit = jest.spyOn(runtime, "exit").mockImplementation(((code) => {
       exitCode = code as number;
     }) as (code?: number) => never);
 

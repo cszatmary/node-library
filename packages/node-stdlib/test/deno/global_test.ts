@@ -1,5 +1,5 @@
 import * as testing from "./testing.ts";
-import { Ref, Result, errors, panic, recover } from "../../dist/deno/mod.ts";
+import { Ref, Result, errors, panic, recover, util } from "../../dist/deno/mod.ts";
 
 Deno.test("panic", () => {
   const tests: [unknown, string][] = [
@@ -9,7 +9,8 @@ Deno.test("panic", () => {
     [{ error: "oops" }, `{ error: "oops" }`],
     [undefined, "undefined"],
     [null, "null"],
-    // TODO(@cszatmary): add something that implements Stringer
+    // Stringer
+    [new util.SemVer(1, 5, 12), "1.5.12"],
   ];
 
   for (const [v, expected] of tests) {
@@ -27,7 +28,8 @@ Deno.test("recover", () => {
     [{ error: "oops" }],
     [undefined],
     [null],
-    // TODO(@cszatmary): add something that implements Stringer
+    // Stringer
+    [new util.SemVer(1, 5, 12)],
   ];
 
   for (const [v] of tests) {
@@ -156,13 +158,12 @@ Deno.test("Result: unwrapFailure", () => {
   testing.assertEquals(r.unwrapFailure(), "Oh no!");
 });
 
-// TODO(@cszatmary): Add a test that uses stringer
-// Deno.test("Result: unwrapFailure: panic with message and stringified success", () => {
-//   const r = Result.success(new util.SemVer(1, 5, 12));
-//   testing.assertPanics(() => {
-//     r.unwrapFailure("Something broke");
-//   }, "Something broke: 1.5.12");
-// });
+Deno.test("Result: unwrapFailure: panic with message and stringified success", () => {
+  const r = Result.success(new util.SemVer(1, 5, 12));
+  testing.assertPanics(() => {
+    r.unwrapFailure("Something broke");
+  }, "Something broke: 1.5.12");
+});
 
 Deno.test("Result: success", () => {
   const r = Result.success(10);

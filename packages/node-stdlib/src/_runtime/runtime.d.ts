@@ -23,11 +23,20 @@ interface InspectOptions {
   getters?: boolean;
 }
 
+interface Writable {
+  write(buffer: Uint8Array): void;
+}
+
 export interface Runtime {
-  readonly env: Env;
-  exit(code?: number): never;
+  readonly build: {
+    os: string;
+  };
   readonly customInspect: unique symbol;
+  readonly env: Env;
+  readonly stderr: Writable;
+  exit(code?: number): never;
   inspect(value: unknown, options?: InspectOptions): string;
+  isatty(rid: number): boolean;
 }
 
 export declare const runtime: Runtime;

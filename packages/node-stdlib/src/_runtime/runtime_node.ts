@@ -5,6 +5,7 @@
 
 // This file contains the Node specific implementation of the runtime API.
 
+import { isatty } from "tty";
 import { inspect } from "util";
 import type { Runtime } from "./runtime";
 
@@ -21,11 +22,17 @@ const env = {
 };
 
 export const runtime: Runtime = {
-  env,
-  exit: process.exit,
+  build: {
+    // Deno uses "windows" while node uses "win32"
+    os: process.platform === "win32" ? "windows" : process.platform,
+  },
   // TS doesn't like assigning a unique symbol
   customInspect: inspect.custom as any,
+  env,
+  stderr: process.stderr,
+  exit: process.exit,
   // TS doesn't like the inspect has multiple signatures
   // The interface required is a subset of what inspect offers so this is fine
   inspect: inspect as any,
+  isatty,
 };

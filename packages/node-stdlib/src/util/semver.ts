@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Christopher Szatmary <cs@christopherszatmary.com>
 // All rights reserved. MIT License.
 
-import { inspect } from "util";
+import { runtime } from "../_runtime/runtime";
 import { Result, panic } from "../global";
 import * as errors from "../errors/mod";
 
@@ -111,7 +111,7 @@ export class SemVer {
   /**
    * Custom inspect implementation for use with node's `util.inspect`.
    */
-  [inspect.custom](): string {
+  [runtime.customInspect](): string {
     return `SemVer(${this.toString()})`;
   }
 
