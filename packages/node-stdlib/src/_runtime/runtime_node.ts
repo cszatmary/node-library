@@ -29,6 +29,7 @@ export const runtime: Runtime = {
   // TS doesn't like assigning a unique symbol
   customInspect: inspect.custom as any,
   env,
+  noColor: process.env.NO_COLOR !== undefined,
   stderr: process.stderr,
   exit: process.exit,
   // TS doesn't like the inspect has multiple signatures
