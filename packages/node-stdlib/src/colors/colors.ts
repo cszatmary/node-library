@@ -43,8 +43,7 @@ const ansiCodes = {
   bgWhite: 47,
 };
 
-const noColor = runtime.env.get("NO_COLOR") !== undefined;
-let colorEnabled = !noColor;
+let colorEnabled = !runtime.noColor;
 
 export function isColorEnabled(): boolean {
   return colorEnabled;
@@ -52,7 +51,7 @@ export function isColorEnabled(): boolean {
 
 export function setColorEnabled(isEnabled: boolean): void {
   /* istanbul ignore else */
-  if (!noColor) {
+  if (!runtime.noColor) {
     colorEnabled = isEnabled;
   }
 }
