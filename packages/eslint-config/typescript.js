@@ -19,8 +19,11 @@ module.exports = {
   ],
   rules: {
     camelcase: ["off"],
-    "@typescript-eslint/naming-convention": ["error"],
+    "consistent-return": ["off"],
+    "import/no-unresolved": ["off"],
+    "@typescript-eslint/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description" }],
     "@typescript-eslint/explicit-function-return-type": ["error"],
+    "@typescript-eslint/naming-convention": ["error"],
     "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "no-use-before-define": ["off"],
@@ -32,9 +35,6 @@ module.exports = {
     "@typescript-eslint/no-dupe-class-members": ["error"],
     "no-shadow": ["off"],
     "@typescript-eslint/no-shadow": ["error"],
-    "import/no-unresolved": ["off"],
-    "consistent-return": ["off"],
-    "@typescript-eslint/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description" }],
     "@typescript-eslint/strict-boolean-expressions": [
       "error",
       {

@@ -24,6 +24,7 @@ const env = {
 export const runtime: Runtime = {
   build: {
     // Deno uses "windows" while node uses "win32"
+    // eslint-disable-next-line no-ternary
     os: process.platform === "win32" ? "windows" : process.platform,
   },
   // TS doesn't like assigning a unique symbol

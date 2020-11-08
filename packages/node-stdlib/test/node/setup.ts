@@ -1,3 +1,5 @@
+/* eslint-disable no-ternary */
+
 import { recover, util } from "../../src";
 
 declare global {

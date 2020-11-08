@@ -295,7 +295,11 @@ export class DynamicBuffer implements Iterable<number> {
    */
   next(n: number): Uint8Array {
     const l = this.length;
-    const m = n > l ? l : n;
+    let m = n;
+    if (n > l) {
+      m = l;
+    }
+
     const data = this.#buf.subarray(this.#off, this.#off + m);
     this.#off += m;
     return data;

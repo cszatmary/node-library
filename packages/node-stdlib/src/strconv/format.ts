@@ -7,7 +7,10 @@ import { panic } from "../global";
  * Returns `"true"` or `"false"` based on the value of `b`.
  */
 export function formatBool(b: boolean): string {
-  return b ? "true" : "false";
+  if (b) {
+    return "true";
+  }
+  return "false";
 }
 
 /**
@@ -48,11 +51,15 @@ export function formatFloat(f: number, fmt: "f" | "e", prec?: number): string {
     panic(`formatFloat: invalid fmt "${fmt}", must be either "f" or "e"`);
   }
 
-  if (prec === undefined && fmt === "f") {
-    // toFixed assumes 0 if the arg is omitted which isn't what we want
-    // if prec is omitted we want the full number
-    return f.toString();
+  if (fmt === "f") {
+    if (prec === undefined) {
+      // toFixed assumes 0 if the arg is omitted which isn't what we want
+      // if prec is omitted we want the full number
+      return f.toString();
+    }
+
+    return f.toFixed(prec);
   }
 
-  return fmt === "f" ? f.toFixed(prec) : f.toExponential(prec);
+  return f.toExponential(prec);
 }

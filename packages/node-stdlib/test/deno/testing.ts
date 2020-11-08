@@ -16,7 +16,11 @@ export function assertPanics<T = void>(fn: () => T, msgIncludes = "", msg = ""):
     thrown = e;
   }
 
-  const end = msg !== "" ? `: ${msg}` : ".";
+  let end = ".";
+  if (msg !== "") {
+    end = `: ${msg}`;
+  }
+
   if (thrown === undefined) {
     throw new AssertionError(`Expected function to panic${end}`);
   }

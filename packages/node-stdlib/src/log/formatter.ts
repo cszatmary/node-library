@@ -118,7 +118,11 @@ export class JSONFormatter implements Formatter {
     const levelKey = resolveKey(FieldKey.level, this.fieldMap);
     data[levelKey] = levelString(log.level);
 
-    const indent = this.prettyPrint ? 2 : undefined;
+    let indent: number | undefined;
+    if (this.prettyPrint) {
+      indent = 2;
+    }
+
     return Result.of(() => JSON.stringify(data, null, indent))
       .map((json) => new TextEncoder().encode(json))
       .mapFailure((err) => errors.fromJSError(err));
@@ -251,7 +255,13 @@ export class TextFormatter implements Formatter {
   };
 
   #appendValue = (b: bytes.DynamicBuffer, value: unknown): void => {
-    const str = typeof value === "string" ? value : util.toString(value);
+    let str: string;
+    if (typeof value === "string") {
+      str = value;
+    } else {
+      str = util.toString(value);
+    }
+
     if (!this.#needsQuoting(str)) {
       b.writeString(str);
     } else {
