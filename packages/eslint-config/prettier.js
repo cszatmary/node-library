@@ -3,9 +3,9 @@ module.exports = {
   plugins: ["prettier"],
   rules: {
     "prettier/prettier": ["error"],
-    "no-underscore-dangle": ["off"],
     camelcase: ["error", { properties: "always" }],
     "lines-around-directive": ["off"],
+    "no-underscore-dangle": ["off"],
     "no-plusplus": ["off"],
     "spaced-comment": ["error", "always", { markers: ["/"] }],
   },

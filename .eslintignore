@@ -4,3 +4,4 @@ coverage
 *.json
 dist
 **/*_deno.ts
+deno.d.ts

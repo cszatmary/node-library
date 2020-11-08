@@ -37,7 +37,11 @@ export async function remove(path: fs.PathLike): Promise<Result<void, Error>> {
 
   // Both failed, figure out which error to return
   const rmdirErr = rmdirRes.failure() as NodeJS.ErrnoException;
-  return rmdirErr.code !== "ENOTDIR" ? rmdirRes : unlinkRes;
+  if (rmdirErr.code !== "ENOTDIR") {
+    return rmdirRes;
+  }
+
+  return unlinkRes;
 }
 
 /**
@@ -56,7 +60,11 @@ export function removeSync(path: fs.PathLike): Result<void, Error> {
 
   // Both failed, figure out which error to return
   const rmdirErr = rmdirRes.failure() as NodeJS.ErrnoException;
-  return rmdirErr.code !== "ENOTDIR" ? rmdirRes : unlinkRes;
+  if (rmdirErr.code !== "ENOTDIR") {
+    return rmdirRes;
+  }
+
+  return unlinkRes;
 }
 
 /**

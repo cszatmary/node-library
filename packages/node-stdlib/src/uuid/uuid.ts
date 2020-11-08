@@ -37,7 +37,13 @@ function createNameBasedUUID(namespace: Buffer, name: string, version: 3 | 5): B
   const buf = Buffer.concat([namespace, Buffer.from(name, "utf8")]);
 
   // Compute the hash of the namespace concatenated with the name
-  const algorithm = version === 5 ? "sha1" : "md5";
+  let algorithm: "sha1" | "md5";
+  if (version === 5) {
+    algorithm = "sha1";
+  } else {
+    algorithm = "md5";
+  }
+
   const hash = crypto.createHash(algorithm).update(buf).digest();
 
   // Set version and variant as required

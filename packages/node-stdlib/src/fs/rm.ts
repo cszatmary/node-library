@@ -6,6 +6,7 @@
 
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable no-ternary */
 /* istanbul ignore file */
 
 /*

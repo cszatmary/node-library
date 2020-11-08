@@ -247,7 +247,11 @@ if (target.action === Action.compile) {
 // Create entrypoint if needed
 if (target.entrypoint !== undefined) {
   const lines = [header];
-  const extension = target.entrypoint.includeExtension ? ".ts" : "";
+  let extension = "";
+  if (target.entrypoint.includeExtension) {
+    extension = ".ts";
+  }
+
   for (const g of target.globals) {
     lines.push(`export * from "./${path.basename(g, ".ts")}${extension}"`);
   }
