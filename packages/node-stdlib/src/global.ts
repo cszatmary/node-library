@@ -110,6 +110,7 @@ export function panic(v: unknown): never {
   // Remove first line of stack trace since it is in this function
   Error.captureStackTrace(p, panic);
   // The rare case where throw is allowed
+  // eslint-disable-next-line no-restricted-syntax
   throw p;
 }
 
@@ -356,6 +357,9 @@ class Failure<S, F> implements ResultCase<S, F> {
 export type Result<S, F> = Success<S, F> | Failure<S, F>;
 
 type ExtractPromise<P> = P extends Promise<infer T> ? T : never;
+
+// try/catch is obviously needed to implement Result
+/* eslint-disable no-restricted-syntax */
 
 // "static methods" for Result type
 // eslint-disable-next-line @typescript-eslint/naming-convention

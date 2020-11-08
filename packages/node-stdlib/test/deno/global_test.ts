@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 import * as testing from "./testing.ts";
 import { Ref, Result, errors, panic, recover, util } from "../../dist/deno/mod.ts";
 
