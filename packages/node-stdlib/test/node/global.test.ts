@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 import { inspect } from "util";
 import { Ref, Result, errors, panic, recover, util } from "../../src";
 

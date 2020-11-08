@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 import { AssertionError } from "https://deno.land/std@0.76.0/testing/asserts.ts";
 import { recover } from "../../dist/deno/mod.ts";
 

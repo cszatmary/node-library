@@ -140,10 +140,5 @@ export function removeAllSync(path: fs.PathLike): Result<void, Error> {
   }
 
   // Node version is less than min required, need to use the polyfill
-  try {
-    rimrafSync(path);
-    return Result.success(undefined);
-  } catch (e) {
-    return Result.failure(e);
-  }
+  return Result.of(() => rimrafSync(path));
 }

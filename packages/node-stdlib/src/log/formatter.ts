@@ -193,10 +193,8 @@ export class TextFormatter implements Formatter {
       if (typeof out.rid === "number") {
         // Deno will throw if an invalid rid is used
         // Do this to be safe
-        try {
-          this.#isTerminal = runtime.isatty(out.rid);
-          // eslint-disable-next-line no-empty
-        } catch {}
+        const r = Result.of(() => runtime.isatty(out.rid));
+        this.#isTerminal = r.success() ?? false;
       } else if (typeof out.fd === "number") {
         this.#isTerminal = runtime.isatty(out.fd);
       }

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-ternary */
 
 import { recover, util } from "../../src";
