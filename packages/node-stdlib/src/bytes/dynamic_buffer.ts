@@ -372,12 +372,12 @@ export class DynamicBuffer implements Iterable<number> {
   /**
    * Returns a new DynamicBuffer with the unread bytes copied.
    */
-  [symbols.copy](): this {
+  [symbols.copy](): DynamicBuffer {
     const buf = new DynamicBuffer(new ArrayBuffer(this.length));
     for (let i = 0; i < this.length; i++) {
       buf.#buf[i] = this.#buf[i + this.#off];
     }
-    return buf as this;
+    return buf;
   }
 
   /**

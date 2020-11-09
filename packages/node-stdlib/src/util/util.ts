@@ -40,13 +40,6 @@ export function toString(v: unknown): string {
 }
 
 /**
- * An interface representing a type that can create copies of itself.
- */
-export interface Copyable {
-  [symbols.copy](): this;
-}
-
-/**
  * Returns a boolean indicating whether or not
  * `v` is a proper object and not an array.
  */
@@ -75,6 +68,16 @@ export function isTypedArray(v: unknown): v is TypedArray {
 }
 
 /**
+ * An interface representing a type that can create copies of itself.
+ * This interface is not exported because TypeScript doesn't have a good way
+ * to express the intent here. This is only used internally for convenience.
+ * Consumers can implement this interface implicitly.
+ */
+interface Copyable {
+  [symbols.copy](): this;
+}
+
+/**
  * Returns a boolean indicating whether or not `v`
  * implements the `Copyable` interface.
  * A value implements `Copyable` if it has a `copy` method.
@@ -84,7 +87,11 @@ export function isCopyable(v: unknown): v is Copyable {
 }
 
 /**
- * Returns a deep copy of the given value.
+ * copy returns a deep copy of the given value.
+ * If the value is a collection (Array, Map, Set or TypedArray), then
+ * the elements will be recursively copied. Custom types can implement
+ * a method using `symbols.copy` which returns a copy of the object.
+ * If such a method exists on the value being copied it will be used.
  */
 export function copy<T>(v: T): T {
   if (v == null) {
