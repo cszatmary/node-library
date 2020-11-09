@@ -29,6 +29,10 @@ declare global {
 export const symbols = Object.freeze({
   copy: Symbol.for("node-stdlib.copy"),
 }) as {
+  /**
+   * The copy symbol can be used to implement a method on a type that
+   * creates a copy of itself. This is used `util.copy`.
+   */
   readonly copy: unique symbol;
 };
 
