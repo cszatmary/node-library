@@ -228,21 +228,19 @@ export class TextFormatter implements Formatter {
       return false;
     }
 
-    for (let i = 0; i < text.length; i++) {
-      const c = text.charCodeAt(i);
-      const s = text.charAt(i);
+    for (const c of text) {
       if (
         !(
-          (c >= 48 && c <= 57) || // 0-9
-          (c >= 65 && c <= 90) || // A-Z
-          (c >= 97 && c <= 122) || // a-z
-          s === "-" ||
-          s === "." ||
-          s === "_" ||
-          s === "/" ||
-          s === "@" ||
-          s === "^" ||
-          s === "+"
+          (c >= "0" && c <= "9") ||
+          (c >= "A" && c <= "Z") ||
+          (c >= "a" && c <= "z") ||
+          c === "-" ||
+          c === "." ||
+          c === "_" ||
+          c === "/" ||
+          c === "@" ||
+          c === "^" ||
+          c === "+"
         )
       ) {
         return true;
