@@ -27,6 +27,7 @@
     "fatal": "*",
     "fs": "node",
     "hex": "*",
+    "http": "node",
     "log": "*",
     "sets": "*",
     "strconv": "*",
