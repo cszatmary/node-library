@@ -9,5 +9,5 @@
     "allowJs": true
   },
   "include": ["packages"],
-  "exclude": ["node_modules", "**/dist/deno", "**/*_deno.ts"]
+  "exclude": ["node_modules"]
 }
