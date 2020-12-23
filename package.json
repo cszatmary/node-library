@@ -8,10 +8,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "build:deno": "lerna run build:deno",
-    "build:node": "lerna run build:node",
     "build": "lerna run build",
-    "check-types:deno": "lerna run check-types:deno",
     "check-types": "tsc --noEmit",
     "clean": "lerna run clean && rimraf coverage",
     "fmt": "prettier --write 'packages/**/{src,test}/**/*.{js,ts}'",
@@ -19,43 +16,36 @@
     "lint:fix": "eslint --fix --ext=js,ts ./packages",
     "prepublishOnly": "yarn clean && yarn build && yarn verify",
     "release": "lerna publish --conventional-commits",
-    "test:deno": "deno test --allow-env packages/node-stdlib/test/deno/",
     "test": "NODE_ENV=test jest --coverage",
-    "test:ci": "yarn test --runInBand --colors",
+    "test:ci": "yarn test --runInBand --colors --passWithNoTests",
     "test:nocover": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "verify": "yarn lint && yarn check-types && yarn test"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.15",
-    "@types/node": "^14.14.5",
-    "@types/rimraf": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.6.0",
-    "@typescript-eslint/parser": "^4.6.0",
-    "eslint": "^7.12.1",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "@types/jest": "^26.0.19",
+    "@types/node": "^14.14.14",
+    "@typescript-eslint/eslint-plugin": "^4.11.0",
+    "@typescript-eslint/parser": "^4.11.0",
+    "eslint": "^7.16.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^6.13.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
-    "jest": "^26.6.1",
+    "eslint-plugin-prettier": "^3.3.0",
+    "husky": "^4.3.6",
+    "jest": "^26.6.3",
     "lerna": "^3.22.1",
-    "lint-staged": "^10.5.0",
-    "prettier": "^2.1.2",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.4.3",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.5"
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.3"
   },
   "eslintConfig": {
     "extends": [
       "./packages/eslint-config/index.js"
-    ],
-    "globals": {
-      "Atomics": "readonly",
-      "SharedArrayBuffer": "readonly"
-    }
+    ]
   },
   "husky": {
     "hooks": {

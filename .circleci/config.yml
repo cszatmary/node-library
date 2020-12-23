@@ -1,24 +1,18 @@
 version: 2.1
 
-cache_key: &cache_key node-library-20200807-{{ checksum "yarn.lock" }}
-
-executors:
-  docker:
-    docker:
-      - image: cszatma/cimg-node:lts
-
-aliases:
-  - &restore_cache
-    name: Restore yarn cache
-    keys:
-      - *cache_key
+cache_key: &cache_key node-library-20201223-{{ checksum "yarn.lock" }}
 
 jobs:
-  install-lint-check:
-    executor: docker
+  lint-build-test:
+    docker:
+      - image: cimg/node:lts
+    working_directory: /mnt/ramdisk
     steps:
       - checkout
-      - restore_cache: *restore_cache
+      - restore_cache:
+          name: Restore yarn cache
+          keys:
+            - *cache_key
       - run:
           name: Install dependencies
           command: .circleci/yarn_frozen_lockfile.sh
@@ -31,49 +25,13 @@ jobs:
           name: lint
           command: yarn lint
       - run:
-          name: check deno runtime types
-          command: yarn check-types:deno
-
-  build-node:
-    executor: docker
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
+          name: build packages
+          command: yarn build
       - run:
-          name: build node target
-          command: yarn build:node
-
-  test-node:
-    executor: docker
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
-      - run:
-          name: run node tests
+          name: run tests
           command: yarn test:ci
-
-  build-test-deno:
-    executor: docker
-    steps:
-      - checkout
-      - restore_cache: *restore_cache
-      - run:
-          name: build deno target
-          command: yarn build:deno
-      - run:
-          name: run deno tests
-          command: yarn test:deno
 
 workflows:
   build-test:
     jobs:
-      - install-lint-check
-      - build-node:
-          requires:
-            - install-lint-check
-      - test-node:
-          requires:
-            - install-lint-check
-      - build-test-deno:
-          requires:
-            - install-lint-check
+      - lint-build-test
